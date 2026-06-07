@@ -1,5 +1,7 @@
 # Psybeam
 
+[![CI](https://github.com/guitaripod/psybeam/actions/workflows/ci.yml/badge.svg)](https://github.com/guitaripod/psybeam/actions/workflows/ci.yml)
+
 A real-time voice-to-voice travel interpreter for iOS. You hold the phone and you're the only operator: two thumb-buttons — your language and theirs. Hold yours to speak and it speaks their language aloud to the person across from you; hold theirs while they reply and it speaks yours back. The stranger never has to touch the phone or understand the UI — the audio carries it, and when it's their turn the screen invites them to speak in their own language. The translation always faces whoever it's for. The local language auto-suggests by GPS as you cross borders.
 
 > Built for the person handed the phone, not the owner.
