@@ -1,0 +1,412 @@
+import PsybeamKit
+import UIKit
+
+final class SettingsViewController: UIViewController {
+    private let viewModel: ConversationViewModel
+    private let auth: AuthService
+    private let worker: WorkerClient
+    private let onBrightnessChanged: () -> Void
+    var onDismiss: (() -> Void)?
+
+    private let gradient = CAGradientLayer()
+    private let scrollView = UIScrollView()
+    private let content = UIStackView()
+    private let youButton = UIButton(type: .system)
+    private let themButton = UIButton(type: .system)
+    private let minutesLabel = UILabel()
+    private let meterTrack = UIView()
+    private let meterFill = UIView()
+    private var meterWidth: NSLayoutConstraint?
+    private let impact = UIImpactFeedbackGenerator(style: .light)
+
+    private let brand = UIColor(red: 0.30, green: 0.62, blue: 1.0, alpha: 1)
+    private let languages = ["en", "es", "fr", "de", "it", "pt", "nl", "ru", "pl", "tr", "el", "ar", "he", "hi", "ja", "ko", "zh", "th", "vi", "id", "fi", "sv"]
+
+    init(
+        viewModel: ConversationViewModel,
+        auth: AuthService,
+        worker: WorkerClient,
+        onBrightnessChanged: @escaping () -> Void
+    ) {
+        self.viewModel = viewModel
+        self.auth = auth
+        self.worker = worker
+        self.onBrightnessChanged = onBrightnessChanged
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) { fatalError() }
+
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        traitCollection.userInterfaceStyle == .dark ? .lightContent : .darkContent
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .systemBackground
+        view.layer.insertSublayer(gradient, at: 0)
+        buildLayout()
+        refreshLanguageButtons()
+        fetchQuota()
+        applyAdaptiveChrome()
+        registerForTraitChanges([UITraitUserInterfaceStyle.self]) { (self: SettingsViewController, _) in
+            self.applyAdaptiveChrome()
+        }
+        impact.prepare()
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        gradient.frame = view.bounds
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        if presentingViewController == nil || isBeingDismissed { onDismiss?() }
+    }
+
+    private func applyAdaptiveChrome() {
+        let top = UIColor { $0.userInterfaceStyle == .dark
+            ? UIColor(red: 0.07, green: 0.08, blue: 0.17, alpha: 1)
+            : UIColor(red: 0.95, green: 0.96, blue: 1.0, alpha: 1) }
+        let bottom = UIColor { $0.userInterfaceStyle == .dark
+            ? UIColor(red: 0.02, green: 0.02, blue: 0.06, alpha: 1)
+            : UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1) }
+        gradient.colors = [top.resolvedColor(with: traitCollection).cgColor, bottom.resolvedColor(with: traitCollection).cgColor]
+        setNeedsStatusBarAppearanceUpdate()
+    }
+
+    private func buildLayout() {
+        let title = UILabel()
+        title.text = "Settings"
+        title.font = .systemFont(ofSize: 32, weight: .bold)
+        title.textColor = .label
+
+        let done = UIButton(type: .system)
+        done.configuration = doneConfig()
+        done.addTarget(self, action: #selector(dismissSelf), for: .touchUpInside)
+
+        let header = UIStackView(arrangedSubviews: [title, UIView(), done])
+        header.alignment = .center
+        header.translatesAutoresizingMaskIntoConstraints = false
+
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.showsVerticalScrollIndicator = false
+        scrollView.contentInsetAdjustmentBehavior = .always
+        content.axis = .vertical
+        content.spacing = 8
+        content.translatesAutoresizingMaskIntoConstraints = false
+
+        view.addSubview(header)
+        view.addSubview(scrollView)
+        scrollView.addSubview(content)
+
+        NSLayoutConstraint.activate([
+            header.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 12),
+            header.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            header.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+
+            scrollView.topAnchor.constraint(equalTo: header.bottomAnchor, constant: 10),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+
+            content.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
+            content.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor, constant: -40),
+            content.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            content.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+        ])
+
+        configureLanguageButton(youButton)
+        configureLanguageButton(themButton)
+
+        let languageCard = addSection("Languages")
+        languageCard.addArrangedSubview(row(icon: "person.fill", tint: brand, "You speak", control: youButton))
+        languageCard.addArrangedSubview(divider())
+        languageCard.addArrangedSubview(row(icon: "globe", tint: .systemGreen, "They speak", control: themButton))
+        languageCard.addArrangedSubview(divider())
+        languageCard.addArrangedSubview(row(icon: "location.fill", tint: .systemTeal, "Auto-detect from location", control: toggle(AppSettings.autoDetectLocation, #selector(autoChanged))))
+
+        let displayCard = addSection("Display")
+        displayCard.addArrangedSubview(row(icon: "sun.max.fill", tint: .systemOrange, "Keep screen bright", control: toggle(AppSettings.keepScreenBright, #selector(brightChanged))))
+        displayCard.addArrangedSubview(divider())
+        displayCard.addArrangedSubview(row(icon: "circle.lefthalf.filled", tint: .systemGray, "Appearance", control: appearanceControl()))
+
+        minutesLabel.text = "…"
+        minutesLabel.font = .systemFont(ofSize: 16, weight: .semibold)
+        minutesLabel.textColor = .secondaryLabel
+        let usageCard = addSection("Usage")
+        usageCard.addArrangedSubview(row(icon: "gauge.with.needle.fill", tint: .systemPurple, "Free minutes left today", control: minutesLabel))
+        usageCard.addArrangedSubview(meterRow())
+
+        let accountCard = addSection("Account")
+        let appleID = UILabel()
+        appleID.text = "Apple ID"
+        appleID.font = .systemFont(ofSize: 16, weight: .medium)
+        appleID.textColor = .secondaryLabel
+        accountCard.addArrangedSubview(row(icon: "apple.logo", tint: .label, "Signed in with", control: appleID))
+        accountCard.addArrangedSubview(divider())
+        let signOut = UIButton(type: .system)
+        signOut.setTitle("Sign Out", for: .normal)
+        signOut.contentHorizontalAlignment = .leading
+        signOut.titleLabel?.font = .systemFont(ofSize: 16, weight: .semibold)
+        signOut.tintColor = .systemRed
+        signOut.addTarget(self, action: #selector(signOutTapped), for: .touchUpInside)
+        accountCard.addArrangedSubview(row(icon: "rectangle.portrait.and.arrow.right", tint: .systemRed, control: signOut))
+
+        let privacyCard = addSection("Privacy")
+        let privacy = UILabel()
+        privacy.numberOfLines = 0
+        privacy.font = .systemFont(ofSize: 13)
+        privacy.textColor = .secondaryLabel
+        privacy.text = "Speech is translated by OpenAI in the cloud. Your conversation transcript stays on this device — we don't store it on our servers."
+        privacyCard.addArrangedSubview(row(icon: "lock.fill", tint: .systemGreen, control: privacy))
+
+        let footer = UILabel()
+        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
+        let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? ""
+        footer.text = "Psybeam \(version) (\(build))"
+        footer.font = .systemFont(ofSize: 12)
+        footer.textColor = .tertiaryLabel
+        footer.textAlignment = .center
+        content.addArrangedSubview(spacer(16))
+        content.addArrangedSubview(footer)
+    }
+
+    private func doneConfig() -> UIButton.Configuration {
+        var config = UIButton.Configuration.gray()
+        config.cornerStyle = .capsule
+        config.baseForegroundColor = .label
+        config.attributedTitle = AttributedString("Done", attributes: AttributeContainer([.font: UIFont.systemFont(ofSize: 16, weight: .semibold)]))
+        config.contentInsets = NSDirectionalEdgeInsets(top: 7, leading: 16, bottom: 7, trailing: 16)
+        return config
+    }
+
+    @discardableResult
+    private func addSection(_ title: String) -> UIStackView {
+        let header = UILabel()
+        header.text = title.uppercased()
+        header.font = .systemFont(ofSize: 13, weight: .semibold)
+        header.textColor = .secondaryLabel
+        let headerWrap = UIView()
+        headerWrap.addSubview(header)
+        header.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            header.topAnchor.constraint(equalTo: headerWrap.topAnchor, constant: 12),
+            header.bottomAnchor.constraint(equalTo: headerWrap.bottomAnchor, constant: -6),
+            header.leadingAnchor.constraint(equalTo: headerWrap.leadingAnchor, constant: 16),
+        ])
+        content.addArrangedSubview(headerWrap)
+
+        let card = UIVisualEffectView()
+        if #available(iOS 26.0, *) {
+            card.effect = UIGlassEffect()
+        } else {
+            card.effect = UIBlurEffect(style: .systemThinMaterial)
+        }
+        card.translatesAutoresizingMaskIntoConstraints = false
+        card.layer.cornerRadius = 22
+        card.layer.cornerCurve = .continuous
+        card.clipsToBounds = true
+
+        let body = UIStackView()
+        body.axis = .vertical
+        body.translatesAutoresizingMaskIntoConstraints = false
+        card.contentView.addSubview(body)
+        NSLayoutConstraint.activate([
+            body.topAnchor.constraint(equalTo: card.contentView.topAnchor),
+            body.bottomAnchor.constraint(equalTo: card.contentView.bottomAnchor),
+            body.leadingAnchor.constraint(equalTo: card.contentView.leadingAnchor),
+            body.trailingAnchor.constraint(equalTo: card.contentView.trailingAnchor),
+        ])
+        content.addArrangedSubview(card)
+        return body
+    }
+
+    private func iconTile(_ symbol: String, _ tint: UIColor) -> UIView {
+        let tile = UIView()
+        tile.backgroundColor = tint
+        tile.layer.cornerRadius = 7
+        tile.layer.cornerCurve = .continuous
+        tile.translatesAutoresizingMaskIntoConstraints = false
+        let glyph = UIImageView(image: UIImage(systemName: symbol, withConfiguration: UIImage.SymbolConfiguration(pointSize: 14, weight: .semibold)))
+        glyph.tintColor = tint == UIColor.label ? .systemBackground : .white
+        glyph.contentMode = .center
+        glyph.translatesAutoresizingMaskIntoConstraints = false
+        tile.addSubview(glyph)
+        NSLayoutConstraint.activate([
+            tile.widthAnchor.constraint(equalToConstant: 29),
+            tile.heightAnchor.constraint(equalToConstant: 29),
+            glyph.centerXAnchor.constraint(equalTo: tile.centerXAnchor),
+            glyph.centerYAnchor.constraint(equalTo: tile.centerYAnchor),
+        ])
+        return tile
+    }
+
+    private func row(icon: String? = nil, tint: UIColor = .systemGray, _ title: String? = nil, control: UIView) -> UIView {
+        var views: [UIView] = []
+        if let icon { views.append(iconTile(icon, tint)) }
+        if let title {
+            let label = UILabel()
+            label.text = title
+            label.font = .systemFont(ofSize: 16)
+            label.textColor = .label
+            label.numberOfLines = 0
+            label.setContentHuggingPriority(.defaultLow, for: .horizontal)
+            views.append(label)
+        }
+        views.append(UIView())
+        control.setContentHuggingPriority(.required, for: .horizontal)
+        control.setContentCompressionResistancePriority(.required, for: .horizontal)
+        views.append(control)
+        let stack = UIStackView(arrangedSubviews: views)
+        stack.alignment = .center
+        stack.spacing = 12
+        stack.isLayoutMarginsRelativeArrangement = true
+        stack.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 14, leading: 16, bottom: 14, trailing: 16)
+        return stack
+    }
+
+    private func meterRow() -> UIView {
+        meterTrack.backgroundColor = .quaternarySystemFill
+        meterTrack.layer.cornerRadius = 4
+        meterTrack.alpha = 0
+        meterTrack.translatesAutoresizingMaskIntoConstraints = false
+        meterFill.backgroundColor = brand
+        meterFill.layer.cornerRadius = 4
+        meterFill.translatesAutoresizingMaskIntoConstraints = false
+        meterTrack.addSubview(meterFill)
+        let width = meterFill.widthAnchor.constraint(equalTo: meterTrack.widthAnchor, multiplier: 0.02)
+        meterWidth = width
+        NSLayoutConstraint.activate([
+            meterTrack.heightAnchor.constraint(equalToConstant: 8),
+            meterFill.leadingAnchor.constraint(equalTo: meterTrack.leadingAnchor),
+            meterFill.topAnchor.constraint(equalTo: meterTrack.topAnchor),
+            meterFill.bottomAnchor.constraint(equalTo: meterTrack.bottomAnchor),
+            width,
+        ])
+        let wrap = UIStackView(arrangedSubviews: [meterTrack])
+        wrap.isLayoutMarginsRelativeArrangement = true
+        wrap.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 0, leading: 16, bottom: 16, trailing: 16)
+        return wrap
+    }
+
+    private func setMeter(_ fraction: Double) {
+        meterWidth?.isActive = false
+        let clamped = max(0.02, min(1.0, fraction))
+        meterFill.backgroundColor = clamped < 0.15 ? .systemRed : brand
+        let width = meterFill.widthAnchor.constraint(equalTo: meterTrack.widthAnchor, multiplier: clamped)
+        meterWidth = width
+        width.isActive = true
+        UIView.animate(withDuration: 0.4, delay: 0, options: .curveEaseOut) {
+            self.meterTrack.alpha = 1
+            self.view.layoutIfNeeded()
+        }
+    }
+
+    private func divider() -> UIView {
+        let line = UIView()
+        line.backgroundColor = .separator
+        line.translatesAutoresizingMaskIntoConstraints = false
+        line.heightAnchor.constraint(equalToConstant: 0.5).isActive = true
+        let wrap = UIStackView(arrangedSubviews: [line])
+        wrap.isLayoutMarginsRelativeArrangement = true
+        wrap.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 0, leading: 57, bottom: 0, trailing: 0)
+        return wrap
+    }
+
+    private func spacer(_ height: CGFloat) -> UIView {
+        let v = UIView()
+        v.heightAnchor.constraint(equalToConstant: height).isActive = true
+        return v
+    }
+
+    private func toggle(_ on: Bool, _ action: Selector) -> UISwitch {
+        let s = UISwitch()
+        s.isOn = on
+        s.onTintColor = brand
+        s.addTarget(self, action: action, for: .valueChanged)
+        return s
+    }
+
+    private func appearanceControl() -> UISegmentedControl {
+        let control = UISegmentedControl(items: ["Auto", "Light", "Dark"])
+        control.selectedSegmentIndex = AppSettings.appearance.rawValue
+        control.selectedSegmentTintColor = brand
+        control.setTitleTextAttributes([.foregroundColor: UIColor.label], for: .normal)
+        control.setTitleTextAttributes([.foregroundColor: UIColor.white], for: .selected)
+        control.addTarget(self, action: #selector(appearanceChanged), for: .valueChanged)
+        control.setContentHuggingPriority(.required, for: .horizontal)
+        return control
+    }
+
+    private func configureLanguageButton(_ button: UIButton) {
+        button.showsMenuAsPrimaryAction = true
+        button.tintColor = .tertiaryLabel
+        var config = UIButton.Configuration.plain()
+        config.imagePlacement = .trailing
+        config.imagePadding = 4
+        config.image = UIImage(systemName: "chevron.up.chevron.down", withConfiguration: UIImage.SymbolConfiguration(pointSize: 12, weight: .semibold))
+        config.contentInsets = .zero
+        button.configuration = config
+    }
+
+    private func refreshLanguageButtons() {
+        setLanguageTitle(youButton, code: viewModel.pair.traveler)
+        setLanguageTitle(themButton, code: viewModel.pair.local)
+        youButton.menu = languageMenu(selected: viewModel.pair.traveler, isTraveler: true)
+        themButton.menu = languageMenu(selected: viewModel.pair.local, isTraveler: false)
+    }
+
+    private func setLanguageTitle(_ button: UIButton, code: String) {
+        button.configuration?.attributedTitle = AttributedString(
+            Self.endonym(code),
+            attributes: AttributeContainer([
+                .font: UIFont.systemFont(ofSize: 16, weight: .semibold),
+                .foregroundColor: UIColor.label,
+            ])
+        )
+    }
+
+    private func languageMenu(selected: String, isTraveler: Bool) -> UIMenu {
+        let actions = languages.map { code in
+            UIAction(title: Self.endonym(code), state: code == selected ? .on : .off) { [weak self] _ in
+                if isTraveler { self?.viewModel.setTravelerLanguage(code) } else { self?.viewModel.setLocalLanguage(code) }
+                self?.refreshLanguageButtons()
+            }
+        }
+        return UIMenu(children: actions)
+    }
+
+    private func fetchQuota() {
+        Task {
+            if let quota = await worker.quota() {
+                minutesLabel.text = "\(quota.minutesRemaining) / \(quota.dailyMinutes)"
+                let fraction = quota.dailyMinutes > 0 ? Double(quota.minutesRemaining) / Double(quota.dailyMinutes) : 0
+                setMeter(fraction)
+            } else {
+                minutesLabel.text = "—"
+            }
+        }
+    }
+
+    @objc private func autoChanged(_ sender: UISwitch) { impact.impactOccurred(); AppSettings.autoDetectLocation = sender.isOn }
+    @objc private func brightChanged(_ sender: UISwitch) { impact.impactOccurred(); AppSettings.keepScreenBright = sender.isOn; onBrightnessChanged() }
+
+    @objc private func appearanceChanged(_ sender: UISegmentedControl) {
+        let mode = AppearanceMode(rawValue: sender.selectedSegmentIndex) ?? .system
+        AppSettings.appearance = mode
+        impact.impactOccurred()
+        UIView.animate(withDuration: 0.3) {
+            self.view.window?.overrideUserInterfaceStyle = UIUserInterfaceStyle(rawValue: mode.rawValue) ?? .unspecified
+        }
+    }
+
+    @objc private func signOutTapped() { auth.signOut(); dismiss(animated: true) }
+    @objc private func dismissSelf() { dismiss(animated: true) }
+
+    private static func endonym(_ code: String) -> String {
+        Locale(identifier: code).localizedString(forLanguageCode: code)?.capitalized ?? code.uppercased()
+    }
+}

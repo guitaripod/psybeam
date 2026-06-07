@@ -1,0 +1,46 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "psybeam-worker",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-06-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  },
+  "placement": {
+    "mode": "smart"
+  },
+  "vars": {
+    "ENVIRONMENT": "production",
+    // Spike 1 (2026-06-07) verified gpt-realtime-translate translates 20+ languages
+    // via /v1/realtime/translations — there is NO hard ~13 ceiling. This list is now
+    // INFORMATIONAL for /v1/config display only; it does NOT gate minting. BCP-47.
+    "OPENAI_TRANSLATE_OUTPUT_LANGS": "es,pt,fr,de,it,nl,en,ru,pl,tr,el,ar,he,hi,ja,ko,zh,th,vi,id,fi,sv",
+    "OPENAI_TRANSLATE_MODEL": "gpt-realtime-translate",
+    "FREE_DAILY_MINUTES": "240",
+    "MAX_CONCURRENT_SESSIONS": "8",
+    "MAX_MINTS_PER_MINUTE": "6"
+  },
+  "kv_namespaces": [
+    {
+      "binding": "AUTH_NONCE",
+      "id": "7d432da4e9c4404ca78202b1411121d9"
+    },
+    {
+      "binding": "QUOTA",
+      "id": "a97097762c9c49669e87a7c6c02a65b8"
+    },
+    {
+      "binding": "SESSIONS",
+      "id": "2d8ed4a7771c413db343ca15f3d675ed"
+    }
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "psybeam",
+      "database_id": "eff4019f-df9e-420a-8f39-7b4698fae64b"
+    }
+  ]
+}

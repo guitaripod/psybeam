@@ -1,0 +1,34 @@
+.DS_Store
+*.swp
+*~
+
+# Xcode / xcodegen — the .xcodeproj is regenerated from project.yml.
+*.xcodeproj
+*.xcworkspace
+DerivedData/
+build/
+*.xcuserstate
+xcuserdata/
+
+# SwiftPM
+.build/
+.swiftpm/
+Package.resolved
+
+# sourcekit-lsp / xcode-build-server
+buildServer.json
+.bsp/
+.compile
+
+# User-specific identifiers + secrets
+.env.local
+Psybeam/Secrets.swift
+
+# Worker
+node_modules/
+workers/node_modules/
+workers/.dev.vars
+workers/.wrangler/
+workers/dist/
+
+*.log
