@@ -19,6 +19,21 @@ enum AppSettings {
         static let turnChime = "psybeam.turnChime"
         static let appearance = "psybeam.appearance"
         static let aiConsentGranted = "psybeam.aiConsentGranted"
+        static let pendingSessionId = "psybeam.pendingSessionId"
+        static let pendingReservedMinutes = "psybeam.pendingReservedMinutes"
+    }
+
+    /// A reserved realtime session that may not have been settled (e.g. the app
+    /// was killed mid-call). Settled on next launch so the unused reservation is
+    /// refunded. Cleared on a successful settle.
+    static var pendingSessionId: String? {
+        get { defaults.string(forKey: Key.pendingSessionId) }
+        set { defaults.set(newValue, forKey: Key.pendingSessionId) }
+    }
+
+    static var pendingReservedMinutes: Int {
+        get { defaults.integer(forKey: Key.pendingReservedMinutes) }
+        set { defaults.set(newValue, forKey: Key.pendingReservedMinutes) }
     }
 
     static var appearance: AppearanceMode {

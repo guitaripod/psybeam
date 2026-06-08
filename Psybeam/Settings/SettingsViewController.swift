@@ -1,11 +1,11 @@
 import AVFoundation
 import PsybeamKit
+import SwiftUI
 import UIKit
+import AICreditsUI
 
 final class SettingsViewController: UIViewController {
     private let viewModel: ConversationViewModel
-    private let auth: AuthService
-    private let worker: WorkerClient
     private let onBrightnessChanged: () -> Void
     var onDismiss: (() -> Void)?
 
@@ -17,9 +17,6 @@ final class SettingsViewController: UIViewController {
     private let minutesLabel = UILabel()
     private let micModeValue = UILabel()
     private var micModeTimer: Timer?
-    private let meterTrack = UIView()
-    private let meterFill = UIView()
-    private var meterWidth: NSLayoutConstraint?
     private let impact = UIImpactFeedbackGenerator(style: .light)
 
     private let brand = UIColor(red: 0.30, green: 0.62, blue: 1.0, alpha: 1)
@@ -27,13 +24,9 @@ final class SettingsViewController: UIViewController {
 
     init(
         viewModel: ConversationViewModel,
-        auth: AuthService,
-        worker: WorkerClient,
         onBrightnessChanged: @escaping () -> Void
     ) {
         self.viewModel = viewModel
-        self.auth = auth
-        self.worker = worker
         self.onBrightnessChanged = onBrightnessChanged
         super.init(nibName: nil, bundle: nil)
     }
@@ -51,7 +44,7 @@ final class SettingsViewController: UIViewController {
         view.layer.insertSublayer(gradient, at: 0)
         buildLayout()
         refreshLanguageButtons()
-        fetchQuota()
+        fetchBalance()
         refreshMicMode()
         applyAdaptiveChrome()
         registerForTraitChanges([UITraitUserInterfaceStyle.self]) { (self: SettingsViewController, _) in
@@ -68,6 +61,7 @@ final class SettingsViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         refreshMicMode()
+        fetchBalance()
         micModeTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
             self?.refreshMicMode()
         }
@@ -157,24 +151,16 @@ final class SettingsViewController: UIViewController {
         minutesLabel.text = "…"
         minutesLabel.font = .systemFont(ofSize: 16, weight: .semibold)
         minutesLabel.textColor = .secondaryLabel
-        let usageCard = addSection("Usage")
-        usageCard.addArrangedSubview(row(icon: "gauge.with.needle.fill", tint: .systemPurple, "Free minutes left today", control: minutesLabel))
-        usageCard.addArrangedSubview(meterRow())
-
-        let accountCard = addSection("Account")
-        let appleID = UILabel()
-        appleID.text = "Apple ID"
-        appleID.font = .systemFont(ofSize: 16, weight: .medium)
-        appleID.textColor = .secondaryLabel
-        accountCard.addArrangedSubview(row(icon: "apple.logo", tint: .label, "Signed in with", control: appleID))
-        accountCard.addArrangedSubview(divider())
-        let signOut = UIButton(type: .system)
-        signOut.setTitle("Sign Out", for: .normal)
-        signOut.contentHorizontalAlignment = .leading
-        signOut.titleLabel?.font = .systemFont(ofSize: 16, weight: .semibold)
-        signOut.tintColor = .systemRed
-        signOut.addTarget(self, action: #selector(signOutTapped), for: .touchUpInside)
-        accountCard.addArrangedSubview(row(icon: "rectangle.portrait.and.arrow.right", tint: .systemRed, control: signOut))
+        let buyButton = UIButton(type: .system)
+        buyButton.setTitle("Buy minutes", for: .normal)
+        buyButton.contentHorizontalAlignment = .leading
+        buyButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .semibold)
+        buyButton.tintColor = brand
+        buyButton.addTarget(self, action: #selector(openStore), for: .touchUpInside)
+        let minutesCard = addSection("Minutes")
+        minutesCard.addArrangedSubview(row(icon: "waveform", tint: .systemPurple, "Minutes remaining", control: minutesLabel))
+        minutesCard.addArrangedSubview(divider())
+        minutesCard.addArrangedSubview(row(icon: "creditcard.fill", tint: brand, control: buyButton))
 
         let privacyCard = addSection("Privacy")
         let privacy = UILabel()
@@ -297,43 +283,6 @@ final class SettingsViewController: UIViewController {
         return stack
     }
 
-    private func meterRow() -> UIView {
-        meterTrack.backgroundColor = .quaternarySystemFill
-        meterTrack.layer.cornerRadius = 4
-        meterTrack.alpha = 0
-        meterTrack.translatesAutoresizingMaskIntoConstraints = false
-        meterFill.backgroundColor = brand
-        meterFill.layer.cornerRadius = 4
-        meterFill.translatesAutoresizingMaskIntoConstraints = false
-        meterTrack.addSubview(meterFill)
-        let width = meterFill.widthAnchor.constraint(equalTo: meterTrack.widthAnchor, multiplier: 0.02)
-        meterWidth = width
-        NSLayoutConstraint.activate([
-            meterTrack.heightAnchor.constraint(equalToConstant: 8),
-            meterFill.leadingAnchor.constraint(equalTo: meterTrack.leadingAnchor),
-            meterFill.topAnchor.constraint(equalTo: meterTrack.topAnchor),
-            meterFill.bottomAnchor.constraint(equalTo: meterTrack.bottomAnchor),
-            width,
-        ])
-        let wrap = UIStackView(arrangedSubviews: [meterTrack])
-        wrap.isLayoutMarginsRelativeArrangement = true
-        wrap.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 0, leading: 16, bottom: 16, trailing: 16)
-        return wrap
-    }
-
-    private func setMeter(_ fraction: Double) {
-        meterWidth?.isActive = false
-        let clamped = max(0.02, min(1.0, fraction))
-        meterFill.backgroundColor = clamped < 0.15 ? .systemRed : brand
-        let width = meterFill.widthAnchor.constraint(equalTo: meterTrack.widthAnchor, multiplier: clamped)
-        meterWidth = width
-        width.isActive = true
-        UIView.animate(withDuration: 0.4, delay: 0, options: .curveEaseOut) {
-            self.meterTrack.alpha = 1
-            self.view.layoutIfNeeded()
-        }
-    }
-
     private func divider() -> UIView {
         let line = UIView()
         line.backgroundColor = .separator
@@ -408,16 +357,24 @@ final class SettingsViewController: UIViewController {
         return UIMenu(children: actions)
     }
 
-    private func fetchQuota() {
+    private func fetchBalance() {
+        minutesLabel.text = "\(AICreditsManager.store.balance) min"
         Task {
-            if let quota = await worker.quota() {
-                minutesLabel.text = "\(quota.minutesRemaining) / \(quota.dailyMinutes)"
-                let fraction = quota.dailyMinutes > 0 ? Double(quota.minutesRemaining) / Double(quota.dailyMinutes) : 0
-                setMeter(fraction)
-            } else {
-                minutesLabel.text = "—"
-            }
+            await AICreditsManager.store.refresh()
+            minutesLabel.text = "\(AICreditsManager.store.balance) min"
         }
+    }
+
+    @objc private func openStore() {
+        impact.impactOccurred()
+        let store = AICreditsManager.store
+        let host = UIHostingController(rootView: CreditStoreView().environmentObject(store))
+        Task { await store.loadCatalog() }
+        if let sheet = host.sheetPresentationController {
+            sheet.detents = [.medium(), .large()]
+            sheet.prefersGrabberVisible = true
+        }
+        present(host, animated: true)
     }
 
     private func micModeRow() -> UIView {
@@ -486,7 +443,6 @@ final class SettingsViewController: UIViewController {
         dismiss(animated: true)
     }
 
-    @objc private func signOutTapped() { auth.signOut(); dismiss(animated: true) }
     @objc private func dismissSelf() { dismiss(animated: true) }
 
     private static func endonym(_ code: String) -> String {

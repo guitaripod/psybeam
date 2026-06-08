@@ -1,21 +1,17 @@
-import AuthenticationServices
 import AVFAudio
 import Combine
 import PsybeamKit
+import SwiftUI
 import UIKit
+import AICreditsUI
 
 final class ConversationViewController: UIViewController {
     private let viewModel: ConversationViewModel
-    private let auth: AuthService
-    private let worker: WorkerClient
     private let location = LocationLanguageService()
     private var cancellables = Set<AnyCancellable>()
 
     private let visualizer = WaveVisualizerView()
     private let convoRoot = UIView()
-    private let authRoot = UIView()
-
-    private let signInButton = ASAuthorizationAppleIDButton(type: .signIn, style: .whiteOutline)
     private let statusLabel = UILabel()
     private let promptLabel = UILabel()
     private let translatedLabel = UILabel()
@@ -50,10 +46,8 @@ final class ConversationViewController: UIViewController {
     private var needsConsentOnAppear = false
     private var micDenied = false
 
-    init(viewModel: ConversationViewModel, auth: AuthService, worker: WorkerClient) {
+    init(viewModel: ConversationViewModel) {
         self.viewModel = viewModel
-        self.auth = auth
-        self.worker = worker
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -101,20 +95,14 @@ final class ConversationViewController: UIViewController {
         view.backgroundColor = .black
         layoutVisualizer()
         layoutConvo()
-        layoutAuth()
         bind()
         if !applyPreviewIfNeeded() {
-            let signedIn = auth.isSignedIn
-            authRoot.alpha = signedIn ? 0 : 1
-            convoRoot.alpha = signedIn ? 1 : 0
-            if signedIn {
-                if AppSettings.aiConsentGranted {
-                    startSession()
-                } else {
-                    needsConsentOnAppear = true
-                }
+            convoRoot.alpha = 1
+            if AppSettings.aiConsentGranted {
+                startSession()
+            } else {
+                needsConsentOnAppear = true
             }
-            auth.restore()
         }
     }
 
@@ -122,7 +110,6 @@ final class ConversationViewController: UIViewController {
     private func applyPreviewIfNeeded() -> Bool {
         #if DEBUG
         guard let demo = ProcessInfo.processInfo.environment["PSYBEAM_DEMO"] else { return false }
-        authRoot.alpha = 0
         convoRoot.alpha = 1
         updateLanguages(LanguagePair(traveler: "en", local: "fr"))
         switch demo {
@@ -149,10 +136,6 @@ final class ConversationViewController: UIViewController {
     }
 
     private func bind() {
-        auth.state
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] state in self?.render(auth: state) }
-            .store(in: &cancellables)
         viewModel.travelerLeg.statePublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] state in self?.render(legState: state, speaker: .traveler) }
@@ -204,24 +187,9 @@ final class ConversationViewController: UIViewController {
                 self?.applyMaxBrightness()
                 self?.primeHaptics()
                 self?.recheckMicPermission()
-                if self?.auth.isSignedIn == true, AppSettings.aiConsentGranted { self?.viewModel.warmUp() }
+                if AppSettings.aiConsentGranted { self?.viewModel.warmUp() }
             }
             .store(in: &cancellables)
-    }
-
-    private func render(auth state: AuthState) {
-        let signedIn: Bool
-        switch state {
-        case .signedIn: signedIn = true
-        default: signedIn = false
-        }
-        if signedIn {
-            enterConversation()
-        }
-        UIView.animate(withDuration: 0.45, delay: 0, options: .curveEaseInOut) {
-            self.authRoot.alpha = signedIn ? 0 : 1
-            self.convoRoot.alpha = signedIn ? 1 : 0
-        }
     }
 
     private func render(legState state: TranslationState, speaker: Side) {
@@ -244,7 +212,8 @@ final class ConversationViewController: UIViewController {
             setStatus(String(localized: "RECONNECTING"), color: amber)
         case .quotaExhausted:
             visualizer.apply(.error)
-            setStatus(String(localized: "NO MINUTES LEFT TODAY"), color: errorRed)
+            setStatus(String(localized: "OUT OF MINUTES"), color: errorRed)
+            presentStoreIfPossible()
         case .offline:
             visualizer.apply(.error)
             setStatus(String(localized: "NO CONNECTION"), color: errorRed)
@@ -306,21 +275,25 @@ final class ConversationViewController: UIViewController {
         }
     }
 
-    /// Consent gate: no session is opened to OpenAI until the user agrees, and a
-    /// withdrawal in Settings re-presents this before any further audio.
-    private func enterConversation() {
-        if AppSettings.aiConsentGranted {
-            startSession()
-        } else {
-            presentConsent()
-        }
-    }
-
     private func startSession() {
         requestMicPermission()
         location.start()
         viewModel.start()
         viewModel.warmUp()
+    }
+
+    /// On a 402 from /start (out of credits) the leg surfaces `.quotaExhausted`;
+    /// present the credit store so the user can top up minutes.
+    private func presentStoreIfPossible() {
+        guard presentedViewController == nil else { return }
+        let store = AICreditsManager.store
+        let host = UIHostingController(rootView: CreditStoreView().environmentObject(store))
+        Task { await store.loadCatalog() }
+        if let sheet = host.sheetPresentationController {
+            sheet.detents = [.medium(), .large()]
+            sheet.prefersGrabberVisible = true
+        }
+        present(host, animated: true)
     }
 
     private func presentConsent() {
@@ -332,7 +305,7 @@ final class ConversationViewController: UIViewController {
             self?.dismiss(animated: true) { self?.startSession() }
         }
         consent.onDecline = { [weak self] in
-            self?.dismiss(animated: true) { self?.auth.signOut() }
+            self?.dismiss(animated: true)
         }
         if let sheet = consent.sheetPresentationController {
             sheet.detents = [.large()]
@@ -617,8 +590,6 @@ final class ConversationViewController: UIViewController {
         visualizer.setPaused(true)
         let settings = SettingsViewController(
             viewModel: viewModel,
-            auth: auth,
-            worker: worker,
             onBrightnessChanged: { [weak self] in self?.applyMaxBrightness() }
         )
         settings.onDismiss = { [weak self] in self?.visualizer.setPaused(false) }
@@ -642,42 +613,6 @@ final class ConversationViewController: UIViewController {
         } else {
             apply()
         }
-    }
-
-    private func layoutAuth() {
-        authRoot.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(authRoot)
-        pin(authRoot)
-
-        let title = UILabel()
-        title.text = "Psybeam"
-        title.font = .systemFont(ofSize: 40, weight: .bold)
-        title.textColor = .white
-        title.textAlignment = .center
-        let subtitle = UILabel()
-        subtitle.text = String(localized: "You speak. They hear it. They reply. You hear it.")
-        subtitle.font = .preferredFont(forTextStyle: .body)
-        subtitle.textColor = UIColor.white.withAlphaComponent(0.7)
-        subtitle.numberOfLines = 0
-        subtitle.textAlignment = .center
-
-        signInButton.addTarget(self, action: #selector(signInTapped), for: .touchUpInside)
-        signInButton.cornerRadius = 14
-        signInButton.translatesAutoresizingMaskIntoConstraints = false
-        signInButton.heightAnchor.constraint(equalToConstant: 52).isActive = true
-
-        let stack = UIStackView(arrangedSubviews: [title, subtitle, signInButton])
-        stack.axis = .vertical
-        stack.alignment = .fill
-        stack.spacing = 16
-        stack.setCustomSpacing(36, after: subtitle)
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        authRoot.addSubview(stack)
-        NSLayoutConstraint.activate([
-            stack.centerYAnchor.constraint(equalTo: authRoot.centerYAnchor),
-            stack.leadingAnchor.constraint(equalTo: authRoot.leadingAnchor, constant: 36),
-            stack.trailingAnchor.constraint(equalTo: authRoot.trailingAnchor, constant: -36),
-        ])
     }
 
     private func updateLanguages(_ pair: LanguagePair) {
@@ -716,8 +651,6 @@ final class ConversationViewController: UIViewController {
         micDenied = false
         render(legState: .idle, speaker: .traveler)
     }
-
-    @objc private func signInTapped() { auth.signIn() }
 
     private static func endonym(_ code: String) -> String {
         Locale(identifier: code).localizedString(forLanguageCode: code)?.capitalized ?? code.uppercased()

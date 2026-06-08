@@ -41,6 +41,9 @@ packages:
   WebRTC:
     url: https://github.com/stasel/WebRTC.git
     from: "147.0.0"
+  AICredits:
+    url: git@github.com:guitaripod/AICredits.git
+    from: "1.1.0"
 
 targets:
   Psybeam:
@@ -57,6 +60,12 @@ targets:
         product: PsybeamKit
       - package: GRDB
       - package: WebRTC
+      - package: AICredits
+        product: AICreditsCore
+      - package: AICredits
+        product: AICreditsRevenueCat
+      - package: AICredits
+        product: AICreditsUI
     info:
       path: Psybeam/Info.plist
       properties:

@@ -23,13 +23,15 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     private static func makeRoot() -> UIViewController {
-        let baseURL = URL(string: Secrets.workerBaseURL) ?? URL(string: "https://example.com")!
-        let keychain = KeychainStore.shared
-        let auth = AuthService(baseURL: baseURL, keychain: keychain)
-        let worker = WorkerClient(baseURL: baseURL, keychain: keychain)
-        let travelerCall = RealtimeCallService(translationProvider: worker)
-        let localCall = RealtimeCallService(translationProvider: worker)
+        let provider = CreditsTranslationProvider(
+            client: AICreditsManager.shared.client, baseURL: AICreditsManager.shared.baseURL)
+        let travelerCall = RealtimeCallService(translationProvider: provider)
+        let localCall = RealtimeCallService(translationProvider: provider)
         let viewModel = ConversationViewModel(travelerCall: travelerCall, localCall: localCall)
-        return ConversationViewController(viewModel: viewModel, auth: auth, worker: worker)
+        Task {
+            await AICreditsManager.store.bootstrap()
+            await provider.settlePendingIfNeeded()
+        }
+        return ConversationViewController(viewModel: viewModel)
     }
 }
