@@ -38,6 +38,7 @@ xcodegen regenerates `Psybeam.xcodeproj` from `project.yml` on every build, so:
 scripts/setup.sh         # one-time: .env.local + Secrets.swift + xcodegen + spm
 scripts/ios-build.sh     # device build, with staleness assertion
 scripts/ios-deploy.sh    # build + install + relaunch on PSYBEAM_DEVICE_UDID
+scripts/ios-test.sh      # PsybeamKit (SPM) + hosted iOS TranslationLeg tests on a simulator
 ```
 
 `ios-build.sh` runs `xcodegen generate` first, captures the real xcodebuild exit code via `pipefail`, surfaces Swift 6 concurrency errors, and asserts no `.swift` is newer than the built binary. Adding/removing any file → just run `ios-build.sh`. Never call `xcodebuild` raw.

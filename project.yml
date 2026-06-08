@@ -90,13 +90,35 @@ targets:
         INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.travel
         INFOPLIST_KEY_UIRequiresFullScreen: YES
 
+  PsybeamTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - PsybeamTests
+    dependencies:
+      - target: Psybeam
+      - package: PsybeamKit
+        product: PsybeamKit
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: ${PSYBEAM_BUNDLE_ID}.tests
+        TEST_HOST: $(BUILT_PRODUCTS_DIR)/Psybeam.app/Psybeam
+        BUNDLE_LOADER: $(TEST_HOST)
+        SWIFT_STRICT_CONCURRENCY: complete
+
 schemes:
   Psybeam:
     build:
       targets:
         Psybeam: all
+        PsybeamTests: [test]
     run:
       config: Debug
+    test:
+      config: Debug
+      targets:
+        - PsybeamTests
     profile:
       config: Release
     analyze:
