@@ -20,8 +20,9 @@ actor RealtimeCallService: RealtimeCallProviding {
     private var coordinator: CallCoordinator?
     private var sessionId: String?
     private var currentSessionId: String?
-    private var connectStart: Date?
     private var didActivateMic = false
+    private var activeSeconds: TimeInterval = 0
+    private var micActiveStart: Date?
     private var levelTask: Task<Void, Never>?
 
     nonisolated(unsafe) private static let sharedFactory: RTCPeerConnectionFactory = {
@@ -51,8 +52,9 @@ actor RealtimeCallService: RealtimeCallProviding {
         let token = try await translationProvider.requestSession(pair: spec.pair, direction: spec.direction)
 
         currentSessionId = token.sessionId
-        connectStart = Date()
         didActivateMic = false
+        activeSeconds = 0
+        micActiveStart = nil
 
         do {
             Self.configureAudioSession()
@@ -130,7 +132,13 @@ actor RealtimeCallService: RealtimeCallProviding {
 
     func setMicActive(_ active: Bool) {
         audioTrack?.isEnabled = active
-        if active { didActivateMic = true }
+        if active {
+            didActivateMic = true
+            if micActiveStart == nil { micActiveStart = Date() }
+        } else if let start = micActiveStart {
+            activeSeconds += Date().timeIntervalSince(start)
+            micActiveStart = nil
+        }
     }
 
     func setTurn(_ side: Side) async {}
@@ -162,12 +170,19 @@ actor RealtimeCallService: RealtimeCallProviding {
             await translationProvider.reportUsage(sessionId: currentSessionId, minutesUsed: minutes)
         }
         currentSessionId = nil
-        connectStart = nil
+        micActiveStart = nil
+        activeSeconds = 0
     }
 
+    /// Billed minutes = the time the mic was actually live (hold-to-talk windows),
+    /// not idle warm-connection time. Each leg only accrues while its button is
+    /// held, so the two legs sum to real conversation minutes rather than 2x.
     private func elapsedMinutes() -> Int {
-        guard didActivateMic, let connectStart else { return 0 }
-        return max(1, Int(ceil(Date().timeIntervalSince(connectStart) / 60.0)))
+        guard didActivateMic else { return 0 }
+        var total = activeSeconds
+        if let micActiveStart { total += Date().timeIntervalSince(micActiveStart) }
+        guard total > 0 else { return 0 }
+        return max(1, Int(ceil(total / 60.0)))
     }
 
     private func makeOffer(pc: RTCPeerConnection, constraints: RTCMediaConstraints) async throws -> String {
