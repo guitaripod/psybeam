@@ -16,3 +16,21 @@ public enum TranslationState: Sendable, Equatable {
     case offline
     case error(TranslationError)
 }
+
+public extension TranslationState {
+    /// Maps a realtime-leg failure to the UI state, with a strict honesty rule:
+    /// a cause-specific state is returned only when the cause is actually known.
+    /// `.network` becomes `.offline` only when `isOnline` is false (the OS
+    /// confirmed no path) — otherwise it's a neutral retry, never a guess.
+    /// `.cancelled` returns nil (deliberate teardown, nothing to show).
+    static func failure(for error: CallError, isOnline: Bool) -> TranslationState? {
+        switch error {
+        case .quota: .quotaExhausted
+        case .permission(let permission): .permissionDenied(permission)
+        case .unsupportedLanguage: .error(.unsupportedLanguage)
+        case .server(let message): .error(.server(message))
+        case .network: isOnline ? .error(.network) : .offline
+        case .cancelled: nil
+        }
+    }
+}

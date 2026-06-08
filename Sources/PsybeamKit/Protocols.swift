@@ -4,7 +4,9 @@
 public protocol RealtimeCallProviding: Sendable {
     var states: AsyncStream<CallState> { get }
     var transcripts: AsyncStream<TranscriptDelta> { get }
+    var levels: AsyncStream<Float> { get }
     func connect(spec: TranslationSessionSpec) async throws
+    func setMicActive(_ active: Bool) async
     func setTurn(_ side: Side) async
     func bargeIn() async
     func hangUp() async
