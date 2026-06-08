@@ -19,9 +19,11 @@
 	<key>CFBundleShortVersionString</key>
 	<string>1.0.0</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>202606081943</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<key>NSCameraUsageDescription</key>
+	<string>Psybeam does not take photos or videos. Camera access is requested only by the real-time audio framework and is never used.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Psybeam suggests the local language for where you are as you cross borders.</string>
 	<key>NSMicrophoneUsageDescription</key>

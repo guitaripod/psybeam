@@ -85,6 +85,7 @@ targets:
           - UIInterfaceOrientationPortrait
         NSMicrophoneUsageDescription: Psybeam uses the microphone to capture speech for live voice translation.
         NSLocationWhenInUseUsageDescription: Psybeam suggests the local language for where you are as you cross borders.
+        NSCameraUsageDescription: Psybeam does not take photos or videos. Camera access is requested only by the real-time audio framework and is never used.
         ITSAppUsesNonExemptEncryption: false
         UIRequiresFullScreen: true
     entitlements:
