@@ -1,3 +1,4 @@
+import AVFoundation
 import PsybeamKit
 import UIKit
 
@@ -14,6 +15,8 @@ final class SettingsViewController: UIViewController {
     private let youButton = UIButton(type: .system)
     private let themButton = UIButton(type: .system)
     private let minutesLabel = UILabel()
+    private let micModeValue = UILabel()
+    private var micModeTimer: Timer?
     private let meterTrack = UIView()
     private let meterFill = UIView()
     private var meterWidth: NSLayoutConstraint?
@@ -49,6 +52,7 @@ final class SettingsViewController: UIViewController {
         buildLayout()
         refreshLanguageButtons()
         fetchQuota()
+        refreshMicMode()
         applyAdaptiveChrome()
         registerForTraitChanges([UITraitUserInterfaceStyle.self]) { (self: SettingsViewController, _) in
             self.applyAdaptiveChrome()
@@ -61,8 +65,18 @@ final class SettingsViewController: UIViewController {
         gradient.frame = view.bounds
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        refreshMicMode()
+        micModeTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+            self?.refreshMicMode()
+        }
+    }
+
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
+        micModeTimer?.invalidate()
+        micModeTimer = nil
         if presentingViewController == nil || isBeingDismissed { onDismiss?() }
     }
 
@@ -128,6 +142,13 @@ final class SettingsViewController: UIViewController {
         languageCard.addArrangedSubview(divider())
         languageCard.addArrangedSubview(row(icon: "location.fill", tint: .systemTeal, "Auto-detect from location", control: toggle(AppSettings.autoDetectLocation, #selector(autoChanged))))
 
+        let micCard = addSection("Microphone")
+        micCard.addArrangedSubview(micModeRow())
+        micCard.addArrangedSubview(divider())
+        micCard.addArrangedSubview(caption("Voice Isolation locks onto the closest voice and cuts background noise — best in cafés, streets, and markets. iOS only lets you switch it yourself: tap it above, or Control Center → Mic Mode.", icon: "sparkles", tint: .systemTeal))
+        micCard.addArrangedSubview(divider())
+        micCard.addArrangedSubview(row(icon: "bell.fill", tint: .systemPink, "Chime on their turn", control: toggle(AppSettings.turnChime, #selector(chimeChanged))))
+
         let displayCard = addSection("Display")
         displayCard.addArrangedSubview(row(icon: "sun.max.fill", tint: .systemOrange, "Keep screen bright", control: toggle(AppSettings.keepScreenBright, #selector(brightChanged))))
         displayCard.addArrangedSubview(divider())
@@ -160,8 +181,16 @@ final class SettingsViewController: UIViewController {
         privacy.numberOfLines = 0
         privacy.font = .systemFont(ofSize: 13)
         privacy.textColor = .secondaryLabel
-        privacy.text = "Speech is translated by OpenAI in the cloud. Your conversation transcript stays on this device — we don't store it on our servers."
+        privacy.text = String(localized: "Speech is translated by AI in the cloud. Your conversation transcript stays on this device — we don't store it on our servers.")
         privacyCard.addArrangedSubview(row(icon: "lock.fill", tint: .systemGreen, control: privacy))
+        privacyCard.addArrangedSubview(divider())
+        let revoke = UIButton(type: .system)
+        revoke.setTitle(String(localized: "Withdraw cloud AI consent"), for: .normal)
+        revoke.contentHorizontalAlignment = .leading
+        revoke.titleLabel?.font = .systemFont(ofSize: 16, weight: .semibold)
+        revoke.tintColor = .systemRed
+        revoke.addTarget(self, action: #selector(revokeConsent), for: .touchUpInside)
+        privacyCard.addArrangedSubview(row(icon: "xmark.shield.fill", tint: .systemRed, control: revoke))
 
         let footer = UILabel()
         let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
@@ -391,8 +420,55 @@ final class SettingsViewController: UIViewController {
         }
     }
 
+    private func micModeRow() -> UIView {
+        micModeValue.font = .systemFont(ofSize: 16, weight: .semibold)
+        micModeValue.textColor = .secondaryLabel
+        let chevron = UIImageView(image: UIImage(systemName: "chevron.right", withConfiguration: UIImage.SymbolConfiguration(pointSize: 12, weight: .semibold)))
+        chevron.tintColor = .tertiaryLabel
+        let trailing = UIStackView(arrangedSubviews: [micModeValue, chevron])
+        trailing.spacing = 5
+        trailing.alignment = .center
+        let r = row(icon: "waveform", tint: brand, "Voice Isolation", control: trailing)
+        r.isUserInteractionEnabled = true
+        r.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(openMicModes)))
+        return r
+    }
+
+    private func caption(_ text: String, icon: String, tint: UIColor) -> UIView {
+        let label = UILabel()
+        label.text = text
+        label.numberOfLines = 0
+        label.font = .systemFont(ofSize: 13)
+        label.textColor = .secondaryLabel
+        let stack = UIStackView(arrangedSubviews: [iconTile(icon, tint), label])
+        stack.alignment = .top
+        stack.spacing = 12
+        stack.isLayoutMarginsRelativeArrangement = true
+        stack.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 12, leading: 16, bottom: 14, trailing: 16)
+        return stack
+    }
+
+    private func refreshMicMode() {
+        micModeValue.text = Self.micModeName(AVCaptureDevice.activeMicrophoneMode)
+    }
+
+    private static func micModeName(_ mode: AVCaptureDevice.MicrophoneMode) -> String {
+        switch mode {
+        case .voiceIsolation: "Voice Isolation"
+        case .wideSpectrum: "Wide Spectrum"
+        case .standard: "Standard"
+        @unknown default: "Standard"
+        }
+    }
+
+    @objc private func openMicModes() {
+        impact.impactOccurred()
+        AVCaptureDevice.showSystemUserInterface(.microphoneModes)
+    }
+
     @objc private func autoChanged(_ sender: UISwitch) { impact.impactOccurred(); AppSettings.autoDetectLocation = sender.isOn }
     @objc private func brightChanged(_ sender: UISwitch) { impact.impactOccurred(); AppSettings.keepScreenBright = sender.isOn; onBrightnessChanged() }
+    @objc private func chimeChanged(_ sender: UISwitch) { impact.impactOccurred(); AppSettings.turnChime = sender.isOn }
 
     @objc private func appearanceChanged(_ sender: UISegmentedControl) {
         let mode = AppearanceMode(rawValue: sender.selectedSegmentIndex) ?? .system
@@ -401,6 +477,13 @@ final class SettingsViewController: UIViewController {
         UIView.animate(withDuration: 0.3) {
             self.view.window?.overrideUserInterfaceStyle = UIUserInterfaceStyle(rawValue: mode.rawValue) ?? .unspecified
         }
+    }
+
+    @objc private func revokeConsent() {
+        impact.impactOccurred()
+        AppSettings.aiConsentGranted = false
+        viewModel.end()
+        dismiss(animated: true)
     }
 
     @objc private func signOutTapped() { auth.signOut(); dismiss(animated: true) }
