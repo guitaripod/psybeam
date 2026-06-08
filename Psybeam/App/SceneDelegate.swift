@@ -11,6 +11,8 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     ) {
         guard let windowScene = scene as? UIWindowScene else { return }
 
+        NetworkMonitor.shared.start()
+
         let window = UIWindow(windowScene: windowScene)
         window.overrideUserInterfaceStyle = UIUserInterfaceStyle(rawValue: AppSettings.appearance.rawValue) ?? .unspecified
         window.rootViewController = Self.makeRoot()

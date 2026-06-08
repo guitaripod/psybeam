@@ -17,14 +17,16 @@ final class TranslationLeg {
     let speaker: Side
     var pair: LanguagePair
 
-    private let call: RealtimeCallService
+    private let call: any RealtimeCallProviding
     private var connected = false
     private var holding = false
-    private var connectTask: Task<Bool, Never>?
+    private var connectTask: Task<CallError?, Never>?
+    private var armingTask: Task<Void, Never>?
+    private var reconnectTimer: Task<Void, Never>?
     private var text = ""
     private var source = ""
 
-    init(call: RealtimeCallService, speaker: Side, pair: LanguagePair) {
+    init(call: any RealtimeCallProviding, speaker: Side, pair: LanguagePair) {
         self.call = call
         self.speaker = speaker
         self.pair = pair
@@ -37,22 +39,36 @@ final class TranslationLeg {
         Task { _ = await ensureConnected() }
     }
 
+    /// Emit `.listening` only once the mic is genuinely live (`setMicActive`
+    /// returned), never optimistically — a silently-dead warm session must not
+    /// look like it's recording. The interim "arming"/"connecting" state shows
+    /// only if that takes longer than a frame's worth of grace, so the common
+    /// warm path goes straight to listening and still feels instant.
     func holdDown() {
         holding = true
         text = ""
         source = ""
         textPublisher.send("")
         sourcePublisher.send("")
-        statePublisher.send(connected ? .listening(turn: speaker, level: 0.7) : .processing(from: speaker))
+        armingTask?.cancel()
+        armingTask = Task {
+            try? await Task.sleep(for: .milliseconds(220))
+            guard !Task.isCancelled, self.holding else { return }
+            self.statePublisher.send(self.connected ? .armed(turn: self.speaker) : .processing(from: self.speaker))
+        }
         Task {
-            let ready = await ensureConnected()
+            let failure = await ensureConnected()
             guard holding else { return }
-            if ready {
-                await call.setMicActive(true)
-                statePublisher.send(.listening(turn: speaker, level: 0.7))
-            } else {
-                statePublisher.send(.error(.network))
+            armingTask?.cancel()
+            if let failure {
+                if let state = TranslationState.failure(for: failure, isOnline: NetworkMonitor.shared.isOnline) {
+                    statePublisher.send(state)
+                }
                 holding = false
+            } else {
+                await call.setMicActive(true)
+                guard holding else { return }
+                statePublisher.send(.listening(turn: speaker, level: 0))
             }
         }
     }
@@ -60,6 +76,7 @@ final class TranslationLeg {
     func holdUp() {
         guard holding else { return }
         holding = false
+        armingTask?.cancel()
         statePublisher.send(.idle)
         Task { await call.setMicActive(false) }
     }
@@ -68,6 +85,8 @@ final class TranslationLeg {
         pair = newPair
         connectTask?.cancel()
         connectTask = nil
+        reconnectTimer?.cancel()
+        reconnectTimer = nil
         connected = false
         statePublisher.send(.idle)
         Task {
@@ -79,30 +98,38 @@ final class TranslationLeg {
     func end() {
         connectTask?.cancel()
         connectTask = nil
+        armingTask?.cancel()
+        reconnectTimer?.cancel()
+        reconnectTimer = nil
         connected = false
         Task { await call.hangUp() }
     }
 
-    private func ensureConnected() async -> Bool {
-        if connected { return true }
+    /// Returns nil on success, or the precise `CallError` so the UI can show an
+    /// honest, cause-specific state — never a guessed one.
+    private func ensureConnected() async -> CallError? {
+        if connected { return nil }
         if let connectTask { return await connectTask.value }
         let call = call
         let speaker = speaker
         let pair = pair
-        let task = Task { () -> Bool in
+        let task = Task { () -> CallError? in
             do {
                 try await call.connect(spec: TranslationSessionSpec(pair: pair, direction: speaker, sessionId: UUID().uuidString))
-                return true
+                return nil
+            } catch let error as CallError {
+                AppLogger.shared.error("leg(\(speaker)) connect failed: \(error)", category: .session)
+                return error
             } catch {
                 AppLogger.shared.error("leg(\(speaker)) connect failed: \(error)", category: .session)
-                return false
+                return .network
             }
         }
         connectTask = task
-        let ok = await task.value
+        let result = await task.value
         connectTask = nil
-        connected = ok
-        return ok
+        connected = (result == nil)
+        return result
     }
 
     private func observe() {
@@ -116,15 +143,43 @@ final class TranslationLeg {
 
     private func handle(callState: CallState) {
         switch callState {
-        case .failed:
-            statePublisher.send(.error(.network))
-            connected = false
+        case .live:
+            connected = true
+            reconnectTimer?.cancel()
+            reconnectTimer = nil
         case .reconnecting:
             statePublisher.send(.reconnecting)
+            startReconnectDeadline()
+        case .failed(let error):
+            reconnectTimer?.cancel()
+            reconnectTimer = nil
+            connected = false
+            if holding, let state = TranslationState.failure(for: error, isOnline: NetworkMonitor.shared.isOnline) {
+                statePublisher.send(state)
+                holding = false
+            }
         case .ended:
             connected = false
+            reconnectTimer?.cancel()
+            reconnectTimer = nil
         default:
             break
+        }
+    }
+
+    /// ICE reconnect is routine, but it must not hang amber forever: if it hasn't
+    /// recovered in 6s, tear the peer down so the next hold mints fresh, and show
+    /// an honest failure (offline only if the OS confirms no path).
+    private func startReconnectDeadline() {
+        reconnectTimer?.cancel()
+        reconnectTimer = Task { [weak self] in
+            try? await Task.sleep(for: .seconds(6))
+            guard let self, !Task.isCancelled else { return }
+            self.connected = false
+            await self.call.hangUp()
+            guard self.holding else { return }
+            self.statePublisher.send(NetworkMonitor.shared.isOnline ? .error(.network) : .offline)
+            self.holding = false
         }
     }
 

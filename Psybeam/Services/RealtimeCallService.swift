@@ -48,13 +48,7 @@ actor RealtimeCallService: RealtimeCallProviding {
 
     func connect(spec: TranslationSessionSpec) async throws {
         stateCont.yield(.connecting)
-        let token: SessionToken
-        do {
-            token = try await translationProvider.requestSession(pair: spec.pair, direction: spec.direction)
-        } catch let error as CallError {
-            stateCont.yield(.failed(error))
-            throw error
-        }
+        let token = try await translationProvider.requestSession(pair: spec.pair, direction: spec.direction)
 
         currentSessionId = token.sessionId
         connectStart = Date()
@@ -96,7 +90,6 @@ actor RealtimeCallService: RealtimeCallProviding {
         } catch {
             cleanupPeer()
             await reportAndClear(minutes: 0)
-            stateCont.yield(.failed(.network))
             throw error
         }
 
@@ -223,6 +216,11 @@ actor RealtimeCallService: RealtimeCallProviding {
         return answer
     }
 
+    /// `.voiceChat` engages Apple's Voice-Processing I/O unit, which runs hardware
+    /// echo-cancellation, noise-suppression and auto-gain — and is what makes the
+    /// system Voice Isolation mic mode available to the user for noisy rooms.
+    /// WebRTC's software-APM `goog*` constraints are intentionally NOT set: VPIO
+    /// owns the processing on iOS, so those constraints are inert here.
     private static func configureAudioSession() {
         let config = RTCAudioSessionConfiguration.webRTC()
         config.category = AVAudioSession.Category.playAndRecord.rawValue
