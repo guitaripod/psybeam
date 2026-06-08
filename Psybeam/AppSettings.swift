@@ -16,12 +16,21 @@ enum AppSettings {
         static let localLanguage = "psybeam.localLanguage"
         static let autoDetectLocation = "psybeam.autoDetectLocation"
         static let keepScreenBright = "psybeam.keepScreenBright"
+        static let turnChime = "psybeam.turnChime"
         static let appearance = "psybeam.appearance"
+        static let aiConsentGranted = "psybeam.aiConsentGranted"
     }
 
     static var appearance: AppearanceMode {
         get { AppearanceMode(rawValue: defaults.integer(forKey: Key.appearance)) ?? .system }
         set { defaults.set(newValue.rawValue, forKey: Key.appearance) }
+    }
+
+    /// Pre-audio consent to cloud third-party-AI translation (App Review 5.1.2(i)).
+    /// Defaults to false — no audio reaches OpenAI until this is granted.
+    static var aiConsentGranted: Bool {
+        get { defaults.bool(forKey: Key.aiConsentGranted) }
+        set { defaults.set(newValue, forKey: Key.aiConsentGranted) }
     }
 
     static var travelerLanguage: String {
@@ -42,5 +51,10 @@ enum AppSettings {
     static var keepScreenBright: Bool {
         get { (defaults.object(forKey: Key.keepScreenBright) as? Bool) ?? true }
         set { defaults.set(newValue, forKey: Key.keepScreenBright) }
+    }
+
+    static var turnChime: Bool {
+        get { (defaults.object(forKey: Key.turnChime) as? Bool) ?? true }
+        set { defaults.set(newValue, forKey: Key.turnChime) }
     }
 }

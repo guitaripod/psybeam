@@ -17,8 +17,10 @@ final class ConversationViewController: UIViewController {
 
     private let signInButton = ASAuthorizationAppleIDButton(type: .signIn, style: .whiteOutline)
     private let statusLabel = UILabel()
+    private let promptLabel = UILabel()
     private let translatedLabel = UILabel()
     private let sourceLabel = UILabel()
+    private let cloudBadge = UILabel()
     private let gearGlass = UIVisualEffectView()
     private let gearIcon = UIImageView()
     private let languageBarHost = UIView()
@@ -30,16 +32,23 @@ final class ConversationViewController: UIViewController {
 
     private let travelerAccent = UIColor(red: 0.34, green: 0.74, blue: 1.0, alpha: 1)
     private let localAccent = UIColor(red: 0.42, green: 1.0, blue: 0.72, alpha: 1)
-    private lazy var meButton = TalkButton(accent: travelerAccent, hint: "HOLD · YOU", micSymbol: "mic.fill")
-    private lazy var themButton = TalkButton(accent: localAccent, hint: "HOLD · THEM", micSymbol: "person.wave.2.fill")
+    private let errorRed = UIColor(red: 1.0, green: 0.32, blue: 0.36, alpha: 1)
+    private let amber = UIColor(red: 1.0, green: 0.66, blue: 0.22, alpha: 1)
+    private lazy var meButton = TalkButton(accent: travelerAccent, hint: String(localized: "HOLD · YOU"), micSymbol: "mic.fill")
+    private lazy var themButton = TalkButton(accent: localAccent, hint: String(localized: "HOLD · THEM"), micSymbol: "person.wave.2.fill")
 
     private let impact = UIImpactFeedbackGenerator(style: .medium)
     private let release = UIImpactFeedbackGenerator(style: .soft)
     private let notify = UINotificationFeedbackGenerator()
+    private let earcon = Earcon()
     private var savedBrightness: CGFloat?
     private var travelerText = ""
     private var localText = ""
     private var displayAudience: Side = .traveler
+    private var hasTranslation = false
+    private var turnProducedText = false
+    private var needsConsentOnAppear = false
+    private var micDenied = false
 
     init(viewModel: ConversationViewModel, auth: AuthService, worker: WorkerClient) {
         self.viewModel = viewModel
@@ -57,6 +66,10 @@ final class ConversationViewController: UIViewController {
         super.viewDidAppear(animated)
         applyMaxBrightness()
         primeHaptics()
+        if needsConsentOnAppear {
+            needsConsentOnAppear = false
+            presentConsent()
+        }
     }
 
     private func primeHaptics() {
@@ -95,10 +108,11 @@ final class ConversationViewController: UIViewController {
             authRoot.alpha = signedIn ? 0 : 1
             convoRoot.alpha = signedIn ? 1 : 0
             if signedIn {
-                requestMicPermission()
-                location.start()
-                viewModel.start()
-                viewModel.warmUp()
+                if AppSettings.aiConsentGranted {
+                    startSession()
+                } else {
+                    needsConsentOnAppear = true
+                }
             }
             auth.restore()
         }
@@ -124,6 +138,9 @@ final class ConversationViewController: UIViewController {
         visualizer.setLevel(0.6)
         if demo == "settings" {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) { [weak self] in self?.openSettings() }
+        }
+        if demo == "consent" {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) { [weak self] in self?.presentConsent() }
         }
         return true
         #else
@@ -186,7 +203,8 @@ final class ConversationViewController: UIViewController {
                 self?.visualizer.setPaused(false)
                 self?.applyMaxBrightness()
                 self?.primeHaptics()
-                if self?.auth.isSignedIn == true { self?.viewModel.warmUp() }
+                self?.recheckMicPermission()
+                if self?.auth.isSignedIn == true, AppSettings.aiConsentGranted { self?.viewModel.warmUp() }
             }
             .store(in: &cancellables)
     }
@@ -198,10 +216,7 @@ final class ConversationViewController: UIViewController {
         default: signedIn = false
         }
         if signedIn {
-            requestMicPermission()
-            location.start()
-            viewModel.start()
-            viewModel.warmUp()
+            enterConversation()
         }
         UIView.animate(withDuration: 0.45, delay: 0, options: .curveEaseInOut) {
             self.authRoot.alpha = signedIn ? 0 : 1
@@ -211,18 +226,38 @@ final class ConversationViewController: UIViewController {
 
     private func render(legState state: TranslationState, speaker: Side) {
         switch state {
+        case .armed:
+            visualizer.apply(speaker == .traveler ? .listening : .speaking)
+            setStatus(String(localized: "GET READY"), color: speaker == .traveler ? travelerAccent : localAccent)
         case .listening:
             visualizer.apply(speaker == .traveler ? .listening : .speaking)
-            setStatus("LISTENING", color: speaker == .traveler ? travelerAccent : localAccent)
+            setStatus(String(localized: "LISTENING"), color: speaker == .traveler ? travelerAccent : localAccent)
+            if speaker == .local, AppSettings.turnChime {
+                earcon.play()
+                visualizer.bloom()
+            }
         case .processing:
             visualizer.apply(.processing)
-            setStatus("CONNECTING", color: UIColor(red: 1.0, green: 0.66, blue: 0.22, alpha: 1))
+            setStatus(String(localized: "CONNECTING"), color: amber)
         case .reconnecting:
             visualizer.apply(.processing)
-            setStatus("RECONNECTING", color: UIColor(red: 1.0, green: 0.66, blue: 0.22, alpha: 1))
+            setStatus(String(localized: "RECONNECTING"), color: amber)
+        case .quotaExhausted:
+            visualizer.apply(.error)
+            setStatus(String(localized: "NO MINUTES LEFT TODAY"), color: errorRed)
+        case .offline:
+            visualizer.apply(.error)
+            setStatus(String(localized: "NO CONNECTION"), color: errorRed)
+        case .permissionDenied:
+            visualizer.apply(.error)
+            micDenied = true
+            setStatus(String(localized: "TAP TO ENABLE MIC"), color: errorRed)
+        case .error(.unsupportedLanguage):
+            visualizer.apply(.error)
+            setStatus(String(localized: "LANGUAGE NOT SUPPORTED"), color: errorRed)
         case .error:
             visualizer.apply(.error)
-            setStatus("HOLD TO RETRY", color: UIColor(red: 1.0, green: 0.32, blue: 0.36, alpha: 1))
+            setStatus(String(localized: "HOLD TO RETRY"), color: errorRed)
         case .idle:
             visualizer.apply(.idle)
             setStatus("", color: .clear)
@@ -238,8 +273,11 @@ final class ConversationViewController: UIViewController {
         }
     }
 
-    /// While a turn is opening, `text` arrives empty — that's the cue to invite
-    /// the upcoming speaker in *their own* language so a stranger knows to talk.
+    /// While a turn is opening, `text` arrives empty — that's the cue to invite the
+    /// upcoming speaker in *their own* language (in `promptLabel`) while the prior
+    /// turn stays readable, only ghosted, so you can re-read their reply as you
+    /// reach to answer. The first real delta restores the caption and hides the
+    /// prompt. The prompt language is the *recorded* language, not the device locale.
     private func handleText(_ text: String, speaker: Side) {
         if speaker == .traveler { travelerText = text } else { localText = text }
         let spokenLanguage = speaker == .traveler ? viewModel.pair.traveler : viewModel.pair.local
@@ -249,11 +287,66 @@ final class ConversationViewController: UIViewController {
             applyFlip(animated: true)
         }
         if text.isEmpty {
-            translatedLabel.text = Self.speakPrompt(for: spokenLanguage)
-            translatedLabel.textColor = (speaker == .traveler ? travelerAccent : localAccent).withAlphaComponent(0.85)
+            promptLabel.text = Self.speakPrompt(for: spokenLanguage)
+            promptLabel.textColor = speaker == .traveler ? travelerAccent : localAccent
+            let priorAlpha: CGFloat = hasTranslation ? 0.28 : 0
+            UIView.animate(withDuration: 0.25) {
+                self.promptLabel.alpha = 1
+                self.translatedLabel.alpha = priorAlpha
+            }
         } else {
+            hasTranslation = true
+            turnProducedText = true
             translatedLabel.text = text
             translatedLabel.textColor = .white
+            UIView.animate(withDuration: 0.2) {
+                self.promptLabel.alpha = 0
+                self.translatedLabel.alpha = 1
+            }
+        }
+    }
+
+    /// Consent gate: no session is opened to OpenAI until the user agrees, and a
+    /// withdrawal in Settings re-presents this before any further audio.
+    private func enterConversation() {
+        if AppSettings.aiConsentGranted {
+            startSession()
+        } else {
+            presentConsent()
+        }
+    }
+
+    private func startSession() {
+        requestMicPermission()
+        location.start()
+        viewModel.start()
+        viewModel.warmUp()
+    }
+
+    private func presentConsent() {
+        guard presentedViewController == nil else { return }
+        let consent = ConsentViewController()
+        consent.isModalInPresentation = true
+        consent.onAgree = { [weak self] in
+            AppSettings.aiConsentGranted = true
+            self?.dismiss(animated: true) { self?.startSession() }
+        }
+        consent.onDecline = { [weak self] in
+            self?.dismiss(animated: true) { self?.auth.signOut() }
+        }
+        if let sheet = consent.sheetPresentationController {
+            sheet.detents = [.large()]
+            sheet.prefersGrabberVisible = false
+        }
+        present(consent, animated: true)
+    }
+
+    /// Released without anything being translated: drop the dangling prompt and
+    /// bring back the resting caption (the last reply, or the idle hint).
+    private func restoreResting() {
+        UIView.animate(withDuration: 0.25) {
+            self.promptLabel.alpha = 0
+            self.translatedLabel.alpha = 1
         }
     }
 
@@ -273,11 +366,13 @@ final class ConversationViewController: UIViewController {
         convoRoot.alpha = 0
         view.addSubview(convoRoot)
         pin(convoRoot)
+        convoRoot.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleScreenTap)))
 
         configureLabels()
         configureGearButton()
         configureLanguageBar()
         configureTalkButtons()
+        configureCloudBadge()
         applyFlip(animated: false)
 
         let buttonRow = UIStackView(arrangedSubviews: [meButton, themButton])
@@ -286,7 +381,7 @@ final class ConversationViewController: UIViewController {
         buttonRow.spacing = 14
         buttonRow.translatesAutoresizingMaskIntoConstraints = false
 
-        [statusLabel, translatedLabel, sourceLabel, buttonRow, gearGlass, languageBarHost].forEach { convoRoot.addSubview($0) }
+        [statusLabel, promptLabel, translatedLabel, sourceLabel, buttonRow, gearGlass, languageBarHost, cloudBadge].forEach { convoRoot.addSubview($0) }
 
         NSLayoutConstraint.activate([
             translatedLabel.centerYAnchor.constraint(equalTo: convoRoot.centerYAnchor, constant: -40),
@@ -300,10 +395,17 @@ final class ConversationViewController: UIViewController {
             sourceLabel.leadingAnchor.constraint(equalTo: convoRoot.leadingAnchor, constant: 28),
             sourceLabel.trailingAnchor.constraint(equalTo: convoRoot.trailingAnchor, constant: -28),
 
+            promptLabel.centerYAnchor.constraint(equalTo: convoRoot.centerYAnchor, constant: -158),
+            promptLabel.leadingAnchor.constraint(equalTo: convoRoot.leadingAnchor, constant: 28),
+            promptLabel.trailingAnchor.constraint(equalTo: convoRoot.trailingAnchor, constant: -28),
+
             buttonRow.leadingAnchor.constraint(equalTo: convoRoot.leadingAnchor, constant: 20),
             buttonRow.trailingAnchor.constraint(equalTo: convoRoot.trailingAnchor, constant: -20),
             buttonRow.bottomAnchor.constraint(equalTo: convoRoot.safeAreaLayoutGuide.bottomAnchor, constant: -24),
             buttonRow.heightAnchor.constraint(equalToConstant: 116),
+
+            cloudBadge.bottomAnchor.constraint(equalTo: buttonRow.topAnchor, constant: -10),
+            cloudBadge.centerXAnchor.constraint(equalTo: convoRoot.centerXAnchor),
 
             gearGlass.topAnchor.constraint(equalTo: convoRoot.safeAreaLayoutGuide.topAnchor, constant: 8),
             gearGlass.leadingAnchor.constraint(equalTo: convoRoot.leadingAnchor, constant: 20),
@@ -343,15 +445,15 @@ final class ConversationViewController: UIViewController {
         }
         youLangButton.tintColor = travelerAccent
         themLangButton.tintColor = localAccent
-        youLangButton.accessibilityHint = "Change the language you speak"
-        themLangButton.accessibilityHint = "Change the language they speak"
+        youLangButton.accessibilityHint = String(localized: "Change the language you speak")
+        themLangButton.accessibilityHint = String(localized: "Change the language they speak")
 
         var swap = UIButton.Configuration.plain()
         swap.image = UIImage(systemName: "arrow.left.arrow.right", withConfiguration: UIImage.SymbolConfiguration(pointSize: 12, weight: .semibold))
         swap.contentInsets = NSDirectionalEdgeInsets(top: 6, leading: 3, bottom: 6, trailing: 3)
         swapButton.configuration = swap
         swapButton.tintColor = UIColor.white.withAlphaComponent(0.7)
-        swapButton.accessibilityLabel = "Swap languages"
+        swapButton.accessibilityLabel = String(localized: "Swap languages")
         swapButton.addTarget(self, action: #selector(swapLanguages), for: .touchUpInside)
 
         let stack = UIStackView(arrangedSubviews: [youLangButton, swapButton, themLangButton])
@@ -375,7 +477,7 @@ final class ConversationViewController: UIViewController {
                 if isTraveler { self?.viewModel.setTravelerLanguage(code) } else { self?.viewModel.setLocalLanguage(code) }
             }
         }
-        return UIMenu(title: isTraveler ? "You speak" : "They speak", children: actions)
+        return UIMenu(title: isTraveler ? String(localized: "You speak") : String(localized: "They speak"), children: actions)
     }
 
     private func setLangButtonTitle(_ button: UIButton, _ text: String, _ color: UIColor) {
@@ -401,15 +503,22 @@ final class ConversationViewController: UIViewController {
         translatedLabel.textColor = .white
         translatedLabel.textAlignment = .center
         translatedLabel.numberOfLines = 0
-        translatedLabel.text = "Hold a button and speak"
+        translatedLabel.text = String(localized: "Hold a button and speak")
         translatedLabel.textColor = UIColor.white.withAlphaComponent(0.55)
+
+        promptLabel.font = .systemFont(ofSize: 31, weight: .bold)
+        promptLabel.adjustsFontForContentSizeCategory = true
+        promptLabel.textColor = .white
+        promptLabel.textAlignment = .center
+        promptLabel.numberOfLines = 0
+        promptLabel.alpha = 0
 
         sourceLabel.font = .systemFont(ofSize: 17, weight: .medium)
         sourceLabel.textColor = UIColor.white.withAlphaComponent(0.5)
         sourceLabel.textAlignment = .center
         sourceLabel.numberOfLines = 0
 
-        for label in [statusLabel, translatedLabel, sourceLabel] {
+        for label in [statusLabel, translatedLabel, sourceLabel, promptLabel] {
             label.translatesAutoresizingMaskIntoConstraints = false
             label.layer.shadowColor = UIColor.black.cgColor
             label.layer.shadowOpacity = 0.55
@@ -424,15 +533,41 @@ final class ConversationViewController: UIViewController {
         themButton.onHold = { [weak self] down in self?.hold(.local, down: down) }
     }
 
+    /// The honest-floor indicator for the bystander who can't consent to cloud
+    /// routing: a persistent, neutral (not blue/green) "cloud AI" mark. Never
+    /// claims on-device.
+    private func configureCloudBadge() {
+        let attachment = NSTextAttachment()
+        attachment.image = UIImage(systemName: "cloud.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 10, weight: .semibold))?
+            .withTintColor(UIColor.white.withAlphaComponent(0.5), renderingMode: .alwaysOriginal)
+        let text = NSMutableAttributedString(attachment: attachment)
+        text.append(NSAttributedString(string: "  " + String(localized: "Cloud AI"), attributes: [
+            .font: UIFont.systemFont(ofSize: 11, weight: .semibold),
+            .foregroundColor: UIColor.white.withAlphaComponent(0.5),
+        ]))
+        cloudBadge.attributedText = text
+        cloudBadge.textAlignment = .center
+        cloudBadge.translatesAutoresizingMaskIntoConstraints = false
+        cloudBadge.isAccessibilityElement = true
+        cloudBadge.accessibilityLabel = String(localized: "Translated by cloud AI")
+    }
+
     private func hold(_ speaker: Side, down: Bool) {
         if down {
+            guard AppSettings.aiConsentGranted else { presentConsent(); return }
+            if AVAudioApplication.shared.recordPermission == .denied {
+                render(legState: .permissionDenied(.microphone), speaker: speaker)
+                return
+            }
             impact.impactOccurred()
             release.prepare()
+            turnProducedText = false
             viewModel.holdDown(speaker)
         } else {
             release.impactOccurred()
             impact.prepare()
             viewModel.holdUp(speaker)
+            if !turnProducedText { restoreResting() }
         }
     }
 
@@ -474,7 +609,7 @@ final class ConversationViewController: UIViewController {
         ])
         gearGlass.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(openSettings)))
         gearGlass.isAccessibilityElement = true
-        gearGlass.accessibilityLabel = "Settings"
+        gearGlass.accessibilityLabel = String(localized: "Settings")
     }
 
     @objc private func openSettings() {
@@ -498,12 +633,14 @@ final class ConversationViewController: UIViewController {
     /// (in their language) faces them; their reply (in your language) faces you.
     private func applyFlip(animated: Bool) {
         let transform: CGAffineTransform = displayAudience == .local ? CGAffineTransform(rotationAngle: .pi) : .identity
+        let apply = {
+            self.translatedLabel.transform = transform
+            self.promptLabel.transform = transform
+        }
         if animated {
-            UIView.animate(withDuration: 0.45, delay: 0, options: .curveEaseInOut) {
-                self.translatedLabel.transform = transform
-            }
+            UIView.animate(withDuration: 0.45, delay: 0, options: .curveEaseInOut, animations: apply)
         } else {
-            translatedLabel.transform = transform
+            apply()
         }
     }
 
@@ -518,7 +655,7 @@ final class ConversationViewController: UIViewController {
         title.textColor = .white
         title.textAlignment = .center
         let subtitle = UILabel()
-        subtitle.text = "You speak. They hear it. They reply. You hear it."
+        subtitle.text = String(localized: "You speak. They hear it. They reply. You hear it.")
         subtitle.font = .preferredFont(forTextStyle: .body)
         subtitle.textColor = UIColor.white.withAlphaComponent(0.7)
         subtitle.numberOfLines = 0
@@ -546,8 +683,8 @@ final class ConversationViewController: UIViewController {
     private func updateLanguages(_ pair: LanguagePair) {
         meButton.languageLabel.text = Self.endonym(pair.traveler)
         themButton.languageLabel.text = Self.endonym(pair.local)
-        meButton.accessibilityLabel = "Hold to speak \(Self.endonym(pair.traveler))"
-        themButton.accessibilityLabel = "Hold while they speak \(Self.endonym(pair.local))"
+        meButton.accessibilityLabel = String(localized: "Hold to speak \(Self.endonym(pair.traveler))")
+        themButton.accessibilityLabel = String(localized: "Hold while they speak \(Self.endonym(pair.local))")
         setLangButtonTitle(youLangButton, Self.endonym(pair.traveler), travelerAccent)
         setLangButtonTitle(themLangButton, Self.endonym(pair.local), localAccent)
         youLangButton.menu = makeLangMenu(isTraveler: true)
@@ -565,6 +702,19 @@ final class ConversationViewController: UIViewController {
 
     private func requestMicPermission() {
         AVAudioApplication.requestRecordPermission { _ in }
+    }
+
+    /// Only acts while mic access is denied — taps are otherwise inert, so this
+    /// never competes with the hold-to-talk buttons during normal use.
+    @objc private func handleScreenTap() {
+        guard micDenied, let url = URL(string: UIApplication.openSettingsURLString) else { return }
+        UIApplication.shared.open(url)
+    }
+
+    private func recheckMicPermission() {
+        guard micDenied, AVAudioApplication.shared.recordPermission == .granted else { return }
+        micDenied = false
+        render(legState: .idle, speaker: .traveler)
     }
 
     @objc private func signInTapped() { auth.signIn() }
@@ -586,5 +736,6 @@ final class ConversationViewController: UIViewController {
         "ja": "話してください", "ko": "말씀하세요", "zh": "请说话",
         "th": "พูดได้เลย", "vi": "Hãy nói", "pl": "Mów teraz",
         "sv": "Tala nu", "id": "Silakan bicara", "uk": "Говоріть",
+        "he": "דבר עכשיו", "fi": "Puhu nyt",
     ]
 }

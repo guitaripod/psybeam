@@ -63,6 +63,7 @@ final class WaveVisualizerView: MTKView {
     func apply(_ style: WaveStyle) { renderer.apply(style) }
     func setLevel(_ level: Float) { renderer.level = level }
     func setPaused(_ paused: Bool) { isPaused = paused }
+    func bloom() { renderer.addBloom() }
 
     @available(*, unavailable)
     required init(coder: NSCoder) { fatalError() }
@@ -79,6 +80,7 @@ private final class WaveRenderer: NSObject, MTKViewDelegate {
     private var target = WaveStyle.idle
     private var amp: Float = 0.12
     private var smoothedLevel: Float = 0
+    private var bloomLevel: Float = 0
     var level: Float = 0
 
     init?(device: MTLDevice) {
@@ -99,6 +101,8 @@ private final class WaveRenderer: NSObject, MTKViewDelegate {
     }
 
     func apply(_ style: WaveStyle) { target = style }
+
+    func addBloom() { bloomLevel = 1.0 }
 
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
         uniforms.resolution = SIMD2(Float(size.width), Float(size.height))
@@ -143,7 +147,8 @@ private final class WaveRenderer: NSObject, MTKViewDelegate {
         current.accent += (target.accent - current.accent) * colorK
         current.baseAmplitude += (target.baseAmplitude - current.baseAmplitude) * colorK
 
-        smoothedLevel += (level - smoothedLevel) * (1 - exp(-delta * 6.0))
+        if bloomLevel > 0 { bloomLevel = max(0, bloomLevel - delta * 2.0) }
+        smoothedLevel += (max(level, bloomLevel) - smoothedLevel) * (1 - exp(-delta * 6.0))
         let desired = max(current.baseAmplitude, min(1.0, smoothedLevel * 1.5))
         let rate: Float = desired > amp ? 6.5 : 2.0
         amp += (desired - amp) * (1 - exp(-delta * rate))
