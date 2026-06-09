@@ -10,7 +10,7 @@ final class AICreditsManager: Sendable {
         client: AICreditsManager.shared.client, lowBalanceThreshold: 5)
 
     let client: AICreditsClient
-    let baseURL = URL(string: "https://openai-image-proxy.guitaripod.workers.dev")!
+    let baseURL = URL(string: "https://mako.midgarcorp.cc")!
     private let appID = "psybeam"
     private let revenueCatPublicKey = "appl_MLWBSJBJGebbpfhFwNhhFDvvKfI"
 
