@@ -81,8 +81,14 @@ final class TranslationLeg {
         Task { await call.setMicActive(false) }
     }
 
+    /// Only re-mint when THIS leg's own output language actually changed. A GPS
+    /// or manual change to the *other* side's language updates the stored pair but
+    /// must not tear this leg's warm session down — otherwise a held button can
+    /// land on a cold, re-handshaking session and the speaker's words are lost.
     func setPair(_ newPair: LanguagePair) {
+        let outputChanged = newPair.outputLanguage(for: speaker) != pair.outputLanguage(for: speaker)
         pair = newPair
+        guard outputChanged else { return }
         connectTask?.cancel()
         connectTask = nil
         reconnectTimer?.cancel()

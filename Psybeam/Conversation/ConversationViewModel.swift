@@ -65,6 +65,7 @@ final class ConversationViewModel {
 
     func setTravelerLanguage(_ code: String) {
         guard code != pair.traveler else { return }
+        languageLocked = true
         pair = LanguagePair(traveler: code, local: pair.local)
         AppSettings.travelerLanguage = code
         updateLegs()

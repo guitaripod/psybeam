@@ -57,6 +57,7 @@ actor RealtimeCallService: RealtimeCallProviding {
         micActiveStart = nil
 
         do {
+            try Task.checkCancellation()
             Self.configureAudioSession()
 
             let config = RTCConfiguration()
@@ -89,6 +90,7 @@ actor RealtimeCallService: RealtimeCallProviding {
             try await setLocal(pc: pc, sdp: RTCSessionDescription(type: .offer, sdp: offerSDP))
             let answerSDP = try await exchangeSDP(sdpUrl: token.sdpUrl, ephemeralToken: token.ephemeralToken, offer: offerSDP)
             try await setRemote(pc: pc, sdp: RTCSessionDescription(type: .answer, sdp: answerSDP))
+            try Task.checkCancellation()
         } catch {
             cleanupPeer()
             await reportAndClear(seconds: 0)
