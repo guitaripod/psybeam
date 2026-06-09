@@ -258,10 +258,9 @@ final class ConversationViewController: UIViewController {
         if text.isEmpty {
             promptLabel.text = Self.speakPrompt(for: spokenLanguage)
             promptLabel.textColor = speaker == .traveler ? travelerAccent : localAccent
-            let priorAlpha: CGFloat = hasTranslation ? 0.28 : 0
             UIView.animate(withDuration: 0.25) {
                 self.promptLabel.alpha = 1
-                self.translatedLabel.alpha = priorAlpha
+                self.translatedLabel.alpha = 0
             }
         } else {
             hasTranslation = true
@@ -479,7 +478,7 @@ final class ConversationViewController: UIViewController {
         translatedLabel.text = String(localized: "Hold a button and speak")
         translatedLabel.textColor = UIColor.white.withAlphaComponent(0.55)
 
-        promptLabel.font = .systemFont(ofSize: 31, weight: .bold)
+        promptLabel.font = .systemFont(ofSize: 34, weight: .heavy)
         promptLabel.adjustsFontForContentSizeCategory = true
         promptLabel.textColor = .white
         promptLabel.textAlignment = .center
