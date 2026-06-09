@@ -17,7 +17,7 @@ public protocol RealtimeCallProviding: Sendable {
 /// round-trip and returns the `ek_` plus the SDP URL for the direct exchange.
 public protocol TranslationProviding: Sendable {
     func requestSession(pair: LanguagePair, direction: Side) async throws -> SessionToken
-    func reportUsage(sessionId: String, minutesUsed: Int) async
+    func reportUsage(sessionId: String, secondsUsed: Int) async
 }
 
 /// GPS-driven local-language suggestions. The pure resolution logic takes a

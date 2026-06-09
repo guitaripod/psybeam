@@ -91,7 +91,7 @@ actor RealtimeCallService: RealtimeCallProviding {
             try await setRemote(pc: pc, sdp: RTCSessionDescription(type: .answer, sdp: answerSDP))
         } catch {
             cleanupPeer()
-            await reportAndClear(minutes: 0)
+            await reportAndClear(seconds: 0)
             throw error
         }
 
@@ -146,10 +146,10 @@ actor RealtimeCallService: RealtimeCallProviding {
     func bargeIn() async {}
 
     func hangUp() async {
-        let minutes = elapsedMinutes()
+        let seconds = elapsedSeconds()
         cleanupPeer()
         levelCont.yield(0)
-        await reportAndClear(minutes: minutes)
+        await reportAndClear(seconds: seconds)
         stateCont.yield(.ended)
     }
 
@@ -165,24 +165,23 @@ actor RealtimeCallService: RealtimeCallProviding {
         coordinator = nil
     }
 
-    private func reportAndClear(minutes: Int) async {
+    private func reportAndClear(seconds: Int) async {
         if let currentSessionId {
-            await translationProvider.reportUsage(sessionId: currentSessionId, minutesUsed: minutes)
+            await translationProvider.reportUsage(sessionId: currentSessionId, secondsUsed: seconds)
         }
         currentSessionId = nil
         micActiveStart = nil
         activeSeconds = 0
     }
 
-    /// Billed minutes = the time the mic was actually live (hold-to-talk windows),
-    /// not idle warm-connection time. Each leg only accrues while its button is
-    /// held, so the two legs sum to real conversation minutes rather than 2x.
-    private func elapsedMinutes() -> Int {
+    /// Raw talk-time in seconds = the time the mic was actually live (hold-to-talk
+    /// windows), not idle warm-connection time. Reported unrounded so the billing
+    /// provider sums seconds across both legs and rounds to whole minutes once.
+    private func elapsedSeconds() -> Int {
         guard didActivateMic else { return 0 }
         var total = activeSeconds
         if let micActiveStart { total += Date().timeIntervalSince(micActiveStart) }
-        guard total > 0 else { return 0 }
-        return max(1, Int(ceil(total / 60.0)))
+        return Int(total.rounded())
     }
 
     private func makeOffer(pc: RTCPeerConnection, constraints: RTCMediaConstraints) async throws -> String {
