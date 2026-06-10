@@ -9,6 +9,13 @@ set -euo pipefail
 # Override the simulator with PSYBEAM_SIM_UDID; otherwise the first available iPhone is used.
 
 cd "$(dirname "$0")/.."
+ROOT="$(pwd)"
+
+if [ ! -f "$ROOT/.env.local" ]; then
+  echo "❌ Missing .env.local — run scripts/setup.sh first." >&2
+  exit 1
+fi
+set -a; . "$ROOT/.env.local"; set +a
 
 echo "== PsybeamKit (SPM) =="
 swift test
