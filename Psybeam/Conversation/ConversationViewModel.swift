@@ -16,6 +16,11 @@ final class ConversationViewModel {
     private var activeSide: Side?
     private var cancellables = Set<AnyCancellable>()
 
+    private var warmUpArmed = false
+    private var warmedUp = false
+    private var languageResolved = false
+    private var warmUpFallback: Task<Void, Never>?
+
     init(travelerCall: RealtimeCallService, localCall: RealtimeCallService) {
         let pair = LanguagePair(traveler: AppSettings.travelerLanguage, local: AppSettings.localLanguage)
         self.pair = pair
@@ -28,12 +33,49 @@ final class ConversationViewModel {
         languagePublisher.send(pair)
     }
 
+    /// Warm-connect both legs so the first hold-to-talk is instant. When GPS
+    /// auto-detect is on, the local language is about to change from the stored
+    /// value to the detected one; connecting now would mint a session in the
+    /// wrong language and tear it straight down on the GPS result — wasting a
+    /// mint and (before the server reservation sweep) leaking the up-front
+    /// charge. So the first warm-up waits for the first GPS resolution, or a
+    /// short fallback when no location ever arrives (denied/restricted/no fix),
+    /// then connects with the language that will actually be used.
     func warmUp() {
+        warmUpArmed = true
+        if warmedUp || languageIsSettled {
+            performWarmUp()
+        } else {
+            scheduleWarmUpFallback()
+        }
+    }
+
+    private var languageIsSettled: Bool {
+        !AppSettings.autoDetectLocation || languageLocked || languageResolved
+    }
+
+    private func scheduleWarmUpFallback() {
+        guard warmUpFallback == nil else { return }
+        warmUpFallback = Task { [weak self] in
+            try? await Task.sleep(for: .seconds(4))
+            guard let self, !Task.isCancelled else { return }
+            self.warmUpFallback = nil
+            if self.warmUpArmed, !self.warmedUp { self.performWarmUp() }
+        }
+    }
+
+    private func performWarmUp() {
+        warmedUp = true
+        warmUpFallback?.cancel()
+        warmUpFallback = nil
         travelerLeg.warmUp()
         localLeg.warmUp()
     }
 
     func end() {
+        warmUpArmed = false
+        warmUpFallback?.cancel()
+        warmUpFallback = nil
         travelerLeg.end()
         localLeg.end()
         activeSide = nil
@@ -84,7 +126,9 @@ final class ConversationViewModel {
 
     func applyDetectedLanguage(_ code: String) {
         guard AppSettings.autoDetectLocation, !languageLocked else { return }
+        languageResolved = true
         applyLocal(code)
+        if warmUpArmed, !warmedUp { performWarmUp() }
     }
 
     private func applyLocal(_ code: String) {

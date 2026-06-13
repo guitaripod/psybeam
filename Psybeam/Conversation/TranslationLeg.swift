@@ -81,19 +81,24 @@ final class TranslationLeg {
         Task { await call.setMicActive(false) }
     }
 
-    /// Only re-mint when THIS leg's own output language actually changed. A GPS
-    /// or manual change to the *other* side's language updates the stored pair but
-    /// must not tear this leg's warm session down — otherwise a held button can
-    /// land on a cold, re-handshaking session and the speaker's words are lost.
+    /// Only re-mint when THIS leg's own output language actually changed, and
+    /// only if it had a live or in-flight session worth replacing. A GPS or
+    /// manual change to the *other* side's language updates the stored pair but
+    /// must not tear this leg's warm session down. A cold leg simply adopts the
+    /// new pair — `warmUp()`/`holdDown()` connects it with the right language —
+    /// so we never mint a stale-language session just to cancel it on the next
+    /// GPS result (the warm-up-before-GPS race).
     func setPair(_ newPair: LanguagePair) {
         let outputChanged = newPair.outputLanguage(for: speaker) != pair.outputLanguage(for: speaker)
         pair = newPair
         guard outputChanged else { return }
+        let wasActive = connected || connectTask != nil
         connectTask?.cancel()
         connectTask = nil
         reconnectTimer?.cancel()
         reconnectTimer = nil
         connected = false
+        guard wasActive else { return }
         statePublisher.send(.idle)
         Task {
             await call.hangUp()
@@ -123,7 +128,12 @@ final class TranslationLeg {
             do {
                 try await call.connect(spec: TranslationSessionSpec(pair: pair, direction: speaker, sessionId: UUID().uuidString))
                 return nil
+            } catch is CancellationError {
+                return Self.cancelled(speaker)
+            } catch let error as URLError where error.code == .cancelled {
+                return Self.cancelled(speaker)
             } catch let error as CallError {
+                if error == .cancelled { return Self.cancelled(speaker) }
                 AppLogger.shared.error("leg(\(speaker)) connect failed: \(error)", category: .session)
                 return error
             } catch {
@@ -136,6 +146,14 @@ final class TranslationLeg {
         connectTask = nil
         connected = (result == nil)
         return result
+    }
+
+    /// A connect torn down by a language change or session end is routine, not a
+    /// failure: logged at debug to stay out of the error stream, and mapped to
+    /// no UI state via `TranslationState.failure(for: .cancelled)`.
+    private static func cancelled(_ speaker: Side) -> CallError {
+        AppLogger.shared.debug("leg(\(speaker)) connect cancelled", category: .session)
+        return .cancelled
     }
 
     private func observe() {
