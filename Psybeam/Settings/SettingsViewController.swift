@@ -1,4 +1,5 @@
 import AVFoundation
+import Combine
 import PsybeamKit
 import SwiftUI
 import UIKit
@@ -18,6 +19,7 @@ final class SettingsViewController: UIViewController {
     private let micModeValue = UILabel()
     private var micModeTimer: Timer?
     private let impact = UIImpactFeedbackGenerator(style: .light)
+    private var cancellables = Set<AnyCancellable>()
 
     private let brand = UIColor(red: 0.30, green: 0.62, blue: 1.0, alpha: 1)
     private let languages = ["en", "es", "fr", "de", "it", "pt", "nl", "ru", "pl", "tr", "el", "ar", "he", "hi", "ja", "ko", "zh", "th", "vi", "id", "fi", "sv"]
@@ -44,6 +46,7 @@ final class SettingsViewController: UIViewController {
         view.layer.insertSublayer(gradient, at: 0)
         buildLayout()
         refreshLanguageButtons()
+        observeBalance()
         fetchBalance()
         refreshMicMode()
         applyAdaptiveChrome()
@@ -357,12 +360,21 @@ final class SettingsViewController: UIViewController {
         return UIMenu(children: actions)
     }
 
+    /// Keep the minutes label live: the credit store sheet (and in-session
+    /// billing) mutate the shared store's balance while this screen stays
+    /// presented, and dismissing a sheet doesn't re-fire `viewDidAppear` on the
+    /// presenter — so bind to the published balance instead of only sampling it
+    /// on appear. `@Published` emits the current value on subscribe, so the
+    /// label is set immediately.
+    private func observeBalance() {
+        AICreditsManager.store.$balance
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] balance in self?.minutesLabel.text = "\(balance) min" }
+            .store(in: &cancellables)
+    }
+
     private func fetchBalance() {
-        minutesLabel.text = "\(AICreditsManager.store.balance) min"
-        Task {
-            await AICreditsManager.store.refresh()
-            minutesLabel.text = "\(AICreditsManager.store.balance) min"
-        }
+        Task { await AICreditsManager.store.refresh() }
     }
 
     @objc private func openStore() {
