@@ -28,7 +28,7 @@ Psybeam/Secrets.swift
 node_modules/
 workers/node_modules/
 workers/.dev.vars
-workers/.wrangler/
+.wrangler/
 workers/dist/
 
 *.log
