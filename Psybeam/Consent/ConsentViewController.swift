@@ -31,14 +31,14 @@ final class ConsentViewController: UIViewController {
         icon.contentMode = .center
 
         let title = UILabel()
-        title.text = String(localized: "Cloud translation")
+        title.text = String(localized: "Translation by OpenAI")
         title.font = .systemFont(ofSize: 28, weight: .bold)
         title.textColor = .label
         title.textAlignment = .center
         title.numberOfLines = 0
 
         let body = UILabel()
-        body.text = String(localized: "Psybeam translates speech using AI in the cloud. To translate, your spoken audio is sent to a secure cloud service and isn’t stored there.\n\nYour conversation transcript stays on this device — we never keep it on our servers. The person you speak with is also translated by cloud AI.")
+        body.text = String(localized: "To translate, the microphone audio of your conversation is streamed in real time to OpenAI — our cloud translation provider — and the translation is spoken back to you. OpenAI processes the audio only to translate it; it isn’t stored on our servers and isn’t used to train AI models.\n\nYour conversation transcript stays on this device. The person you speak with is translated by OpenAI the same way.")
         body.font = .systemFont(ofSize: 16)
         body.textColor = .secondaryLabel
         body.numberOfLines = 0
@@ -74,11 +74,18 @@ final class ConsentViewController: UIViewController {
         footnote.textAlignment = .center
         footnote.numberOfLines = 0
 
-        let buttons = UIStackView(arrangedSubviews: [agree, decline, footnote])
+        let privacyLink = UIButton(type: .system)
+        privacyLink.setTitle(String(localized: "Privacy Policy"), for: .normal)
+        privacyLink.titleLabel?.font = .systemFont(ofSize: 13, weight: .medium)
+        privacyLink.tintColor = brand
+        privacyLink.addAction(UIAction { _ in UIApplication.shared.open(Links.privacyPolicy) }, for: .touchUpInside)
+
+        let buttons = UIStackView(arrangedSubviews: [agree, decline, footnote, privacyLink])
         buttons.axis = .vertical
         buttons.alignment = .fill
         buttons.spacing = 6
         buttons.setCustomSpacing(18, after: decline)
+        buttons.setCustomSpacing(2, after: footnote)
         buttons.translatesAutoresizingMaskIntoConstraints = false
 
         view.addSubview(stack)

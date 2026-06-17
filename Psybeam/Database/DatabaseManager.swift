@@ -58,4 +58,12 @@ final class DatabaseManager: @unchecked Sendable {
             try preferences.saved(db)
         }
     }
+
+    /// Erases all on-device records (App Store 5.1.1(v) account deletion). The
+    /// schema is recreated empty so the app keeps working with a clean state.
+    func wipe() throws {
+        try dbQueue.write { db in
+            try AppPreferences.deleteAll(db)
+        }
+    }
 }

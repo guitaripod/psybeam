@@ -170,16 +170,20 @@ final class SettingsViewController: UIViewController {
         privacy.numberOfLines = 0
         privacy.font = .systemFont(ofSize: 13)
         privacy.textColor = .secondaryLabel
-        privacy.text = String(localized: "Speech is translated by AI in the cloud. Your conversation transcript stays on this device — we don't store it on our servers.")
+        privacy.text = String(localized: "Your conversation audio is streamed to OpenAI to translate it, then spoken back. OpenAI doesn't store it or use it to train models. Your transcript stays on this device.")
         privacyCard.addArrangedSubview(row(icon: "lock.fill", tint: .systemGreen, control: privacy))
         privacyCard.addArrangedSubview(divider())
-        let revoke = UIButton(type: .system)
-        revoke.setTitle(String(localized: "Withdraw cloud AI consent"), for: .normal)
-        revoke.contentHorizontalAlignment = .leading
-        revoke.titleLabel?.font = .systemFont(ofSize: 16, weight: .semibold)
-        revoke.tintColor = .systemRed
-        revoke.addTarget(self, action: #selector(revokeConsent), for: .touchUpInside)
-        privacyCard.addArrangedSubview(row(icon: "xmark.shield.fill", tint: .systemRed, control: revoke))
+        privacyCard.addArrangedSubview(row(icon: "doc.text.fill", tint: .systemBlue,
+            control: linkButton(String(localized: "Privacy Policy"), color: brand, #selector(openPrivacyPolicy))))
+        privacyCard.addArrangedSubview(divider())
+        privacyCard.addArrangedSubview(row(icon: "xmark.shield.fill", tint: .systemRed,
+            control: linkButton(String(localized: "Withdraw cloud AI consent"), color: .systemRed, #selector(revokeConsent))))
+
+        let accountCard = addSection("Account")
+        accountCard.addArrangedSubview(row(icon: "trash.fill", tint: .systemRed,
+            control: linkButton(String(localized: "Delete Account"), color: .systemRed, #selector(confirmDeleteAccount))))
+        accountCard.addArrangedSubview(divider())
+        accountCard.addArrangedSubview(caption(String(localized: "Permanently deletes your account and remaining minutes from our servers, and erases on-device data. This can't be undone."), icon: "exclamationmark.triangle.fill", tint: .systemOrange))
 
         let footer = UILabel()
         let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
@@ -309,6 +313,16 @@ final class SettingsViewController: UIViewController {
         s.onTintColor = brand
         s.addTarget(self, action: action, for: .valueChanged)
         return s
+    }
+
+    private func linkButton(_ title: String, color: UIColor, _ action: Selector) -> UIButton {
+        let button = UIButton(type: .system)
+        button.setTitle(title, for: .normal)
+        button.contentHorizontalAlignment = .leading
+        button.titleLabel?.font = .systemFont(ofSize: 16, weight: .semibold)
+        button.tintColor = color
+        button.addTarget(self, action: action, for: .touchUpInside)
+        return button
     }
 
     private func appearanceControl() -> UISegmentedControl {
@@ -453,6 +467,67 @@ final class SettingsViewController: UIViewController {
         AppSettings.aiConsentGranted = false
         viewModel.end()
         dismiss(animated: true)
+    }
+
+    @objc private func openPrivacyPolicy() {
+        impact.impactOccurred()
+        UIApplication.shared.open(Links.privacyPolicy)
+    }
+
+    @objc private func confirmDeleteAccount() {
+        impact.impactOccurred()
+        let alert = UIAlertController(
+            title: String(localized: "Delete Account?"),
+            message: String(localized: "This permanently deletes your account and any remaining minutes from our servers and erases on-device data. This can’t be undone."),
+            preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: String(localized: "Cancel"), style: .cancel))
+        alert.addAction(UIAlertAction(title: String(localized: "Delete Account"), style: .destructive) { [weak self] _ in
+            self?.performDeleteAccount()
+        })
+        present(alert, animated: true)
+    }
+
+    private func performDeleteAccount() {
+        let progress = UIAlertController(title: nil, message: String(localized: "Deleting…"), preferredStyle: .alert)
+        present(progress, animated: true)
+        Task { @MainActor in
+            do {
+                try await AccountService().deleteAccount()
+                self.wipeLocalData()
+                self.viewModel.end()
+                await AICreditsManager.store.bootstrap()
+                progress.dismiss(animated: true) { self.showAccountDeleted() }
+            } catch {
+                progress.dismiss(animated: true) { self.showDeletionFailed() }
+            }
+        }
+    }
+
+    private func wipeLocalData() {
+        AppSettings.aiConsentGranted = false
+        AppSettings.pendingSessionId = nil
+        AppSettings.pendingReservedMinutes = 0
+        try? DatabaseManager.shared.wipe()
+    }
+
+    private func showAccountDeleted() {
+        let alert = UIAlertController(
+            title: String(localized: "Account Deleted"),
+            message: String(localized: "Your account and data have been removed."),
+            preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: String(localized: "OK"), style: .default) { [weak self] _ in
+            self?.dismiss(animated: true) { self?.onDismiss?() }
+        })
+        present(alert, animated: true)
+    }
+
+    private func showDeletionFailed() {
+        let alert = UIAlertController(
+            title: String(localized: "Couldn’t Delete Account"),
+            message: String(localized: "Please check your connection and try again."),
+            preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: String(localized: "OK"), style: .default))
+        present(alert, animated: true)
     }
 
     @objc private func dismissSelf() { dismiss(animated: true) }
