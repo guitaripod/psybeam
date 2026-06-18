@@ -1,5 +1,6 @@
 import AVFoundation
 import Combine
+import Midgar
 import PsybeamKit
 import SwiftUI
 import UIKit
@@ -184,6 +185,10 @@ final class SettingsViewController: UIViewController {
             control: linkButton(String(localized: "Delete Account"), color: .systemRed, #selector(confirmDeleteAccount))))
         accountCard.addArrangedSubview(divider())
         accountCard.addArrangedSubview(caption(String(localized: "Permanently deletes your account and remaining minutes from our servers, and erases on-device data. This can't be undone."), icon: "exclamationmark.triangle.fill", tint: .systemOrange))
+
+        let moreCard = addSection("More")
+        moreCard.addArrangedSubview(row(icon: "square.stack.3d.up.fill", tint: brand,
+            control: linkButton(String(localized: "More Apps"), color: brand, #selector(openMoreApps))))
 
         let footer = UILabel()
         let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
@@ -472,6 +477,11 @@ final class SettingsViewController: UIViewController {
     @objc private func openPrivacyPolicy() {
         impact.impactOccurred()
         UIApplication.shared.open(Links.privacyPolicy)
+    }
+
+    @objc private func openMoreApps() {
+        impact.impactOccurred()
+        Midgar.present(from: self)
     }
 
     @objc private func confirmDeleteAccount() {
