@@ -88,12 +88,43 @@ final class ConsentViewController: UIViewController {
         buttons.setCustomSpacing(2, after: footnote)
         buttons.translatesAutoresizingMaskIntoConstraints = false
 
-        view.addSubview(stack)
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.showsVerticalScrollIndicator = true
+        scrollView.alwaysBounceVertical = true
+
+        let content = UIView()
+        content.translatesAutoresizingMaskIntoConstraints = false
+        content.addSubview(stack)
+        scrollView.addSubview(content)
+        view.addSubview(scrollView)
         view.addSubview(buttons)
+
+        // Center the disclosure when it fits; scroll it when it doesn't — so a
+        // long disclosure can never be cropped on a short window (e.g. an iPad
+        // running the iPhone app, landscape, or large Dynamic Type). The buttons
+        // stay pinned to the bottom so the call to action is always reachable.
+        let fitViewport = content.heightAnchor.constraint(equalTo: scrollView.frameLayoutGuide.heightAnchor)
+        fitViewport.priority = .defaultLow
+
         NSLayoutConstraint.activate([
-            stack.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -36),
-            stack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
-            stack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
+            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: buttons.topAnchor, constant: -12),
+
+            content.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
+            content.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
+            content.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
+            content.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
+            content.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor),
+            fitViewport,
+
+            stack.topAnchor.constraint(greaterThanOrEqualTo: content.topAnchor, constant: 16),
+            stack.bottomAnchor.constraint(lessThanOrEqualTo: content.bottomAnchor, constant: -16),
+            stack.centerYAnchor.constraint(equalTo: content.centerYAnchor),
+            stack.leadingAnchor.constraint(equalTo: content.leadingAnchor, constant: 32),
+            stack.trailingAnchor.constraint(equalTo: content.trailingAnchor, constant: -32),
 
             buttons.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
             buttons.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
