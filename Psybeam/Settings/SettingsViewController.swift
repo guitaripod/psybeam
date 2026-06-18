@@ -1,6 +1,6 @@
 import AVFoundation
 import Combine
-import Midgar
+import MidgarKit
 import PsybeamKit
 import SwiftUI
 import UIKit
