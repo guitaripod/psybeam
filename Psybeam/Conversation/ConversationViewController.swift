@@ -86,6 +86,7 @@ final class ConversationViewController: UIViewController {
     private func restoreBrightness() {
         if let savedBrightness {
             view.window?.windowScene?.screen.brightness = savedBrightness
+            self.savedBrightness = nil
         }
         UIApplication.shared.isIdleTimerDisabled = false
     }
@@ -635,7 +636,12 @@ final class ConversationViewController: UIViewController {
     }
 
     private func requestMicPermission() {
-        AVAudioApplication.requestRecordPermission { _ in }
+        AVAudioApplication.requestRecordPermission { [weak self] granted in
+            guard !granted else { return }
+            Task { @MainActor in
+                self?.render(legState: .permissionDenied(.microphone), speaker: .traveler)
+            }
+        }
     }
 
     /// Only acts while mic access is denied — taps are otherwise inert, so this

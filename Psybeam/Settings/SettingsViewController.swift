@@ -171,7 +171,7 @@ final class SettingsViewController: UIViewController {
         privacy.numberOfLines = 0
         privacy.font = .systemFont(ofSize: 13)
         privacy.textColor = .secondaryLabel
-        privacy.text = String(localized: "Your conversation audio is streamed to OpenAI to translate it, then spoken back. OpenAI doesn't store it or use it to train models. Your transcript stays on this device.")
+        privacy.text = String(localized: "Your conversation audio is streamed directly to OpenAI to translate it, then spoken back — it never passes through our servers. See our Privacy Policy for how OpenAI handles it. Your transcript stays on this device.")
         privacyCard.addArrangedSubview(row(icon: "lock.fill", tint: .systemGreen, control: privacy))
         privacyCard.addArrangedSubview(divider())
         privacyCard.addArrangedSubview(row(icon: "doc.text.fill", tint: .systemBlue,

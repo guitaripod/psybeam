@@ -20,6 +20,7 @@ final class TranslationLeg {
     private let call: any RealtimeCallProviding
     private var connected = false
     private var holding = false
+    private var holdGeneration = 0
     private var connectTask: Task<CallError?, Never>?
     private var armingTask: Task<Void, Never>?
     private var reconnectTimer: Task<Void, Never>?
@@ -45,6 +46,8 @@ final class TranslationLeg {
     /// only if that takes longer than a frame's worth of grace, so the common
     /// warm path goes straight to listening and still feels instant.
     func holdDown() {
+        holdGeneration &+= 1
+        let gen = holdGeneration
         holding = true
         text = ""
         source = ""
@@ -53,12 +56,12 @@ final class TranslationLeg {
         armingTask?.cancel()
         armingTask = Task {
             try? await Task.sleep(for: .milliseconds(220))
-            guard !Task.isCancelled, self.holding else { return }
+            guard !Task.isCancelled, self.holding, gen == self.holdGeneration else { return }
             self.statePublisher.send(self.connected ? .armed(turn: self.speaker) : .processing(from: self.speaker))
         }
         Task {
             let failure = await ensureConnected()
-            guard holding else { return }
+            guard holding, gen == holdGeneration else { return }
             armingTask?.cancel()
             if let failure {
                 if let state = TranslationState.failure(for: failure, isOnline: NetworkMonitor.shared.isOnline) {
@@ -67,7 +70,7 @@ final class TranslationLeg {
                 holding = false
             } else {
                 await call.setMicActive(true)
-                guard holding else { return }
+                guard holding, gen == holdGeneration else { return }
                 statePublisher.send(.listening(turn: speaker, level: 0))
             }
         }
@@ -75,6 +78,7 @@ final class TranslationLeg {
 
     func holdUp() {
         guard holding else { return }
+        holdGeneration &+= 1
         holding = false
         armingTask?.cancel()
         statePublisher.send(.idle)

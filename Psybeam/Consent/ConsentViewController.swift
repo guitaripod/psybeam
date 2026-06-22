@@ -38,7 +38,7 @@ final class ConsentViewController: UIViewController {
         title.numberOfLines = 0
 
         let body = UILabel()
-        body.text = String(localized: "To translate, the microphone audio of your conversation is streamed in real time to OpenAI — our cloud translation provider — and the translation is spoken back to you. OpenAI processes the audio only to translate it; it isn’t stored on our servers and isn’t used to train AI models.\n\nYour conversation transcript stays on this device. The person you speak with is translated by OpenAI the same way.")
+        body.text = String(localized: "To translate, the microphone audio of your conversation is streamed in real time to OpenAI — our cloud translation provider — and the translation is spoken back to you. The audio is sent directly to OpenAI and never passes through our servers. See OpenAI’s privacy terms and our Privacy Policy for how they handle it.\n\nYour conversation transcript stays on this device. The person you speak with is translated by OpenAI the same way.")
         body.font = .systemFont(ofSize: 16)
         body.textColor = .secondaryLabel
         body.numberOfLines = 0

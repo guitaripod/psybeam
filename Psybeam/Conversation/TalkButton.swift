@@ -55,6 +55,8 @@ final class TalkButton: UIVisualEffectView {
         let press = UILongPressGestureRecognizer(target: self, action: #selector(handlePress(_:)))
         press.minimumPressDuration = 0
         addGestureRecognizer(press)
+        isExclusiveTouch = true
+        isMultipleTouchEnabled = false
 
         isAccessibilityElement = true
         accessibilityTraits = .button
