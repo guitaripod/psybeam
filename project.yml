@@ -74,7 +74,7 @@ targets:
       path: Psybeam/Info.plist
       properties:
         CFBundleDisplayName: Psybeam
-        CFBundleShortVersionString: "1.0.0"
+        CFBundleShortVersionString: "1.0.1"
         UILaunchScreen: {}
         UIApplicationSceneManifest:
           UIApplicationSupportsMultipleScenes: false
