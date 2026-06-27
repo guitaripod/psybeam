@@ -20,15 +20,7 @@ buildServer.json
 .bsp/
 .compile
 
-# User-specific identifiers + secrets
+# User-specific identifiers
 .env.local
-Psybeam/Secrets.swift
-
-# Worker
-node_modules/
-workers/node_modules/
-workers/.dev.vars
-.wrangler/
-workers/dist/
 
 *.log

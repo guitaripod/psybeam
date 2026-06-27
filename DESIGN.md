@@ -13,11 +13,11 @@ This is the build document. Every P0/P1/P2 from the principal review is resolved
 |---|---|---|
 | Name | App name | **Psybeam** (`com.guitaripod.psybeam`) — clean App Store namespace, sibling to Solar Beam / Psywave. Findability via keyword subtitle, not the brand. |
 | A | Backend posture | **OpenAI `gpt-realtime-translate` — VERIFIED WORKING (Spike 1) via `/v1/realtime/translations`, 20+ languages, flat $0.034/min, no drift.** Azure fallback tier **retired** (the 13-language ceiling was disproved). `gpt-realtime-2` (instruction-steered) is the proven emergency fallback. Apple on-device for no-signal. |
-| B | Monetization | **Free 10 min/day → sub $9.99/mo · $59.99/yr → v1 trip-packs $19.99/300min · $34.99/600min.** BYO-key deferred (OpenAI ToS check). |
+| B | Monetization | **SHIPPED:** one-time **5 free minutes** (mako "welcome bonus", anonymous-first — no sign-in to start) → **consumable minute packs** (mako/AICredits via RevenueCat): **45 min $4.99 · 120 min $9.99 · 300 min $19.99**. *No subscription; the planned 10-min/day free tier + $9.99/$59.99 sub were dropped pre-launch. Billing runs on **mako** (`mako.midgarcorp.cc`), not the in-repo `workers/` mint (vestigial).* BYO-key deferred (OpenAI ToS check). |
 | C | Turn-taking default | **Auto-VAD + half-tap override** — *contingent on Spike 2*; falls back to hold-to-talk handset if the noisy-room echo test fails. |
 | D | Offline scope | **v1, not MVP.** MVP uses online `CLGeocoder` reverse-geocoding. |
 
-**Foundation scaffolded & green (2026-06-06):** PsybeamKit core (21 tests), psybeam-worker (38 tests, typecheck clean), iOS app (`xcodebuild BUILD SUCCEEDED`).
+**Foundation scaffolded & green (2026-06-06):** PsybeamKit core (21 tests), psybeam-worker (38 tests, typecheck clean), iOS app (`xcodebuild BUILD SUCCEEDED`). *(The in-repo `psybeam-worker` was never deployed and has since been removed — the shipped backend is the shared **mako** credits service; see §5.)*
 
 **Spike 1 — RESOLVED (2026-06-07).** `gpt-realtime-translate` is served ONLY under the dedicated `/v1/realtime/translations` namespace (the general `/v1/realtime` path 404s its inference — `inference_not_found_error`). Verified flow, live against the API:
 - **Mint (Worker):** `POST https://api.openai.com/v1/realtime/translations/client_secrets`, body `{ session: { model, audio: { output: { language } } } }` (NO `type` field) → `{ value: "ek_…", expires_at, session.type:"translation" }`.
@@ -74,7 +74,7 @@ Mirrors golf-coach / embr exactly.
 |---|---|---|
 | **(1) SPM core** | **`PsybeamKit`** (Swift 6, **Linux-compiles, NO UIKit/AVFoundation/Combine — Combine fully removed**, see §10) | `TranslationState`/`Side` enums; `TranslationProviding`/`LocationLanguageProviding`/`Translating` **Sendable** protocols exposing **`AsyncStream`/`AsyncSequence`** (no `AnyPublisher`); provider-agnostic request-spec structs; WS/WebRTC message DTOs; `CountryLocator` (online + offline impls) + `CldrLanguageTable` + `LocaleSuggestion` (pure value types); GRDB record structs. |
 | **(2) iOS app** | **`Psybeam`** (programmatic UIKit, MVVM+Combine) | `ConversationViewController` (@MainActor), `RealtimeCallService` (actor, owns `RTCPeerConnection` + `RTCAudioSession`), `LocationLanguageService` (actor over CoreLocation), `OpenAIRealtimeTranslate`/`AzureLiveInterpreter` adapters, simple color-fill divider view, Liquid-Glass caption cards. **Combine lives only here, at the VM↔VC boundary.** |
-| **(3) workers/** | **`psybeam-worker`** (Hono v4, jose v6, TypeScript, vitest) | Sign-in-with-Apple → HS256 app JWT; ephemeral-token mint; `/v1/config` language gate; **KV atomic quota**; D1 usage ledger. **No Durable Object.** |
+| **(3) backend** | ~~**`psybeam-worker`**~~ → **mako** (shared, `mako.midgarcorp.cc`, repo `pixie`) | **The in-repo worker was never shipped and has been removed.** mako mints the `ek_` token (`/v1/run/realtime.translate/start`), meters minutes as credits, and does anonymous-first identity + SIWA. See §5. |
 
 **LIVE AUDIO PATH — WebRTC owns I/O (the §4 rewrite):**
 
@@ -146,6 +146,8 @@ The `AsyncStream` continuation is `Sendable` and safe to yield from any executor
 ---
 
 ## 5. THE CLOUDFLARE WORKER SURFACE (`psybeam-worker`, Hono v4 / jose v6)
+
+> **⚠️ NOT SHIPPED / REMOVED (2026-06-27).** This in-repo worker design was never deployed and the `workers/` directory has been deleted. The shipped backend is the shared **mako** AICredits service (`mako.midgarcorp.cc`, repo `~/Dev/rust/pixie`): the device calls `POST /v1/run/realtime.translate/start` for an `ek_` mint + `sdpUrl`, then `/settle` to reconcile minutes. Minutes are billed as credits (**1 credit = 1 minute**) with a one-time **5-minute** welcome grant — no daily quota, no Sign-in-with-Apple gate (anonymous-first; SIWA only links/restores). The `/v1/session` broker + KV daily-quota surface described below is **historical design only**.
 
 > **VERIFIED 2026-06-07 (Spike 1) — implementation differs from the prose below; see §0.** The Worker mints at `POST /v1/realtime/translations/client_secrets` (body `{ session:{ model, audio.output.language } }`, no `type`) and returns `sdpUrl` `…/translations/calls`. **There is no output-language gate and no Azure 422 path** — both were removed; any requested language is minted. The "language gate / Azure path / 13-language list" steps below are historical.
 
@@ -285,11 +287,11 @@ The `Translating` impl in `Psybeam` wraps a zero-size `UIHostingController` carr
 - One-tap **turn-gated bidirectional** live translation via `gpt-realtime-translate`, **direct WebRTC** (WebRTC owns audio per §4).
 - **Table mode** dual-facing, rotated, color-coded, large-type UI + **simple color-fill divider** (the color *contract*, not fluid physics). **Table-as-default gated on Spike 2**; handset/hold-to-talk fully designed as the fallback default.
 - **Online `CLGeocoder`** GPS language suggestion + CLDR table, endonym banner, manual override + recents. (Offline polygon engine deferred to v1.)
-- Sign-in-with-Apple → app JWT → Worker mint; **atomic** free tier **10 min/day** (KV).
+- **SHIPPED:** anonymous-first identity via **mako** (`mako.midgarcorp.cc`); **one-time 5 free minutes** (welcome bonus), Sign-in-with-Apple only links/restores the account. *(The in-repo `workers/` mint + 10-min/day KV quota is **vestigial** — superseded by mako's per-minute credit reservation.)*
 - **5.1.2(i) pre-audio consent screen + revocable Settings toggle** (revocation actually kills cloud routing) naming OpenAI + Cloudflare; **bystander "cloud AI" indicator** on the local's half; privacy-policy update.
 - **4.3 defense baked into the submission:** first screenshot = the dual-facing table moment; App Review notes lead with the differentiation.
 - Privacy Manifest (`CA92.1`; `7D9E.1` DiskSpace if GRDB ships), `ITSAppUsesNonExemptEncryption=false`.
-- StoreKit 2 monthly ($9.99) + annual ($59.99) + 7-day trial. **Consent persistence in GRDB `AppPreferences`.** (Conversation history, Live Activity, Action Button deferred.)
+- **SHIPPED:** consumable **minute packs** (RevenueCat via mako/AICredits: 45 min $4.99 · 120 min $9.99 · 300 min $19.99) — *no subscription, no trial*. **Consent persistence in GRDB `AppPreferences`.** (Conversation history, Live Activity, Action Button deferred.)
 
 **v1:**
 - **Azure Live Interpreter fallback** for non-13 output corridors (Arabic/Thai/Turkish/Greek) + Personal Voice (pending Limited-Access approval applied-for on day 1).
@@ -318,7 +320,7 @@ The `Translating` impl in `Psybeam` wraps a zero-size `UIHostingController` carr
 
 **Product decisions the user must make before building:**
 - **A. Backend cost posture.** Ship OpenAI-primary (best UX) accepting the 13-lang gap for MVP, Azure in v1 — **apply for Azure Limited Access today** (long pole). *(Recommended.)*
-- **B. Monetization.** Confirm hybrid: free 10 min/day + sub ($9.99/$59.99) + v1 trip-packs ($19.99/$34.99). Ship BYO-key Pro? (needs OpenAI ToS confirmation — defer).
+- **B. Monetization.** **RESOLVED — shipped:** one-time 5 free minutes + consumable minute packs (45/120/300 min @ $4.99/$9.99/$19.99) on mako/AICredits; no subscription. *(The pre-launch plan — free 10 min/day + sub $9.99/$59.99 + trip-packs — was dropped.)* BYO-key Pro deferred (OpenAI ToS).
 - **C. Turn-taking default.** Confirm **auto-VAD-with-tap-override** (recommended) — but it is **contingent on Spike 2**; if table mode fails the noisy-room test, the default becomes **push-to-talk handset**. This is now a data-driven decision, not a pre-commitment.
 - **D. Offline scope.** Confirmed **v1**, not MVP (MVP uses `CLGeocoder`).
 - **E. The name.** **Psybeam** (my pick) or **Borderless**. Verify .app/.com + USPTO/EUIPO before committing. Avoid Babel/Babble (trademark thicket).

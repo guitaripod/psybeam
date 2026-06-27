@@ -54,10 +54,6 @@ targets:
     platform: iOS
     sources:
       - path: Psybeam
-        excludes:
-          - "Secrets.example.swift"
-      - path: Psybeam/Secrets.swift
-        optional: true
     dependencies:
       - package: PsybeamKit
         product: PsybeamKit

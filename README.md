@@ -12,29 +12,25 @@ Speech is translated by OpenAI's `gpt-realtime-translate` (simultaneous speech-t
 
 ## Structure
 
-Three parts, mirroring the rest of these apps:
+Two parts in this repo, plus a shared backend:
 
 - **`Sources/PsybeamKit`** — platform-agnostic Swift 6 core: the `TranslationState`/`Side`/`CallState` state machine, `Sendable` provider protocols exposing `AsyncStream`, DTOs, and the CLDR locale tables. No UIKit/AVFoundation. Compiles and tests on Linux and macOS.
 - **`Psybeam/`** — the programmatic UIKit app (xcodegen, no storyboards). MVVM with Combine only at the VM↔VC seam, a Metal aurora that reacts to the voice, Sign in with Apple, Liquid Glass. iOS 18+ deploy target, iOS 26 SDK, iPhone-only.
-- **`workers/`** — the Cloudflare Worker (Hono, jose, KV + D1): Sign in with Apple → app JWT, ephemeral token mint, atomic per-user minute quota, usage ledger.
+
+The backend is **mako** — a shared Cloudflare Worker (`mako.midgarcorp.cc`, repo `guitaripod/pixie`) that mints the ephemeral OpenAI token, meters minutes as credits, and handles Sign in with Apple. It lives outside this repo.
 
 See **[DESIGN.md](DESIGN.md)** for the architecture, the state machine, the data model, and the spikes that gate the build.
 
 ## Build
 
 ```bash
-scripts/setup.sh         # one-time: .env.local + Secrets.swift + xcodegen + SPM resolve
+scripts/setup.sh         # one-time: .env.local + xcodegen + SPM resolve
 scripts/ios-build.sh     # device build
 scripts/ios-deploy.sh    # build + install + relaunch on your device
-
-cd workers
-npm install
-npm run typecheck && npm test
-npx wrangler deploy
 ```
 
-`scripts/setup.sh` creates the two gitignored files you supply yourself: `.env.local` (your bundle id, team id, device udid — see `.env.local.example`) and `Psybeam/Secrets.swift` (your Worker URL — see `Psybeam/Secrets.example.swift`). Worker secrets (`OPENAI_API_KEY`, `APP_JWT_SECRET`, `APPLE_CLIENT_ID`, `APPLE_TEAM_ID`) are set with `wrangler secret put`; see `workers/.dev.vars.example`.
+`scripts/setup.sh` creates the gitignored `.env.local` you supply yourself (your bundle id, team id, device udid — see `.env.local.example`). The app ships no API keys: all backend secrets (the OpenAI key, etc.) live on the shared mako worker, not in this repo.
 
 ## Stack
 
-Swift 6 strict concurrency · UIKit (programmatic) · Combine · GRDB · Metal · WebRTC ([stasel/WebRTC](https://github.com/stasel/WebRTC)) · OpenAI `gpt-realtime-translate` · Cloudflare Workers (Hono · jose · KV · D1) · Sign in with Apple.
+Swift 6 strict concurrency · UIKit (programmatic) · Combine · GRDB · Metal · WebRTC ([stasel/WebRTC](https://github.com/stasel/WebRTC)) · OpenAI `gpt-realtime-translate` · mako credits backend (shared Cloudflare Worker) · Sign in with Apple.

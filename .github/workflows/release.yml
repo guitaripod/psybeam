@@ -63,14 +63,6 @@ jobs:
       - name: Generate Xcode project
         run: |
           brew install xcodegen
-          cat > Psybeam/Secrets.swift <<'EOF'
-          import Foundation
-
-          enum Secrets {
-              static let workerBaseURL = "https://psybeam-worker.guitaripod.workers.dev"
-              static let redirectURI = "psybeam://auth/callback"
-          }
-          EOF
           xcodegen generate
 
       - name: Set build number

@@ -53,6 +53,8 @@ is no 13-language ceiling.**
 
 ## What changed in the code
 
+> **Historical (2026-06-07).** These edits were made to the in-repo `workers/` worker, which has since been **removed** — the shipped backend is the shared **mako** service (repo `pixie`). The paths below no longer exist in this repo; they record what the spike changed at the time. `run.sh` is standalone and still re-runnable.
+
 - `workers/src/lib/openai.ts` — mint + SDP URLs point at `/v1/realtime/translations/*`;
   mint body drops `type`.
 - `workers/src/routes/session.ts` + `config.ts` — output-language gate + Azure 422 path

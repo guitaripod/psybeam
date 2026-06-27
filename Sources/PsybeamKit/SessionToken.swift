@@ -1,8 +1,9 @@
 import Foundation
 
-/// The `POST /v1/session` response. Field names mirror the Worker's JSON
-/// exactly; do not rename without changing the broker. `ephemeralToken` is the
-/// OpenAI `ek_` client secret the device exchanges for an SDP answer directly.
+/// The session token the call layer consumes, assembled from mako's
+/// `/v1/run/realtime.translate/start` response. `ephemeralToken` is the OpenAI
+/// `ek_` client secret the device exchanges for an SDP answer directly — the
+/// audio never traverses our infrastructure.
 public struct SessionToken: Sendable, Codable, Equatable {
     public var provider: String
     public var ephemeralToken: String

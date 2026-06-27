@@ -6,17 +6,17 @@ See `DESIGN.md` for the authoritative architecture, the backend decision, the st
 
 ## Status
 
-Greenfield — foundation scaffolded & green. **Spike 1 is RESOLVED (2026-06-07):** the `gpt-realtime-translate` mint + endpoints (`/v1/realtime/translations`) and 20+-language output are verified live; the Worker targets these endpoints. **Run the remaining spikes in `DESIGN.md` §11 before writing the §4 audio code** — table-mode echo on real hardware (Spike 2) and turn-taking (Spike 3) are still unproven. Do not commit to the audio path or the turn-taking model before Spikes 2 and 3 pass.
+Greenfield — foundation scaffolded & green. **Spike 1 is RESOLVED (2026-06-07):** the `gpt-realtime-translate` mint + endpoints (`/v1/realtime/translations`) and 20+-language output are verified live; mako mints against these endpoints. **Run the remaining spikes in `DESIGN.md` §11 before writing the §4 audio code** — table-mode echo on real hardware (Spike 2) and turn-taking (Spike 3) are still unproven. Do not commit to the audio path or the turn-taking model before Spikes 2 and 3 pass.
 
 ## Stack
 
 - **PsybeamKit** (`Sources/PsybeamKit`): platform-agnostic Swift 6 — `TranslationState`/`Side`/`CallState` enums, `RealtimeCallProviding`/`TranslationProviding`/`LocationLanguageProviding`/`Translating` **Sendable** protocols exposing `AsyncStream` (no UIKit/AVFoundation/Combine imports), provider DTOs, `CldrLanguageTable` + `LocaleSuggestion`, GRDB record structs. **Compiles and tests on Linux and macOS.**
 - **Psybeam** (`Psybeam/`, xcodegen): programmatic UIKit, MVVM. Combine `PassthroughSubject` lives **only** at the VM↔VC seam. `RealtimeCallService` (actor, owns `RTCPeerConnection` + `RTCAudioSession`), `LocationLanguageService` (actor over CoreLocation), `OpenAIRealtimeTranslate` adapter (the Azure fallback adapter is retired — Spike 1 disproved the output-language ceiling). Swift 6 strict concurrency, iOS 18+ deploy target / iOS 26 SDK, iPhone-only. Darwin-only — build on a Mac.
-- **workers/** (`psybeam-worker`): Cloudflare Workers (Hono v4, jose v6, KV + D1). Sign in with Apple → HS256 app JWT; ephemeral `ek_` mint; **atomic** per-user minute quota; usage ledger. TypeScript, vitest. No Durable Object.
+- **Backend**: the shared **mako** AICredits worker (`mako.midgarcorp.cc`, repo `~/Dev/rust/pixie`) — token mint, credit metering, anonymous-first identity + SIWA. **Not in this repo** (the old in-repo `psybeam-worker` was vestigial and has been removed).
 
 ## Backend
 
-`gpt-realtime-translate` (OpenAI speech-to-speech, auto-detects source, mimics speaker voice) over **WebRTC direct from device**, using a Worker-minted ephemeral token — so the audio never touches our infrastructure and the real key stays on Cloudflare. Served under the dedicated `/v1/realtime/translations` namespace (mint at `/v1/realtime/translations/client_secrets`, SDP at `/v1/realtime/translations/calls`); the general `/v1/realtime` path 404s the translate inference. **WebRTC owns the `AVAudioSession`; there is no hand-built `AVAudioEngine` graph.** Route the speaker via the `.defaultToSpeaker` category option, never `overrideOutputAudioPort` (it reverts on ICE-connect). Spike 1 (2026-06-07) verified the model translates 20+ languages, so the **Azure "Live Interpreter" breadth-fallback tier is retired** (there was no 13-output ceiling). `gpt-realtime-2` (instruction-steered) is the emergency fallback; Apple on-device (`SpeechAnalyzer` + Translation framework) is the no-signal fallback — never primary.
+`gpt-realtime-translate` (OpenAI speech-to-speech, auto-detects source, mimics speaker voice) over **WebRTC direct from device**, using a **mako**-minted ephemeral token (the shared AICredits backend, `mako.midgarcorp.cc`, via `POST /v1/run/realtime.translate/start`) — so the audio never touches our infrastructure and the real key stays on Cloudflare. Served under the dedicated `/v1/realtime/translations` namespace (mint at `/v1/realtime/translations/client_secrets`, SDP at `/v1/realtime/translations/calls`); the general `/v1/realtime` path 404s the translate inference. **WebRTC owns the `AVAudioSession`; there is no hand-built `AVAudioEngine` graph.** Route the speaker via the `.defaultToSpeaker` category option, never `overrideOutputAudioPort` (it reverts on ICE-connect). Spike 1 (2026-06-07) verified the model translates 20+ languages, so the **Azure "Live Interpreter" breadth-fallback tier is retired** (there was no 13-output ceiling). `gpt-realtime-2` (instruction-steered) is the emergency fallback; Apple on-device (`SpeechAnalyzer` + Translation framework) is the no-signal fallback — never primary.
 
 ## Code style (non-negotiable)
 
@@ -35,7 +35,7 @@ Greenfield — foundation scaffolded & green. **Spike 1 is RESOLVED (2026-06-07)
 xcodegen regenerates `Psybeam.xcodeproj` from `project.yml` on every build, so:
 
 ```bash
-scripts/setup.sh         # one-time: .env.local + Secrets.swift + xcodegen + spm
+scripts/setup.sh         # one-time: .env.local + xcodegen + spm
 scripts/ios-build.sh     # device build, with staleness assertion
 scripts/ios-deploy.sh    # build + install + relaunch on PSYBEAM_DEVICE_UDID
 scripts/ios-test.sh      # PsybeamKit (SPM) + hosted iOS TranslationLeg tests on a simulator
@@ -43,14 +43,7 @@ scripts/ios-test.sh      # PsybeamKit (SPM) + hosted iOS TranslationLeg tests on
 
 `ios-build.sh` runs `xcodegen generate` first, captures the real xcodebuild exit code via `pipefail`, surfaces Swift 6 concurrency errors, and asserts no `.swift` is newer than the built binary. Adding/removing any file → just run `ios-build.sh`. Never call `xcodebuild` raw.
 
-```bash
-cd workers
-npm install
-npm run typecheck
-npm test
-CLOUDFLARE_API_TOKEN=$(cat ~/.cloudflare-api-token) npx wrangler dev     # local
-CLOUDFLARE_API_TOKEN=$(cat ~/.cloudflare-api-token) npx wrangler deploy   # prod
-```
+The backend (mako) lives in `~/Dev/rust/pixie` and is deployed from there — see that repo + `~/.config/midgar/OPERATIONS.md`. This repo builds only the iOS app.
 
 ## Logging — agents read this
 
@@ -58,7 +51,7 @@ CLOUDFLARE_API_TOKEN=$(cat ~/.cloudflare-api-token) npx wrangler deploy   # prod
 
 ## Secrets / config
 
-`.env.local` (gitignored, made by `setup.sh`): `PSYBEAM_BUNDLE_ID`, `PSYBEAM_TEAM_ID`, `PSYBEAM_DEVICE_UDID`, `PSYBEAM_DEVICE_NAME`. `Psybeam/Secrets.swift` (gitignored, from `Secrets.example.swift`): `workerBaseURL`, `redirectURI`. Worker secrets via `wrangler secret put` (prod) + `workers/.dev.vars` (local): `OPENAI_API_KEY`, `APP_JWT_SECRET`, `APPLE_CLIENT_ID`, `APPLE_TEAM_ID`. Never commit any of them.
+`.env.local` (gitignored, made by `setup.sh`): `PSYBEAM_BUNDLE_ID`, `PSYBEAM_TEAM_ID`, `PSYBEAM_DEVICE_UDID`, `PSYBEAM_DEVICE_NAME` — never commit it. The app ships no API keys: all backend secrets (`OPENAI_API_KEY`, etc.) live on the shared **mako** worker (`~/Dev/rust/pixie`), managed there via `wrangler secret put`. The mako base URL is hardcoded in `AICreditsManager.swift` (no `Secrets.swift`).
 
 ## Reality
 

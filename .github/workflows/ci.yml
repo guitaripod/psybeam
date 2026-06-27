@@ -20,23 +20,3 @@ jobs:
         run: swift build
       - name: Test
         run: swift test
-
-  worker:
-    name: Worker (typecheck + test)
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: workers
-    steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
-        with:
-          node-version: "20"
-          cache: npm
-          cache-dependency-path: workers/package-lock.json
-      - name: Install
-        run: npm ci
-      - name: Typecheck
-        run: npm run typecheck
-      - name: Test
-        run: npm test

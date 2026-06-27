@@ -3,7 +3,6 @@
 #
 # - Creates .env.local from .env.local.example if missing (auto-detecting the
 #   signing Team ID when possible).
-# - Copies Psybeam/Secrets.example.swift -> Psybeam/Secrets.swift if missing.
 # - Regenerates Psybeam.xcodeproj from project.yml (xcodegen).
 # - Resolves the local PsybeamKit package + GRDB.
 #
@@ -33,14 +32,6 @@ else
   echo "·  .env.local already exists, leaving it"
 fi
 
-if [ ! -f Psybeam/Secrets.swift ]; then
-  echo "==> Creating Psybeam/Secrets.swift from example"
-  cp Psybeam/Secrets.example.swift Psybeam/Secrets.swift
-  echo "    edit Psybeam/Secrets.swift: workerBaseURL + redirectURI"
-else
-  echo "·  Psybeam/Secrets.swift already exists, leaving it"
-fi
-
 if ! command -v xcodegen >/dev/null 2>&1; then
   echo "error: xcodegen not installed (brew install xcodegen)." >&2
   exit 1
@@ -52,4 +43,4 @@ xcodegen generate
 echo "==> swift package resolve"
 swift package resolve >/dev/null 2>&1 || true
 
-echo "==> Done. Next: edit .env.local + Psybeam/Secrets.swift, then scripts/ios-build.sh"
+echo "==> Done. Next: edit .env.local, then scripts/ios-build.sh"
