@@ -21,6 +21,19 @@ enum AppSettings {
         static let aiConsentGranted = "psybeam.aiConsentGranted"
         static let pendingSessionId = "psybeam.pendingSessionId"
         static let pendingReservedMinutes = "psybeam.pendingReservedMinutes"
+        static let completedTurns = "psybeam.completedTurns"
+        static let ratingPromptShownVersion = "psybeam.ratingPromptShownVersion"
+    }
+
+    /// Translation turns that actually produced text. Gates the rating prompt.
+    static var completedTurns: Int {
+        get { defaults.integer(forKey: Key.completedTurns) }
+        set { defaults.set(newValue, forKey: Key.completedTurns) }
+    }
+
+    static var ratingPromptShownVersion: String? {
+        get { defaults.string(forKey: Key.ratingPromptShownVersion) }
+        set { defaults.set(newValue, forKey: Key.ratingPromptShownVersion) }
     }
 
     /// A reserved realtime session that may not have been settled (e.g. the app

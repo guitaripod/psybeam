@@ -31,11 +31,6 @@ if [ -z "${PSYBEAM_TEAM_ID:-}" ] || [ -z "${PSYBEAM_BUNDLE_ID:-}" ]; then
   exit 1
 fi
 
-if [ ! -f "$ROOT/Psybeam/Secrets.swift" ]; then
-  echo "❌ Psybeam/Secrets.swift missing — run scripts/setup.sh." >&2
-  exit 1
-fi
-
 if ! command -v xcodegen >/dev/null 2>&1; then
   echo "❌ xcodegen not installed (brew install xcodegen)." >&2
   exit 1

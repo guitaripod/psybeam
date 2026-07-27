@@ -549,6 +549,7 @@ final class ConversationViewController: UIViewController {
     private func onTurnFinished() {
         notify.notificationOccurred(.success)
         notify.prepare()
+        ReviewPrompt.recordCompletedTurn(in: view.window?.windowScene)
         let base = translatedLabel.transform
         UIView.animate(withDuration: 0.14, animations: {
             self.translatedLabel.transform = base.scaledBy(x: 1.035, y: 1.035)
