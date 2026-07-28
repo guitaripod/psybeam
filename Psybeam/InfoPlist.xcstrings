@@ -5,10 +5,58 @@
       "comment" : "Camera permission prompt. The camera is never used; the realtime audio framework requests it.",
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam macht keine Fotos oder Videos. Der Kamerazugriff wird nur vom Echtzeit-Audio-Framework angefragt und nie genutzt."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Psybeam does not take photos or videos. Camera access is requested only by the real-time audio framework and is never used."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam no toma fotos ni vídeos. El acceso a la cámara solo lo solicita el framework de audio en tiempo real y nunca se usa."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam ne prend ni photos ni vidéos. L’accès à l’appareil photo est uniquement demandé par le framework audio en temps réel et n’est jamais utilisé."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam non scatta foto né registra video. L’accesso alla fotocamera viene richiesto solo dal framework audio in tempo reale e non viene mai utilizzato."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeamは写真やビデオを撮影しません。カメラへのアクセスはリアルタイム音声フレームワークが要求するもので、実際には使用しません。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam은 사진이나 동영상을 촬영하지 않습니다. 카메라 접근 권한은 실시간 오디오 프레임워크가 요청할 뿐이며 실제로 사용되지 않습니다."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Psybeam não tira fotos nem grava vídeos. O acesso à câmera é solicitado apenas pelo framework de áudio em tempo real e nunca é usado."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam 不会拍摄照片或视频。相机权限仅由实时音频框架请求，实际从不使用。"
           }
         }
       }
@@ -17,10 +65,58 @@
       "comment" : "Location permission prompt shown before GPS suggests the local language.",
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam schlägt dir beim Grenzübertritt die Sprache deines aktuellen Standorts vor."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Psybeam suggests the local language for where you are as you cross borders."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam sugiere el idioma local del lugar donde estás cuando cruzas fronteras."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam suggère la langue locale de l’endroit où vous êtes lorsque vous franchissez une frontière."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam suggerisce la lingua locale del posto in cui ti trovi quando attraversi un confine."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeamは、国境を越えるたびに現在地の言語を提案します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam은 국경을 넘을 때 현재 위치의 언어를 제안합니다."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Psybeam sugere o idioma local do lugar onde você está ao cruzar fronteiras."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam 会在你跨越国界时，根据所在位置建议当地语言。"
           }
         }
       }
@@ -29,10 +125,58 @@
       "comment" : "Microphone permission prompt shown before the first translation session.",
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam verwendet das Mikrofon, um Sprache für die Live-Sprachübersetzung aufzunehmen."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Psybeam uses the microphone to capture speech for live voice translation."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam usa el micrófono para captar el habla y traducirla por voz en tiempo real."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam utilise le micro pour capter la parole et la traduire vocalement en direct."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam usa il microfono per acquisire la voce e tradurla in tempo reale."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeamは、リアルタイム音声翻訳のために音声を取得する目的でマイクを使用します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam은 실시간 음성 번역을 위해 마이크로 음성을 수집합니다."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Psybeam usa o microfone para captar a fala e traduzi-la por voz em tempo real."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam 使用麦克风采集语音，以进行实时语音翻译。"
           }
         }
       }
