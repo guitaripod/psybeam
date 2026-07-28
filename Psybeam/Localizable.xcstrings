@@ -1,7 +1,208 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "%lld min" : {
 
+    },
+    "Account" : {
+
+    },
+    "Account Deleted" : {
+
+    },
+    "Agree & Continue" : {
+
+    },
+    "Appearance" : {
+
+    },
+    "Auto" : {
+
+    },
+    "Auto-detect from location" : {
+
+    },
+    "Buy minutes" : {
+
+    },
+    "CONNECTING" : {
+
+    },
+    "Cancel" : {
+
+    },
+    "Change the language they speak" : {
+
+    },
+    "Change the language you speak" : {
+
+    },
+    "Chime on their turn" : {
+
+    },
+    "Cloud AI" : {
+
+    },
+    "Couldn’t Delete Account" : {
+
+    },
+    "Dark" : {
+
+    },
+    "Delete Account" : {
+
+    },
+    "Delete Account?" : {
+
+    },
+    "Deleting…" : {
+
+    },
+    "Display" : {
+
+    },
+    "Done" : {
+
+    },
+    "GET READY" : {
+
+    },
+    "HOLD TO RETRY" : {
+
+    },
+    "HOLD · THEM" : {
+
+    },
+    "HOLD · YOU" : {
+
+    },
+    "Hold a button and speak" : {
+
+    },
+    "Hold to speak %@" : {
+
+    },
+    "Hold while they speak %@" : {
+
+    },
+    "Keep screen bright" : {
+
+    },
+    "LANGUAGE NOT SUPPORTED" : {
+
+    },
+    "LISTENING" : {
+
+    },
+    "Languages" : {
+
+    },
+    "Light" : {
+
+    },
+    "Microphone" : {
+
+    },
+    "Minutes" : {
+
+    },
+    "Minutes remaining" : {
+
+    },
+    "More" : {
+
+    },
+    "More Apps" : {
+
+    },
+    "NO CONNECTION" : {
+
+    },
+    "Not now" : {
+
+    },
+    "OK" : {
+
+    },
+    "OUT OF MINUTES" : {
+
+    },
+    "Permanently deletes your account and remaining minutes from our servers, and erases on-device data. This can't be undone." : {
+
+    },
+    "Please check your connection and try again." : {
+
+    },
+    "Privacy" : {
+
+    },
+    "Privacy Policy" : {
+
+    },
+    "Psybeam %@ (%@)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Psybeam %1$@ (%2$@)"
+          }
+        }
+      }
+    },
+    "RECONNECTING" : {
+
+    },
+    "Settings" : {
+
+    },
+    "Standard" : {
+
+    },
+    "Swap languages" : {
+
+    },
+    "TAP TO ENABLE MIC" : {
+
+    },
+    "They speak" : {
+
+    },
+    "This permanently deletes your account and any remaining minutes from our servers and erases on-device data. This can’t be undone." : {
+
+    },
+    "To translate, the microphone audio of your conversation is streamed in real time to OpenAI — our cloud translation provider — and the translation is spoken back to you. The audio is sent directly to OpenAI and never passes through our servers. See OpenAI’s privacy terms and our Privacy Policy for how they handle it.\n\nYour conversation transcript stays on this device. The person you speak with is translated by OpenAI the same way." : {
+
+    },
+    "Translated by cloud AI" : {
+
+    },
+    "Translation by OpenAI" : {
+
+    },
+    "Voice Isolation" : {
+
+    },
+    "Voice Isolation locks onto the closest voice and cuts background noise — best in cafés, streets, and markets. iOS only lets you switch it yourself: tap it above, or Control Center → Mic Mode." : {
+
+    },
+    "Wide Spectrum" : {
+
+    },
+    "Withdraw cloud AI consent" : {
+
+    },
+    "You can withdraw consent anytime in Settings." : {
+
+    },
+    "You speak" : {
+
+    },
+    "Your account and data have been removed." : {
+
+    },
+    "Your conversation audio is streamed directly to OpenAI to translate it, then spoken back — it never passes through our servers. See our Privacy Policy for how OpenAI handles it. Your transcript stays on this device." : {
+
+    }
   },
   "version" : "1.0"
 }

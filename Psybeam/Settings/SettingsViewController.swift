@@ -91,7 +91,7 @@ final class SettingsViewController: UIViewController {
 
     private func buildLayout() {
         let title = UILabel()
-        title.text = "Settings"
+        title.text = String(localized: "Settings")
         title.font = .systemFont(ofSize: 32, weight: .bold)
         title.textColor = .label
 
@@ -133,40 +133,40 @@ final class SettingsViewController: UIViewController {
         configureLanguageButton(youButton)
         configureLanguageButton(themButton)
 
-        let languageCard = addSection("Languages")
-        languageCard.addArrangedSubview(row(icon: "person.fill", tint: brand, "You speak", control: youButton))
+        let languageCard = addSection(String(localized: "Languages"))
+        languageCard.addArrangedSubview(row(icon: "person.fill", tint: brand, String(localized: "You speak"), control: youButton))
         languageCard.addArrangedSubview(divider())
-        languageCard.addArrangedSubview(row(icon: "globe", tint: .systemGreen, "They speak", control: themButton))
+        languageCard.addArrangedSubview(row(icon: "globe", tint: .systemGreen, String(localized: "They speak"), control: themButton))
         languageCard.addArrangedSubview(divider())
-        languageCard.addArrangedSubview(row(icon: "location.fill", tint: .systemTeal, "Auto-detect from location", control: toggle(AppSettings.autoDetectLocation, #selector(autoChanged))))
+        languageCard.addArrangedSubview(row(icon: "location.fill", tint: .systemTeal, String(localized: "Auto-detect from location"), control: toggle(AppSettings.autoDetectLocation, #selector(autoChanged))))
 
-        let micCard = addSection("Microphone")
+        let micCard = addSection(String(localized: "Microphone"))
         micCard.addArrangedSubview(micModeRow())
         micCard.addArrangedSubview(divider())
-        micCard.addArrangedSubview(caption("Voice Isolation locks onto the closest voice and cuts background noise — best in cafés, streets, and markets. iOS only lets you switch it yourself: tap it above, or Control Center → Mic Mode.", icon: "sparkles", tint: .systemTeal))
+        micCard.addArrangedSubview(caption(String(localized: "Voice Isolation locks onto the closest voice and cuts background noise — best in cafés, streets, and markets. iOS only lets you switch it yourself: tap it above, or Control Center → Mic Mode."), icon: "sparkles", tint: .systemTeal))
         micCard.addArrangedSubview(divider())
-        micCard.addArrangedSubview(row(icon: "bell.fill", tint: .systemPink, "Chime on their turn", control: toggle(AppSettings.turnChime, #selector(chimeChanged))))
+        micCard.addArrangedSubview(row(icon: "bell.fill", tint: .systemPink, String(localized: "Chime on their turn"), control: toggle(AppSettings.turnChime, #selector(chimeChanged))))
 
-        let displayCard = addSection("Display")
-        displayCard.addArrangedSubview(row(icon: "sun.max.fill", tint: .systemOrange, "Keep screen bright", control: toggle(AppSettings.keepScreenBright, #selector(brightChanged))))
+        let displayCard = addSection(String(localized: "Display"))
+        displayCard.addArrangedSubview(row(icon: "sun.max.fill", tint: .systemOrange, String(localized: "Keep screen bright"), control: toggle(AppSettings.keepScreenBright, #selector(brightChanged))))
         displayCard.addArrangedSubview(divider())
-        displayCard.addArrangedSubview(row(icon: "circle.lefthalf.filled", tint: .systemGray, "Appearance", control: appearanceControl()))
+        displayCard.addArrangedSubview(row(icon: "circle.lefthalf.filled", tint: .systemGray, String(localized: "Appearance"), control: appearanceControl()))
 
         minutesLabel.text = "…"
         minutesLabel.font = .systemFont(ofSize: 16, weight: .semibold)
         minutesLabel.textColor = .secondaryLabel
         let buyButton = UIButton(type: .system)
-        buyButton.setTitle("Buy minutes", for: .normal)
+        buyButton.setTitle(String(localized: "Buy minutes"), for: .normal)
         buyButton.contentHorizontalAlignment = .leading
         buyButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .semibold)
         buyButton.tintColor = brand
         buyButton.addTarget(self, action: #selector(openStore), for: .touchUpInside)
-        let minutesCard = addSection("Minutes")
-        minutesCard.addArrangedSubview(row(icon: "waveform", tint: .systemPurple, "Minutes remaining", control: minutesLabel))
+        let minutesCard = addSection(String(localized: "Minutes"))
+        minutesCard.addArrangedSubview(row(icon: "waveform", tint: .systemPurple, String(localized: "Minutes remaining"), control: minutesLabel))
         minutesCard.addArrangedSubview(divider())
         minutesCard.addArrangedSubview(row(icon: "creditcard.fill", tint: brand, control: buyButton))
 
-        let privacyCard = addSection("Privacy")
+        let privacyCard = addSection(String(localized: "Privacy"))
         let privacy = UILabel()
         privacy.numberOfLines = 0
         privacy.font = .systemFont(ofSize: 13)
@@ -180,20 +180,20 @@ final class SettingsViewController: UIViewController {
         privacyCard.addArrangedSubview(row(icon: "xmark.shield.fill", tint: .systemRed,
             control: linkButton(String(localized: "Withdraw cloud AI consent"), color: .systemRed, #selector(revokeConsent))))
 
-        let accountCard = addSection("Account")
+        let accountCard = addSection(String(localized: "Account"))
         accountCard.addArrangedSubview(row(icon: "trash.fill", tint: .systemRed,
             control: linkButton(String(localized: "Delete Account"), color: .systemRed, #selector(confirmDeleteAccount))))
         accountCard.addArrangedSubview(divider())
         accountCard.addArrangedSubview(caption(String(localized: "Permanently deletes your account and remaining minutes from our servers, and erases on-device data. This can't be undone."), icon: "exclamationmark.triangle.fill", tint: .systemOrange))
 
-        let moreCard = addSection("More")
+        let moreCard = addSection(String(localized: "More"))
         moreCard.addArrangedSubview(row(icon: "square.stack.3d.up.fill", tint: brand,
             control: linkButton(String(localized: "More Apps"), color: brand, #selector(openMoreApps))))
 
         let footer = UILabel()
         let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
         let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? ""
-        footer.text = "Psybeam \(version) (\(build))"
+        footer.text = String(localized: "Psybeam \(version) (\(build))")
         footer.font = .systemFont(ofSize: 12)
         footer.textColor = .tertiaryLabel
         footer.textAlignment = .center
@@ -205,7 +205,7 @@ final class SettingsViewController: UIViewController {
         var config = UIButton.Configuration.gray()
         config.cornerStyle = .capsule
         config.baseForegroundColor = .label
-        config.attributedTitle = AttributedString("Done", attributes: AttributeContainer([.font: UIFont.systemFont(ofSize: 16, weight: .semibold)]))
+        config.attributedTitle = AttributedString(String(localized: "Done"), attributes: AttributeContainer([.font: UIFont.systemFont(ofSize: 16, weight: .semibold)]))
         config.contentInsets = NSDirectionalEdgeInsets(top: 7, leading: 16, bottom: 7, trailing: 16)
         return config
     }
@@ -331,7 +331,11 @@ final class SettingsViewController: UIViewController {
     }
 
     private func appearanceControl() -> UISegmentedControl {
-        let control = UISegmentedControl(items: ["Auto", "Light", "Dark"])
+        let control = UISegmentedControl(items: [
+            String(localized: "Auto"),
+            String(localized: "Light"),
+            String(localized: "Dark"),
+        ])
         control.selectedSegmentIndex = AppSettings.appearance.rawValue
         control.selectedSegmentTintColor = brand
         control.setTitleTextAttributes([.foregroundColor: UIColor.label], for: .normal)
@@ -388,7 +392,7 @@ final class SettingsViewController: UIViewController {
     private func observeBalance() {
         AICreditsManager.store.$balance
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] balance in self?.minutesLabel.text = "\(balance) min" }
+            .sink { [weak self] balance in self?.minutesLabel.text = String(localized: "\(balance) min") }
             .store(in: &cancellables)
     }
 
@@ -416,7 +420,7 @@ final class SettingsViewController: UIViewController {
         let trailing = UIStackView(arrangedSubviews: [micModeValue, chevron])
         trailing.spacing = 5
         trailing.alignment = .center
-        let r = row(icon: "waveform", tint: brand, "Voice Isolation", control: trailing)
+        let r = row(icon: "waveform", tint: brand, String(localized: "Voice Isolation"), control: trailing)
         r.isUserInteractionEnabled = true
         r.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(openMicModes)))
         return r
@@ -442,10 +446,10 @@ final class SettingsViewController: UIViewController {
 
     private static func micModeName(_ mode: AVCaptureDevice.MicrophoneMode) -> String {
         switch mode {
-        case .voiceIsolation: "Voice Isolation"
-        case .wideSpectrum: "Wide Spectrum"
-        case .standard: "Standard"
-        @unknown default: "Standard"
+        case .voiceIsolation: String(localized: "Voice Isolation")
+        case .wideSpectrum: String(localized: "Wide Spectrum")
+        case .standard: String(localized: "Standard")
+        @unknown default: String(localized: "Standard")
         }
     }
 
