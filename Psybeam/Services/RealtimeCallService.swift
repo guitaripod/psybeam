@@ -287,9 +287,17 @@ private final class CallCoordinator: NSObject, RTCPeerConnectionDelegate, RTCDat
 
     func dataChannelDidChangeState(_ dataChannel: RTCDataChannel) {}
 
+    /// `/v1/realtime/translations` streams `session.input_transcript.delta` and
+    /// `session.output_transcript.delta` and — measured over a full session plus
+    /// eight seconds of trailing silence — never a closing `.done`. This stays as
+    /// forward compatibility; `TranslationLeg` ends turns on caption quiescence.
+    private static func isTurnFinal(_ eventType: String) -> Bool {
+        eventType.hasSuffix(".done")
+    }
+
     func dataChannel(_ dataChannel: RTCDataChannel, didReceiveMessageWith buffer: RTCDataBuffer) {
         guard let event = try? JSONDecoder().decode(OAIEvent.self, from: buffer.data) else { return }
-        let isFinal = event.type.hasSuffix(".done")
+        let isFinal = Self.isTurnFinal(event.type)
         if event.type.contains("output_transcript") {
             transcriptCont.yield(TranscriptDelta(side: direction.other, text: event.delta ?? "", isFinal: isFinal))
         } else if event.type.contains("input_transcript") {

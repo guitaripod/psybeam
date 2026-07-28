@@ -28,6 +28,8 @@ final class SignalRecorder {
     private var count = 0
     private var cancellable: AnyCancellable?
 
+    var signals: Int { count }
+
     init(_ publisher: some Publisher<Void, Never>) {
         cancellable = publisher.sink { [weak self] in self?.count += 1 }
     }

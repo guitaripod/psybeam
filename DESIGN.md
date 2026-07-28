@@ -172,9 +172,15 @@ GET  /v1/me/quota
 ```jsonc
 { "expires_after": { "anchor":"created_at", "seconds":120 },
   "session": { "model":"gpt-realtime-translate",
-    "audio": { "input":{ "transcription":{ "model":"gpt-realtime-whisper" } },
+    "audio": { "input":{ "transcription":{ "model":"gpt-4o-mini-transcribe" } },
                "output":{ "language":"es" } } } }   // output lang validated in step 2
 ```
+> **Corrected 2026-07-29 (Spike 6).** The transcription model was `gpt-realtime-whisper`
+> here; OpenAI now lists that as legacy. Shipped is **`gpt-4o-mini-transcribe`**
+> (+$0.003/min). Without an input transcription model the session emits **no**
+> `input_transcript` events at all, so this line is what makes the source-confirmation
+> caption exist. `prompt`/`keywords`/`languages` are rejected in this namespace.
+
 6. Return `{ provider, ephemeralToken, expiresAt, sdpUrl:"https://api.openai.com/v1/realtime/calls", model, targetLanguage, maxSessionSeconds:3600, sessionId, minutesRemaining }`. iOS does the SDP exchange **directly**.
 
 **Honest worst-case exposure.** Per *connected* session: bounded by the **60-min OpenAI hard cap** ≈ **$2.04** for translate. Per *leaked app JWT*: bounded by **`DAILY_QUOTA × $0.034` per user/day** — **only because** the debit is atomic-at-mint. Without atomic debit it is unbounded (the review's correct catch). Concurrency cap + mint rate-limit bound the burst.
@@ -345,6 +351,9 @@ Mint `ek_` from the Worker, connect iOS→OpenAI **direct WebRTC** over a thrott
 
 **Spike 5 — Offline boundary bundle size + cold-start parse (½–1 day, gates the v1 offline geocoder; run before v1, not MVP).**
 Build the hybrid layer (1:50m coarse + enclave-only 1:10m for the ~12 problem features), emit the compact binary, **measure bundle bytes and cold deserialization + first-fix time** on an iPhone Air. Test the enclave fixtures (Büsingen, Llívia, Baarle, Vatican, Campione, Kaliningrad). **Pass:** bundle ≤ ~6 MB and parse < ~150 ms. **Fail:** lazy-load the enclave layer or fall back to `CLGeocoder`-only with a "no offline near borders" note. *Replaces the non-credible 1–4 MB uniform-1:10m target with a measured number.*
+
+**Spike 6 — What the translations transport actually emits (RESOLVED 2026-07-29, `spikes/spike6-transcript-events/`).**
+Ran six live WebSocket sessions with synthesized speech + a long silence tail. **Two shipped bugs found:** (a) with no `audio.input.transcription.model` in the mint the session emits **zero** `input_transcript` events, so the source-confirmation caption had no data source; (b) the transport **never sends a closing `.done`/`.completed`** — measured over 8 s of trailing silence + 20 s of watching — so `isFinal` was always false and the turn-finished path (haptic, completion animation, `ReviewPrompt.recordCompletedTurn`) never ran. Fixes: mako mints `gpt-4o-mini-transcribe` (+$0.003/min); `TranslationLeg` closes turns on caption quiescence. Also settled: the 2026-07-28 `gpt-live-transcribe`/`gpt-transcribe` release is ASR-only and does **not** replace `gpt-realtime-translate`; its `prompt`/`keywords`/`languages` context knobs are rejected in this namespace.
 
 **Sequencing:** Spikes 1, 2, 4 are the MVP go/no-go set and can run in parallel in week 1. Spike 3 follows once a basic WebRTC loop exists. Spike 5 is v1-time. **Do not write §4 audio code before Spike 2 passes, and do not lock the turn-taking model before Spike 3.**
 

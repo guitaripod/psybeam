@@ -6,8 +6,17 @@ import Testing
 @MainActor
 @Suite("TranslationLeg behavior")
 struct TranslationLegTests {
-    private func makeLeg(_ mock: MockCall, speaker: Side = .traveler) -> TranslationLeg {
-        TranslationLeg(call: mock, speaker: speaker, pair: LanguagePair(traveler: "en", local: "es"))
+    private func makeLeg(
+        _ mock: MockCall,
+        speaker: Side = .traveler,
+        settleInterval: Duration = .milliseconds(120)
+    ) -> TranslationLeg {
+        TranslationLeg(
+            call: mock,
+            speaker: speaker,
+            pair: LanguagePair(traveler: "en", local: "es"),
+            settleInterval: settleInterval
+        )
     }
 
     @Test("A successful hold arms the mic and reaches listening")
@@ -67,6 +76,64 @@ struct TranslationLegTests {
         #expect(await source.waitFor { $0 == "Where is it" })
         let leaked = await text.waitFor(timeout: .milliseconds(200)) { $0.contains("Where is it") }
         #expect(!leaked)
+    }
+
+    @Test("A settled caption finishes the turn even though no closing delta ever arrives")
+    func settlesWithoutFinalDelta() async {
+        let mock = MockCall()
+        let leg = makeLeg(mock)
+        let finished = SignalRecorder(leg.finishedPublisher)
+        let states = Recorder(leg.statePublisher)
+        leg.holdDown()
+        _ = await states.waitFor { if case .listening = $0 { return true }; return false }
+        mock.emit(TranscriptDelta(side: .local, text: "Hola", isFinal: false))
+        leg.holdUp()
+        #expect(await finished.waitForSignal())
+        try? await Task.sleep(for: .milliseconds(300))
+        #expect(finished.signals == 1)
+    }
+
+    @Test("A turn still being held never finishes, however long the caption sits idle")
+    func heldTurnNeverFinishes() async {
+        let mock = MockCall()
+        let leg = makeLeg(mock)
+        let finished = SignalRecorder(leg.finishedPublisher)
+        let states = Recorder(leg.statePublisher)
+        leg.holdDown()
+        _ = await states.waitFor { if case .listening = $0 { return true }; return false }
+        mock.emit(TranscriptDelta(side: .local, text: "Hola", isFinal: false))
+        #expect(!(await finished.waitForSignal(timeout: .milliseconds(400))))
+    }
+
+    @Test("A silent turn is never reported as delivered")
+    func emptyTurnNeverFinishes() async {
+        let mock = MockCall()
+        let leg = makeLeg(mock)
+        let finished = SignalRecorder(leg.finishedPublisher)
+        let states = Recorder(leg.statePublisher)
+        leg.holdDown()
+        _ = await states.waitFor { if case .listening = $0 { return true }; return false }
+        leg.holdUp()
+        #expect(!(await finished.waitForSignal(timeout: .milliseconds(400))))
+    }
+
+    @Test("Each hold finishes its own turn")
+    func consecutiveTurnsEachFinish() async {
+        let mock = MockCall()
+        let leg = makeLeg(mock)
+        let finished = SignalRecorder(leg.finishedPublisher)
+        let states = Recorder(leg.statePublisher)
+        var expected = 0
+        for text in ["Hola", "Adiós"] {
+            expected += 1
+            leg.holdDown()
+            _ = await states.waitFor { if case .listening = $0 { return true }; return false }
+            mock.emit(TranscriptDelta(side: .local, text: text, isFinal: false))
+            leg.holdUp()
+            #expect(await waitUntil { finished.signals >= expected })
+        }
+        try? await Task.sleep(for: .milliseconds(300))
+        #expect(finished.signals == 2)
     }
 
     @Test("Releasing the hold turns the mic off")

@@ -18,19 +18,29 @@ final class TranslationLeg {
     var pair: LanguagePair
 
     private let call: any RealtimeCallProviding
+    private let settleInterval: Duration
     private var connected = false
     private var holding = false
     private var holdGeneration = 0
+    private var turn = 0
+    private var finishedTurn: Int?
     private var connectTask: Task<CallError?, Never>?
     private var armingTask: Task<Void, Never>?
     private var reconnectTimer: Task<Void, Never>?
+    private var settleTask: Task<Void, Never>?
     private var text = ""
     private var source = ""
 
-    init(call: any RealtimeCallProviding, speaker: Side, pair: LanguagePair) {
+    init(
+        call: any RealtimeCallProviding,
+        speaker: Side,
+        pair: LanguagePair,
+        settleInterval: Duration = .milliseconds(1200)
+    ) {
         self.call = call
         self.speaker = speaker
         self.pair = pair
+        self.settleInterval = settleInterval
         observe()
     }
 
@@ -47,8 +57,10 @@ final class TranslationLeg {
     /// warm path goes straight to listening and still feels instant.
     func holdDown() {
         holdGeneration &+= 1
+        turn &+= 1
         let gen = holdGeneration
         holding = true
+        settleTask?.cancel()
         text = ""
         source = ""
         textPublisher.send("")
@@ -82,6 +94,7 @@ final class TranslationLeg {
         holding = false
         armingTask?.cancel()
         statePublisher.send(.idle)
+        scheduleSettle()
         Task { await call.setMicActive(false) }
     }
 
@@ -114,6 +127,7 @@ final class TranslationLeg {
         connectTask?.cancel()
         connectTask = nil
         armingTask?.cancel()
+        settleTask?.cancel()
         reconnectTimer?.cancel()
         reconnectTimer = nil
         connected = false
@@ -215,10 +229,39 @@ final class TranslationLeg {
         if delta.side == speaker.other {
             text += delta.text
             textPublisher.send(text)
-            if delta.isFinal, !text.isEmpty { finishedPublisher.send(()) }
+            if delta.isFinal {
+                settleTask?.cancel()
+                finishTurn()
+            } else {
+                scheduleSettle()
+            }
         } else if delta.side == speaker {
             source += delta.text
             sourcePublisher.send(source)
         }
+    }
+
+    /// The transport streams `*_transcript.delta` and — verified live against
+    /// `/v1/realtime/translations` — never sends a closing `.done`, so the only
+    /// end-of-turn signal available is quiescence: the caption stopping for
+    /// `settleInterval` after the hold was released. A still-held button is not a
+    /// finished turn no matter how long the speaker pauses, and each release
+    /// re-arms the timer so a turn whose translation landed before the release
+    /// still completes.
+    private func scheduleSettle() {
+        settleTask?.cancel()
+        let turn = turn
+        let interval = settleInterval
+        settleTask = Task { [weak self] in
+            try? await Task.sleep(for: interval)
+            guard !Task.isCancelled, let self, self.turn == turn, !self.holding else { return }
+            self.finishTurn()
+        }
+    }
+
+    private func finishTurn() {
+        guard !text.isEmpty, finishedTurn != turn else { return }
+        finishedTurn = turn
+        finishedPublisher.send(())
     }
 }
