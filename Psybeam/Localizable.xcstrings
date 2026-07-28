@@ -2401,12 +2401,6 @@
             "value" : "Psybeam %1$@ (%2$@)"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Psybeam %1$@ (%2$@)"
-          }
-        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
