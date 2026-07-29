@@ -58,6 +58,12 @@
             "state" : "translated",
             "value" : "Psybeam 不会拍摄照片或视频。相机权限仅由实时音频框架请求，实际从不使用。"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam 不會拍攝照片或影片。相機權限僅由即時音訊框架提出要求，實際上從未使用。"
+          }
         }
       }
     },
@@ -118,6 +124,12 @@
             "state" : "translated",
             "value" : "Psybeam 会在你跨越国界时，根据所在位置建议当地语言。"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam 會在你跨越國界時，依你所在的位置建議當地語言。"
+          }
         }
       }
     },
@@ -177,6 +189,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Psybeam 使用麦克风采集语音，以进行实时语音翻译。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam 會使用麥克風擷取語音，以進行即時語音翻譯。"
           }
         }
       }
