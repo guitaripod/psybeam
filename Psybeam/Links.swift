@@ -6,4 +6,6 @@ import Foundation
 enum Links {
     static let privacyPolicy = URL(string: "https://mako.midgarcorp.cc/privacy/psybeam")!
     static let terms = URL(string: "https://mako.midgarcorp.cc/terms/psybeam")!
+    static let appStore = URL(string: "https://apps.apple.com/app/id6777952645")!
+    static let writeReview = URL(string: "https://apps.apple.com/app/id6777952645?action=write-review")!
 }

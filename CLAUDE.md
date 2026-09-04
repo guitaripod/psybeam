@@ -6,7 +6,7 @@ See `DESIGN.md` for the authoritative architecture, the backend decision, the st
 
 ## Status
 
-Greenfield — foundation scaffolded & green. **Spike 1 is RESOLVED (2026-06-07):** the `gpt-realtime-translate` mint + endpoints (`/v1/realtime/translations`) and 20+-language output are verified live; mako mints against these endpoints. **Run the remaining spikes in `DESIGN.md` §11 before writing the §4 audio code** — table-mode echo on real hardware (Spike 2) and turn-taking (Spike 3) are still unproven. Do not commit to the audio path or the turn-taking model before Spikes 2 and 3 pass.
+Shipping. Live on the App Store as **1.0.4** (released 2026-07-30); **1.1.0** (2026-09-04) adds 13 UI languages (22 total), audio-interruption recovery, share/rate from Settings, and a full ASO rewrite of the listing in 34 storefront locales. All spikes in `DESIGN.md` §11 are resolved; the handset single-operator model, WebRTC audio path and quiescence-based turn-taking are the shipped design. Store listing source of truth is `marketing/appstore/metadata/` (push with `asc metadata push`); the review backlog lives in `docs/review-1.0.1-backlog.md`.
 
 ## Stack
 

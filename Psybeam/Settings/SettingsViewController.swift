@@ -187,6 +187,12 @@ final class SettingsViewController: UIViewController {
         accountCard.addArrangedSubview(caption(String(localized: "Permanently deletes your account and remaining minutes from our servers, and erases on-device data. This can't be undone."), icon: "exclamationmark.triangle.fill", tint: .systemOrange))
 
         let moreCard = addSection(String(localized: "More"))
+        moreCard.addArrangedSubview(row(icon: "square.and.arrow.up.fill", tint: .systemBlue,
+            control: linkButton(String(localized: "Share Psybeam"), color: brand, #selector(sharePsybeam))))
+        moreCard.addArrangedSubview(divider())
+        moreCard.addArrangedSubview(row(icon: "star.fill", tint: .systemYellow,
+            control: linkButton(String(localized: "Rate Psybeam"), color: brand, #selector(ratePsybeam))))
+        moreCard.addArrangedSubview(divider())
         moreCard.addArrangedSubview(row(icon: "square.stack.3d.up.fill", tint: brand,
             control: linkButton(String(localized: "More Apps"), color: brand, #selector(openMoreApps))))
 
@@ -486,6 +492,21 @@ final class SettingsViewController: UIViewController {
     @objc private func openMoreApps() {
         impact.impactOccurred()
         Midgar.present(from: self)
+    }
+
+    /// The share sheet gets the text and the URL as separate items so Messages and Mail render
+    /// a rich App Store link card instead of a bare URL buried in a sentence.
+    @objc private func sharePsybeam(_ sender: UIButton) {
+        impact.impactOccurred()
+        let pitch = String(localized: "Talk to anyone in their language. Psybeam translates voice to voice while you travel.")
+        let sheet = UIActivityViewController(activityItems: [pitch, Links.appStore], applicationActivities: nil)
+        sheet.popoverPresentationController?.sourceView = sender
+        present(sheet, animated: true)
+    }
+
+    @objc private func ratePsybeam() {
+        impact.impactOccurred()
+        UIApplication.shared.open(Links.writeReview)
     }
 
     @objc private func confirmDeleteAccount() {

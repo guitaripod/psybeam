@@ -3,7 +3,10 @@ import Testing
 
 @Suite("Localization catalog")
 struct LocalizationCatalogTests {
-    private let languages = ["de", "fr", "es", "it", "ja", "ko", "zh-Hans", "zh-Hant", "pt-BR"]
+    private let languages = [
+        "de", "fr", "es", "it", "ja", "ko", "zh-Hans", "zh-Hant", "pt-BR",
+        "ar", "ru", "tr", "th", "vi", "id", "nl", "pl", "hi", "he", "el", "fi", "sv",
+    ]
     private let infoPlistKeys = [
         "NSMicrophoneUsageDescription",
         "NSLocationWhenInUseUsageDescription",

@@ -24,6 +24,7 @@ actor RealtimeCallService: RealtimeCallProviding {
     private var activeSeconds: TimeInterval = 0
     private var micActiveStart: Date?
     private var levelTask: Task<Void, Never>?
+    private var interruptionTask: Task<Void, Never>?
 
     nonisolated(unsafe) private static let sharedFactory: RTCPeerConnectionFactory = {
         RTCInitializeSSL()
@@ -47,7 +48,33 @@ actor RealtimeCallService: RealtimeCallProviding {
         self.levelCont = lc
     }
 
+    /// A phone call, alarm, Siri or another app seizing the audio session ends the
+    /// peer's audio for good: the Voice-Processing unit does not come back on its
+    /// own after `.ended`, so a session that survived the interruption would look
+    /// live while recording nothing. Tear it down as a normal end instead — the leg
+    /// marks itself cold and the next hold mints a fresh session. Talk-time up to
+    /// the interruption is still billed.
+    private func observeInterruptionsIfNeeded() {
+        guard interruptionTask == nil else { return }
+        interruptionTask = Task { [weak self] in
+            let interruptions = NotificationCenter.default.notifications(named: AVAudioSession.interruptionNotification)
+            for await notification in interruptions {
+                guard let self else { return }
+                let raw = notification.userInfo?[AVAudioSessionInterruptionTypeKey] as? UInt
+                guard raw == AVAudioSession.InterruptionType.began.rawValue else { continue }
+                await self.handleInterruption()
+            }
+        }
+    }
+
+    private func handleInterruption() async {
+        guard pc != nil else { return }
+        AppLogger.shared.info("audio session interrupted; ending session=\(currentSessionId ?? "-")", category: .audio)
+        await hangUp()
+    }
+
     func connect(spec: TranslationSessionSpec) async throws {
+        observeInterruptionsIfNeeded()
         stateCont.yield(.connecting)
         let token = try await translationProvider.requestSession(pair: spec.pair, direction: spec.direction)
 

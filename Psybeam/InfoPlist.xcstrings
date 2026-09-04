@@ -64,6 +64,84 @@
             "state" : "translated",
             "value" : "Psybeam 不會拍攝照片或影片。相機權限僅由即時音訊框架提出要求，實際上從未使用。"
           }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لا يلتقط Psybeam صورًا أو مقاطع فيديو. يُطلَب الوصول إلى الكاميرا فقط من قبل إطار عمل الصوت في الوقت الفعلي، ولا يُستخدَم مطلقًا."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam не делает фото и видео. Доступ к камере запрашивается только фреймворком аудио в реальном времени и никогда не используется."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam fotoğraf veya video çekmez. Kameraya erişim yalnızca gerçek zamanlı ses çerçevesi tarafından istenir ve asla kullanılmaz."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam ไม่ถ่ายภาพหรือวิดีโอ การขอสิทธิ์เข้าถึงกล้องมาจากเฟรมเวิร์กเสียงแบบเรียลไทม์เท่านั้น และจะไม่ถูกใช้งานเลย"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam không chụp ảnh hay quay video. Quyền truy cập camera chỉ được yêu cầu bởi khung âm thanh thời gian thực và không bao giờ được sử dụng."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam tidak mengambil foto atau video. Akses kamera hanya diminta oleh framework audio real-time dan tidak pernah digunakan."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam maakt geen foto's of video's. Cameratoegang wordt alleen aangevraagd door het realtime audioframework en wordt nooit gebruikt."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam nie robi zdjęć ani nagrań wideo. Dostęp do aparatu jest wymagany wyłącznie przez platformę audio czasu rzeczywistego i nigdy nie jest wykorzystywany."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam फ़ोटो या वीडियो नहीं लेता। कैमरा एक्सेस केवल रीयल-टाइम ऑडियो फ़्रेमवर्क द्वारा अनुरोधित किया जाता है और इसका उपयोग कभी नहीं किया जाता।"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam לא מצלם תמונות או סרטונים. הגישה למצלמה מתבקשת רק על ידי מסגרת השמע בזמן אמת, ואף פעם לא נעשה בה שימוש."
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Το Psybeam δεν τραβάει φωτογραφίες ή βίντεο. Η πρόσβαση στην κάμερα ζητείται μόνο από το πλαίσιο ήχου πραγματικού χρόνου και δεν χρησιμοποιείται ποτέ."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam ei ota valokuvia tai videoita. Kameran käyttöoikeutta pyytää vain reaaliaikainen äänikehys, eikä sitä koskaan käytetä."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam tar inte foton eller videor. Kameraåtkomst begärs endast av ramverket för realtidsljud och används aldrig."
+          }
         }
       }
     },
@@ -130,6 +208,84 @@
             "state" : "translated",
             "value" : "Psybeam 會在你跨越國界時，依你所在的位置建議當地語言。"
           }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يقترح Psybeam اللغة المحلية للمكان الذي أنت فيه أثناء عبورك الحدود."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam предлагает местный язык того места, где вы находитесь, когда вы пересекаете границы."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sınırları geçtikçe Psybeam bulunduğunuz yerin yerel dilini önerir."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam จะแนะนำภาษาท้องถิ่นของสถานที่ที่คุณอยู่ขณะข้ามพรมแดน"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam gợi ý ngôn ngữ địa phương của nơi bạn đang ở khi bạn vượt qua biên giới."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam menyarankan bahasa lokal tempat Anda berada saat melintasi perbatasan."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam stelt de lokale taal voor van de plek waar u bent wanneer u een grens oversteekt."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam sugeruje lokalny język miejsca, w którym się znajdujesz, gdy przekraczasz granice."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "जब आप सीमाएं पार करते हैं, तो Psybeam आपके वर्तमान स्थान की स्थानीय भाषा सुझाता है।"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam מציע את השפה המקומית של המקום שבו אתם נמצאים בעת חציית גבולות."
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Το Psybeam προτείνει την τοπική γλώσσα του μέρους όπου βρίσκεστε καθώς διασχίζετε σύνορα."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam ehdottaa sen paikan kieltä, jossa olet, kun ylität rajoja."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam föreslår det lokala språket där du befinner dig när du korsar gränser."
+          }
         }
       }
     },
@@ -195,6 +351,84 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Psybeam 會使用麥克風擷取語音，以進行即時語音翻譯。"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يستخدم Psybeam الميكروفون لالتقاط الكلام من أجل الترجمة الصوتية المباشرة."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam использует микрофон для записи речи для перевода голоса в реальном времени."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam, canlı sesli çeviri için konuşmayı yakalamak amacıyla mikrofonu kullanır."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam ใช้ไมโครโฟนเพื่อบันทึกเสียงพูดสำหรับการแปลเสียงแบบสด"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam sử dụng micrô để thu âm giọng nói cho việc dịch giọng nói trực tiếp."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam menggunakan mikrofon untuk menangkap suara demi terjemahan suara langsung."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam gebruikt de microfoon om spraak vast te leggen voor live spraakvertaling."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam używa mikrofonu do przechwytywania mowy na potrzeby tłumaczenia głosowego na żywo."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam लाइव वॉइस अनुवाद के लिए वाणी कैप्चर करने हेतु माइक्रोफ़ोन का उपयोग करता है।"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam משתמש במיקרופון כדי לתעד דיבור לצורך תרגום קולי בזמן אמת."
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Το Psybeam χρησιμοποιεί το μικρόφωνο για την καταγραφή ομιλίας για ζωντανή φωνητική μετάφραση."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam käyttää mikrofonia puheen tallentamiseen reaaliaikaista äänenkäännöstä varten."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam använder mikrofonen för att fånga tal för direkt röstöversättning."
           }
         }
       }
