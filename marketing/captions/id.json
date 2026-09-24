@@ -1,0 +1,30 @@
+{
+  "pair": "id:ja",
+  "order": [
+    "hero",
+    "reply",
+    "destination",
+    "faces",
+    "free"
+  ],
+  "hero": {
+    "title": "Bicara. Mereka dengar bahasa Jepang.",
+    "subtitle": "Tahan tombol. Terdengar keras dalam bahasa Jepang."
+  },
+  "reply": {
+    "title": "Jawabannya kembali dalam bahasamu.",
+    "subtitle": "Tahan tombol yang lain saat mereka menjawab."
+  },
+  "destination": {
+    "title": "Pilih tujuanmu.",
+    "subtitle": "22 bahasa, dua arah."
+  },
+  "faces": {
+    "title": "Layarnya menghadap mereka. Tak perlu instal apa pun.",
+    "subtitle": "Kata-katamu berputar menghadap mereka. Tak ada aplikasi di ponsel mereka."
+  },
+  "free": {
+    "title": "5 menit gratis. Tanpa berlangganan.",
+    "subtitle": "Beli paket hanya saat butuh lebih."
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "order": [
+    "hero",
+    "reply",
+    "destination",
+    "faces",
+    "free"
+  ],
+  "hero": {
+    "title": "Speak. They hear Italian.",
+    "subtitle": "Hold a button in Rome, Florence or anywhere else — it plays aloud in Italian."
+  },
+  "reply": {
+    "title": "Their reply comes back in English.",
+    "subtitle": "Hold the other button while they answer."
+  },
+  "destination": {
+    "title": "Built for your Italian trip.",
+    "subtitle": "22 languages, spoken both ways."
+  },
+  "faces": {
+    "title": "It faces them. Nothing to install.",
+    "subtitle": "Your words turn to face them. No app on their phone."
+  },
+  "free": {
+    "title": "5 free minutes. No subscription.",
+    "subtitle": "Buy a pack only when you need more."
+  }
+}

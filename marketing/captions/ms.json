@@ -1,0 +1,30 @@
+{
+  "pair": "en:ja",
+  "order": [
+    "hero",
+    "reply",
+    "destination",
+    "faces",
+    "free"
+  ],
+  "hero": {
+    "title": "Bercakap. Mereka dengar Jepun.",
+    "subtitle": "Tahan butang. Ia disebut dengan kuat dalam bahasa Jepun."
+  },
+  "reply": {
+    "title": "Jawapan kembali dalam bahasa anda.",
+    "subtitle": "Tahan butang lain semasa mereka menjawab."
+  },
+  "destination": {
+    "title": "Pilih destinasi anda.",
+    "subtitle": "22 bahasa, dua hala."
+  },
+  "faces": {
+    "title": "Skrin menghadap mereka. Tiada apa untuk dipasang.",
+    "subtitle": "Kata-kata anda berpusing menghadap mereka. Tiada apl pada telefon mereka."
+  },
+  "free": {
+    "title": "5 minit percuma. Tiada langganan.",
+    "subtitle": "Beli pek hanya apabila anda perlukan lebih."
+  }
+}

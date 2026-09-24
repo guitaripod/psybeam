@@ -1,0 +1,331 @@
+{
+ "app": "Psybeam",
+ "appId": "6777952645",
+ "referenceName": "Try It Before Your Trip — Oct 2026",
+ "badge": "MAJOR_UPDATE",
+ "purpose": "ATTRACT_NEW_USERS",
+ "priority": "HIGH",
+ "primaryLocale": "en-US",
+ "deepLink": "psybeam://try",
+ "purchaseRequirement": "NO_COST_ASSOCIATED",
+ "schedule": {
+  "publishStart": "2026-09-29T09:00:00Z",
+  "eventStart": "2026-09-30T09:00:00Z",
+  "eventEnd": "2026-10-30T09:00:00Z"
+ },
+ "localizations": {
+  "en-US": {
+   "name": "Try It Before Your Trip",
+   "shortDescription": "Pick a destination, then practice with a coach.",
+   "longDescription": "Psybeam 1.1.1 adds a destination picker and a practice hold, so you're ready before using it on a stranger."
+  },
+  "en-GB": {
+   "name": "Try It Before Your Trip",
+   "shortDescription": "Pick a destination, then practise with a coach.",
+   "longDescription": "Psybeam 1.1.1 adds a destination picker and a practice hold, so you're ready before using it on a stranger."
+  },
+  "en-AU": {
+   "name": "Try It Before Your Trip",
+   "shortDescription": "Pick a destination, then practise with a coach.",
+   "longDescription": "Psybeam 1.1.1 adds a destination picker and a practice hold, so you're ready before using it on a stranger."
+  },
+  "en-CA": {
+   "name": "Try It Before Your Trip",
+   "shortDescription": "Pick a destination, then practice with a coach.",
+   "longDescription": "Psybeam 1.1.1 adds a destination picker and a practice hold, so you're ready before using it on a stranger."
+  },
+  "de-DE": {
+   "name": "Vor der Reise ausprobieren",
+   "shortDescription": "Reiseziel wählen, dann mit Coach üben.",
+   "longDescription": "Psybeam 1.1.1 bringt eine Zielauswahl und eine Testaufnahme, damit Sie bereit sind, bevor Sie es bei Fremden nutzen."
+  },
+  "es-ES": {
+   "name": "Pruébalo antes de tu viaje",
+   "shortDescription": "Elige destino y practica con una guía.",
+   "longDescription": "Psybeam 1.1.1 añade un selector de destino y una prueba guiada, para llegar listo antes de hablar con un desconocido."
+  },
+  "es-MX": {
+   "name": "Pruébalo antes de tu viaje",
+   "shortDescription": "Elige destino y practica con una guía.",
+   "longDescription": "Psybeam 1.1.1 agrega un selector de destino y una práctica guiada, para llegar listo antes de hablar con un desconocido."
+  },
+  "fr-FR": {
+   "name": "Essayez avant votre voyage",
+   "shortDescription": "Choisissez une destination, puis entraînez-vous.",
+   "longDescription": "Psybeam 1.1.1 ajoute un sélecteur de destination et un essai guidé, pour être prêt avant de l'utiliser avec un inconnu."
+  },
+  "fr-CA": {
+   "name": "Essayez avant votre voyage",
+   "shortDescription": "Choisissez une destination, puis entraînez-vous.",
+   "longDescription": "Psybeam 1.1.1 ajoute un sélecteur de destination et un essai guidé, pour être prêt avant de l'utiliser avec un inconnu."
+  },
+  "it": {
+   "name": "Provalo prima del viaggio",
+   "shortDescription": "Scegli la destinazione, poi fai una prova guidata.",
+   "longDescription": "Psybeam 1.1.1 aggiunge un selettore di destinazione e una prova guidata, per essere pronto con uno straniero."
+  },
+  "pt-BR": {
+   "name": "Experimente antes da viagem",
+   "shortDescription": "Escolha o destino e treine com um guia.",
+   "longDescription": "O Psybeam 1.1.1 traz um seletor de destino e um treino guiado, para você chegar pronto antes de usar com um estranho."
+  },
+  "pt-PT": {
+   "name": "Experimente antes da viagem",
+   "shortDescription": "Escolha o destino e treine com um guia.",
+   "longDescription": "O Psybeam 1.1.1 traz um seletor de destino e um treino guiado, para chegar preparado antes de o usar com um estranho."
+  },
+  "nl-NL": {
+   "name": "Probeer het voor je reis",
+   "shortDescription": "Kies je bestemming en oefen met een coach.",
+   "longDescription": "Psybeam 1.1.1 voegt een bestemmingskeuze en een oefensessie toe, zodat je klaar bent voor een vreemde."
+  },
+  "pl": {
+   "name": "Wypróbuj przed podróżą",
+   "shortDescription": "Wybierz cel podróży i przećwicz z asystentem.",
+   "longDescription": "Psybeam 1.1.1 dodaje wybór celu podróży i próbne ćwiczenie, byś był gotowy, zanim użyjesz go z nieznajomym."
+  },
+  "ru": {
+   "name": "Попробуйте перед поездкой",
+   "shortDescription": "Выберите направление и потренируйтесь с гидом.",
+   "longDescription": "Psybeam 1.1.1 добавляет выбор направления и тренировку, чтобы вы были готовы перед использованием с незнакомцем."
+  },
+  "tr": {
+   "name": "Seyahatinden Önce Dene",
+   "shortDescription": "Hedefini seç, sonra rehberle pratik yap.",
+   "longDescription": "Psybeam 1.1.1 bir hedef seçici ve rehberli deneme ekliyor, böylece yabancıyla kullanmadan önce hazır olursun."
+  },
+  "el": {
+   "name": "Δοκιμάστε το πριν το ταξίδι",
+   "shortDescription": "Επιλέξτε προορισμό και εξασκηθείτε με οδηγό.",
+   "longDescription": "Το Psybeam 1.1.1 προσθέτει επιλογή προορισμού και καθοδηγούμενη εξάσκηση πριν μιλήσετε σε έναν ξένο."
+  },
+  "he": {
+   "name": "נסו את זה לפני הטיול",
+   "shortDescription": "בחרו יעד והתאמנו עם מדריך.",
+   "longDescription": "Psybeam 1.1.1 מוסיף בורר יעדים ותרגול מודרך, כדי שתהיו מוכנים לפני שתשתמשו בו עם אדם זר."
+  },
+  "hi": {
+   "name": "यात्रा से पहले आज़माएं",
+   "shortDescription": "मंज़िल चुनें, फिर कोच के साथ अभ्यास करें।",
+   "longDescription": "Psybeam 1.1.1 में मंज़िल चुनने का विकल्प और अभ्यास मोड जोड़ा गया, ताकि अनजान व्यक्ति से पहले आप तैयार रहें।"
+  },
+  "id": {
+   "name": "Coba Sebelum Perjalananmu",
+   "shortDescription": "Pilih tujuan, lalu latihan dengan panduan.",
+   "longDescription": "Psybeam 1.1.1 menambah pemilih tujuan dan latihan berpandu, agar kamu siap sebelum memakainya dengan orang asing."
+  },
+  "ja": {
+   "name": "旅の前に試してみよう",
+   "shortDescription": "行き先を選んで、コーチと練習しよう。",
+   "longDescription": "Psybeam 1.1.1に行き先選択と練習モードが追加され、知らない人に使う前に準備ができます。"
+  },
+  "ko": {
+   "name": "여행 전에 먼저 체험하기",
+   "shortDescription": "목적지를 고르고 코치와 연습해보세요.",
+   "longDescription": "Psybeam 1.1.1에 목적지 선택과 연습 모드가 추가되어, 낯선 사람에게 쓰기 전에 준비할 수 있습니다."
+  },
+  "zh-Hans": {
+   "name": "出发前先试试看",
+   "shortDescription": "选择目的地，跟教练一起练习。",
+   "longDescription": "Psybeam 1.1.1 新增目的地选择和练习模式，让你在对陌生人使用前先做好准备。"
+  },
+  "zh-Hant": {
+   "name": "出發前先試試看",
+   "shortDescription": "選擇目的地，跟教練一起練習。",
+   "longDescription": "Psybeam 1.1.1 新增目的地選擇和練習模式，讓你在對陌生人使用前先做好準備。"
+  },
+  "th": {
+   "name": "ลองก่อนออกเดินทาง",
+   "shortDescription": "เลือกจุดหมาย แล้วฝึกกับโค้ช",
+   "longDescription": "Psybeam 1.1.1 เพิ่มตัวเลือกจุดหมายปลายทางและโหมดฝึกซ้อม ให้คุณพร้อมก่อนใช้กับคนแปลกหน้า"
+  },
+  "vi": {
+   "name": "Thử Trước Chuyến Đi",
+   "shortDescription": "Chọn điểm đến, rồi luyện tập cùng hướng dẫn.",
+   "longDescription": "Psybeam 1.1.1 thêm bộ chọn điểm đến và chế độ luyện tập, giúp bạn sẵn sàng trước khi dùng với người lạ."
+  },
+  "ar-SA": {
+   "name": "جرّبه قبل رحلتك",
+   "shortDescription": "اختر وجهتك، ثم تدرّب مع مرشد.",
+   "longDescription": "يضيف Psybeam 1.1.1 أداة لاختيار الوجهة وتدريباً موجهاً، لتكون جاهزاً قبل استخدامه مع شخص غريب."
+  },
+  "fi": {
+   "name": "Kokeile ennen matkaa",
+   "shortDescription": "Valitse kohde ja harjoittele oppaan kanssa.",
+   "longDescription": "Psybeam 1.1.1 lisää kohteen valinnan ja ohjatun harjoituksen, jotta olet valmis ennen vieraan kanssa käyttöä."
+  },
+  "sv": {
+   "name": "Testa innan din resa",
+   "shortDescription": "Välj resmål och öva med en guide.",
+   "longDescription": "Psybeam 1.1.1 lägger till val av resmål och en guidad övning, så att du är redo innan du använder den på en främling."
+  }
+ },
+ "cardBrief": "A traveler holds up a phone with a soft glowing screen to a smiling street-food vendor under warm string lights at dusk (LTX-2.5 frame, no text: Apple renders the event name over the card). Files: marketing/appstore/events/art/event-card-1920x1080.png and event-details-1080x1920.png.",
+ "rationale": "1.1.1 adds a first-launch destination picker and a practice-hold coach, the two changes most likely to fix the funnel's real failure (78% of wallets never complete a translation, and the home-GPS en-to-en bug made the app look broken before anyone left the house) — so MAJOR_UPDATE is truthful and ATTRACT_NEW_USERS matches the constraint (32 downloads in 3 months, 0% search rank). The deep link psybeam://try (registered in 1.1.1) replays the destination picker and coach.",
+ "territories": [
+  "AFG",
+  "AGO",
+  "ALB",
+  "ARE",
+  "ARG",
+  "ARM",
+  "ATG",
+  "AUS",
+  "AUT",
+  "AZE",
+  "BEL",
+  "BEN",
+  "BFA",
+  "BGR",
+  "BHR",
+  "BHS",
+  "BIH",
+  "BLZ",
+  "BMU",
+  "BOL",
+  "BRA",
+  "BRB",
+  "BRN",
+  "BTN",
+  "BWA",
+  "CAN",
+  "CHE",
+  "CHL",
+  "CIV",
+  "CMR",
+  "COD",
+  "COG",
+  "COL",
+  "CPV",
+  "CRI",
+  "CYM",
+  "CYP",
+  "CZE",
+  "DEU",
+  "DMA",
+  "DNK",
+  "DOM",
+  "DZA",
+  "ECU",
+  "EGY",
+  "ESP",
+  "EST",
+  "FIN",
+  "FJI",
+  "FRA",
+  "FSM",
+  "GAB",
+  "GBR",
+  "GEO",
+  "GHA",
+  "GMB",
+  "GNB",
+  "GRC",
+  "GRD",
+  "GTM",
+  "GUY",
+  "HND",
+  "HRV",
+  "HUN",
+  "IDN",
+  "IND",
+  "IRL",
+  "IRQ",
+  "ISL",
+  "ISR",
+  "ITA",
+  "JAM",
+  "JOR",
+  "JPN",
+  "KAZ",
+  "KEN",
+  "KGZ",
+  "KHM",
+  "KNA",
+  "KOR",
+  "KWT",
+  "LAO",
+  "LBN",
+  "LBR",
+  "LBY",
+  "LCA",
+  "LKA",
+  "LTU",
+  "LUX",
+  "LVA",
+  "MAR",
+  "MDA",
+  "MDG",
+  "MDV",
+  "MEX",
+  "MKD",
+  "MLI",
+  "MLT",
+  "MMR",
+  "MNE",
+  "MNG",
+  "MOZ",
+  "MRT",
+  "MUS",
+  "MWI",
+  "MYS",
+  "NAM",
+  "NER",
+  "NGA",
+  "NIC",
+  "NLD",
+  "NOR",
+  "NPL",
+  "NRU",
+  "NZL",
+  "OMN",
+  "PAK",
+  "PAN",
+  "PER",
+  "PHL",
+  "PLW",
+  "PNG",
+  "POL",
+  "PRT",
+  "PRY",
+  "QAT",
+  "ROU",
+  "RWA",
+  "SAU",
+  "SEN",
+  "SGP",
+  "SLB",
+  "SLE",
+  "SLV",
+  "SRB",
+  "STP",
+  "SUR",
+  "SVK",
+  "SVN",
+  "SWE",
+  "SWZ",
+  "SYC",
+  "TCD",
+  "THA",
+  "TJK",
+  "TKM",
+  "TON",
+  "TTO",
+  "TUN",
+  "TUR",
+  "TWN",
+  "TZA",
+  "UGA",
+  "UKR",
+  "URY",
+  "USA",
+  "UZB",
+  "VCT",
+  "VNM",
+  "VUT",
+  "YEM",
+  "ZAF",
+  "ZMB",
+  "ZWE"
+ ]
+}

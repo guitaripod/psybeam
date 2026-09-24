@@ -1,0 +1,271 @@
+{
+  "pages": [
+    {
+      "name": "Japanese",
+      "locale": "en-US",
+      "pair": "en:ja",
+      "promotionalText": "Heading somewhere Japanese is spoken? Hold a button and speak — they hear it in Japanese, no subscription needed.",
+      "keywords": [
+        "japanese"
+      ],
+      "captions": {
+        "order": [
+          "hero",
+          "reply",
+          "destination",
+          "faces",
+          "free"
+        ],
+        "hero": {
+          "title": "Speak. They hear Japanese.",
+          "subtitle": "Hold a button in Tokyo, Kyoto or anywhere else — it plays aloud in Japanese."
+        },
+        "reply": {
+          "title": "Their reply comes back in English.",
+          "subtitle": "Hold the other button while they answer."
+        },
+        "destination": {
+          "title": "Built for your Japanese trip.",
+          "subtitle": "22 languages, spoken both ways."
+        },
+        "faces": {
+          "title": "It faces them. Nothing to install.",
+          "subtitle": "Your words turn to face them. No app on their phone."
+        },
+        "free": {
+          "title": "5 free minutes. No subscription.",
+          "subtitle": "Buy a pack only when you need more."
+        }
+      }
+    },
+    {
+      "name": "Spanish",
+      "locale": "en-US",
+      "pair": "en:es",
+      "promotionalText": "Heading somewhere Spanish is spoken? Hold a button and speak — they hear it in Spanish, no subscription needed.",
+      "keywords": [
+        "spanish"
+      ],
+      "captions": {
+        "order": [
+          "hero",
+          "reply",
+          "destination",
+          "faces",
+          "free"
+        ],
+        "hero": {
+          "title": "Speak. They hear Spanish.",
+          "subtitle": "Hold a button in Madrid, Mexico City or anywhere else — it plays aloud in Spanish."
+        },
+        "reply": {
+          "title": "Their reply comes back in English.",
+          "subtitle": "Hold the other button while they answer."
+        },
+        "destination": {
+          "title": "Built for your Spanish trip.",
+          "subtitle": "22 languages, spoken both ways."
+        },
+        "faces": {
+          "title": "It faces them. Nothing to install.",
+          "subtitle": "Your words turn to face them. No app on their phone."
+        },
+        "free": {
+          "title": "5 free minutes. No subscription.",
+          "subtitle": "Buy a pack only when you need more."
+        }
+      }
+    },
+    {
+      "name": "French",
+      "locale": "en-US",
+      "pair": "en:fr",
+      "promotionalText": "Heading somewhere French is spoken? Hold a button and speak — they hear it in French, no subscription needed.",
+      "keywords": [
+        "french"
+      ],
+      "captions": {
+        "order": [
+          "hero",
+          "reply",
+          "destination",
+          "faces",
+          "free"
+        ],
+        "hero": {
+          "title": "Speak. They hear French.",
+          "subtitle": "Hold a button in Paris, Montreal or anywhere else — it plays aloud in French."
+        },
+        "reply": {
+          "title": "Their reply comes back in English.",
+          "subtitle": "Hold the other button while they answer."
+        },
+        "destination": {
+          "title": "Built for your French trip.",
+          "subtitle": "22 languages, spoken both ways."
+        },
+        "faces": {
+          "title": "It faces them. Nothing to install.",
+          "subtitle": "Your words turn to face them. No app on their phone."
+        },
+        "free": {
+          "title": "5 free minutes. No subscription.",
+          "subtitle": "Buy a pack only when you need more."
+        }
+      }
+    },
+    {
+      "name": "Italian",
+      "locale": "en-US",
+      "pair": "en:it",
+      "promotionalText": "Heading somewhere Italian is spoken? Hold a button and speak — they hear it in Italian, no subscription needed.",
+      "keywords": [
+        "italian"
+      ],
+      "captions": {
+        "order": [
+          "hero",
+          "reply",
+          "destination",
+          "faces",
+          "free"
+        ],
+        "hero": {
+          "title": "Speak. They hear Italian.",
+          "subtitle": "Hold a button in Rome, Florence or anywhere else — it plays aloud in Italian."
+        },
+        "reply": {
+          "title": "Their reply comes back in English.",
+          "subtitle": "Hold the other button while they answer."
+        },
+        "destination": {
+          "title": "Built for your Italian trip.",
+          "subtitle": "22 languages, spoken both ways."
+        },
+        "faces": {
+          "title": "It faces them. Nothing to install.",
+          "subtitle": "Your words turn to face them. No app on their phone."
+        },
+        "free": {
+          "title": "5 free minutes. No subscription.",
+          "subtitle": "Buy a pack only when you need more."
+        }
+      }
+    },
+    {
+      "name": "Korean",
+      "locale": "en-US",
+      "pair": "en:ko",
+      "promotionalText": "Heading somewhere Korean is spoken? Hold a button and speak — they hear it in Korean, no subscription needed.",
+      "keywords": [
+        "korean"
+      ],
+      "captions": {
+        "order": [
+          "hero",
+          "reply",
+          "destination",
+          "faces",
+          "free"
+        ],
+        "hero": {
+          "title": "Speak. They hear Korean.",
+          "subtitle": "Hold a button in Seoul, Busan or anywhere else — it plays aloud in Korean."
+        },
+        "reply": {
+          "title": "Their reply comes back in English.",
+          "subtitle": "Hold the other button while they answer."
+        },
+        "destination": {
+          "title": "Built for your Korean trip.",
+          "subtitle": "22 languages, spoken both ways."
+        },
+        "faces": {
+          "title": "It faces them. Nothing to install.",
+          "subtitle": "Your words turn to face them. No app on their phone."
+        },
+        "free": {
+          "title": "5 free minutes. No subscription.",
+          "subtitle": "Buy a pack only when you need more."
+        }
+      }
+    },
+    {
+      "name": "Thai",
+      "locale": "en-US",
+      "pair": "en:th",
+      "promotionalText": "Heading somewhere Thai is spoken? Hold a button and speak — they hear it in Thai, no subscription needed.",
+      "keywords": [
+        "thai"
+      ],
+      "captions": {
+        "order": [
+          "hero",
+          "reply",
+          "destination",
+          "faces",
+          "free"
+        ],
+        "hero": {
+          "title": "Speak. They hear Thai.",
+          "subtitle": "Hold a button in Bangkok, Phuket or anywhere else — it plays aloud in Thai."
+        },
+        "reply": {
+          "title": "Their reply comes back in English.",
+          "subtitle": "Hold the other button while they answer."
+        },
+        "destination": {
+          "title": "Built for your Thai trip.",
+          "subtitle": "22 languages, spoken both ways."
+        },
+        "faces": {
+          "title": "It faces them. Nothing to install.",
+          "subtitle": "Your words turn to face them. No app on their phone."
+        },
+        "free": {
+          "title": "5 free minutes. No subscription.",
+          "subtitle": "Buy a pack only when you need more."
+        }
+      }
+    },
+    {
+      "name": "接客・インバウンド向け",
+      "locale": "ja",
+      "pair": "ja:en",
+      "promotionalText": "レジや受付で使えます。話せば英語で伝わり、返事は日本語で聞こえます。サブスクリプションなし。",
+      "keywords": [
+        "接客",
+        "インバウンド"
+      ],
+      "captions": {
+        "order": [
+          "hero",
+          "reply",
+          "destination",
+          "faces",
+          "free"
+        ],
+        "hero": {
+          "title": "話せば、お客様に英語で伝わる。",
+          "subtitle": "レジや受付でボタンを押しながら話すだけ。英語で読み上げます。"
+        },
+        "reply": {
+          "title": "お客様の返事は日本語で聞こえます。",
+          "subtitle": "お客様が話す間、もう一方のボタンを押しておきます。"
+        },
+        "destination": {
+          "title": "インバウンド接客に、22言語対応。",
+          "subtitle": "英語だけでなく、22言語のお客様に対応できます。"
+        },
+        "faces": {
+          "title": "画面がお客様のほうを向きます。インストール不要。",
+          "subtitle": "お客様のスマートフォンにアプリを入れる必要はありません。"
+        },
+        "free": {
+          "title": "無料5分から。サブスクリプションなし。",
+          "subtitle": "必要になったときだけ分数パックを購入。"
+        }
+      }
+    }
+  ]
+}

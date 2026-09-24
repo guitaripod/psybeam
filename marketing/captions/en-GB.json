@@ -1,0 +1,30 @@
+{
+  "pair": "en:es",
+  "order": [
+    "hero",
+    "reply",
+    "destination",
+    "faces",
+    "free"
+  ],
+  "hero": {
+    "title": "Speak. They hear Spanish.",
+    "subtitle": "Hold a button. It plays aloud in Spanish."
+  },
+  "reply": {
+    "title": "Their reply comes back in your language.",
+    "subtitle": "Hold the other button while they answer."
+  },
+  "destination": {
+    "title": "Pick where you're headed.",
+    "subtitle": "22 languages, spoken both ways."
+  },
+  "faces": {
+    "title": "It faces them. Nothing to install.",
+    "subtitle": "Your words turn to face them. No app on their phone."
+  },
+  "free": {
+    "title": "5 free minutes. No subscription.",
+    "subtitle": "Buy a pack only when you need more."
+  }
+}

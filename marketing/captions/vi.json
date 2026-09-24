@@ -1,0 +1,30 @@
+{
+  "pair": "vi:ko",
+  "order": [
+    "hero",
+    "reply",
+    "destination",
+    "faces",
+    "free"
+  ],
+  "hero": {
+    "title": "Nói đi. Họ sẽ nghe tiếng Hàn.",
+    "subtitle": "Giữ nút. Ứng dụng đọc to bằng tiếng Hàn."
+  },
+  "reply": {
+    "title": "Câu trả lời quay lại bằng ngôn ngữ của bạn.",
+    "subtitle": "Giữ nút bên kia khi họ trả lời."
+  },
+  "destination": {
+    "title": "Chọn điểm đến của bạn.",
+    "subtitle": "22 ngôn ngữ, cả hai chiều."
+  },
+  "faces": {
+    "title": "Màn hình quay về phía họ. Không cần cài gì.",
+    "subtitle": "Lời của bạn quay về phía họ. Không có app nào trên điện thoại của họ."
+  },
+  "free": {
+    "title": "5 phút miễn phí. Không cần đăng ký gói.",
+    "subtitle": "Chỉ mua thêm gói khi bạn cần nhiều hơn."
+  }
+}

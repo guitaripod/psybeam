@@ -1,0 +1,30 @@
+{
+  "pair": "es:en",
+  "order": [
+    "hero",
+    "reply",
+    "destination",
+    "faces",
+    "free"
+  ],
+  "hero": {
+    "title": "Habla. Oirán inglés.",
+    "subtitle": "Mantén pulsado un botón. Se dice en voz alta en inglés."
+  },
+  "reply": {
+    "title": "La respuesta llega en tu idioma.",
+    "subtitle": "Mantén pulsado el otro botón mientras responden."
+  },
+  "destination": {
+    "title": "Elige tu destino.",
+    "subtitle": "22 idiomas, en ambos sentidos."
+  },
+  "faces": {
+    "title": "Se gira hacia ellos. Nada que instalar.",
+    "subtitle": "Tus palabras se giran hacia ellos. Sin apps en su teléfono."
+  },
+  "free": {
+    "title": "5 minutos gratis. Sin suscripción.",
+    "subtitle": "Compra un paquete solo cuando necesites más."
+  }
+}

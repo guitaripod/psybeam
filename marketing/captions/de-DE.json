@@ -1,0 +1,30 @@
+{
+  "pair": "de:it",
+  "order": [
+    "hero",
+    "reply",
+    "destination",
+    "faces",
+    "free"
+  ],
+  "hero": {
+    "title": "Sprechen. Sie hören Italienisch.",
+    "subtitle": "Taste halten. Es wird laut auf Italienisch gesagt."
+  },
+  "reply": {
+    "title": "Die Antwort kommt in Ihrer Sprache.",
+    "subtitle": "Halten Sie die andere Taste, während sie antworten."
+  },
+  "destination": {
+    "title": "Wählen Sie Ihr Reiseziel.",
+    "subtitle": "22 Sprachen, in beide Richtungen."
+  },
+  "faces": {
+    "title": "Sie wendet sich ihnen zu. Nichts zu installieren.",
+    "subtitle": "Ihre Worte drehen sich zu ihnen. Keine App auf ihrem Handy."
+  },
+  "free": {
+    "title": "5 Freiminuten. Kein Abo.",
+    "subtitle": "Kaufen Sie ein Paket erst, wenn Sie mehr brauchen."
+  }
+}

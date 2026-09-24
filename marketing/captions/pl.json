@@ -1,0 +1,30 @@
+{
+  "pair": "pl:it",
+  "order": [
+    "hero",
+    "reply",
+    "destination",
+    "faces",
+    "free"
+  ],
+  "hero": {
+    "title": "Mów. Usłyszą włoski.",
+    "subtitle": "Przytrzymaj przycisk. Mówi to na głos po włosku."
+  },
+  "reply": {
+    "title": "Odpowiedź wraca w twoim języku.",
+    "subtitle": "Przytrzymaj drugi przycisk, gdy odpowiadają."
+  },
+  "destination": {
+    "title": "Wybierz swój cel podróży.",
+    "subtitle": "22 języki, w obie strony."
+  },
+  "faces": {
+    "title": "Ekran zwraca się do nich. Nic do instalowania.",
+    "subtitle": "Twoje słowa obracają się w ich stronę. Żadnej aplikacji na ich telefonie."
+  },
+  "free": {
+    "title": "5 minut za darmo. Bez subskrypcji.",
+    "subtitle": "Kup pakiet tylko wtedy, gdy potrzebujesz więcej."
+  }
+}

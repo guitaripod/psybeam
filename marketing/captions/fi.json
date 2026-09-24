@@ -1,0 +1,30 @@
+{
+  "pair": "fi:es",
+  "order": [
+    "hero",
+    "reply",
+    "destination",
+    "faces",
+    "free"
+  ],
+  "hero": {
+    "title": "Puhu. He kuulevat espanjaa.",
+    "subtitle": "Pidä painiketta pohjassa. Se sanotaan ääneen espanjaksi."
+  },
+  "reply": {
+    "title": "Vastaus kuuluu omalla kielelläsi.",
+    "subtitle": "Pidä toista painiketta pohjassa heidän vastatessaan."
+  },
+  "destination": {
+    "title": "Valitse kohteesi.",
+    "subtitle": "22 kieltä, molempiin suuntiin."
+  },
+  "faces": {
+    "title": "Se kääntyy heitä kohti. Ei asennettavaa.",
+    "subtitle": "Sanasi kääntyvät heitä kohti. Ei sovellusta heidän puhelimeensa."
+  },
+  "free": {
+    "title": "5 ilmaista minuuttia. Ei tilausta.",
+    "subtitle": "Ostat paketin vasta, kun tarvitset lisää."
+  }
+}

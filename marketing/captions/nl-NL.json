@@ -1,0 +1,30 @@
+{
+  "pair": "nl:fr",
+  "order": [
+    "hero",
+    "reply",
+    "destination",
+    "faces",
+    "free"
+  ],
+  "hero": {
+    "title": "Spreek. Zij horen Frans.",
+    "subtitle": "Houd een knop ingedrukt. Het wordt luid uitgesproken in het Frans."
+  },
+  "reply": {
+    "title": "Het antwoord komt terug in jouw taal.",
+    "subtitle": "Houd de andere knop ingedrukt terwijl zij antwoorden."
+  },
+  "destination": {
+    "title": "Kies je bestemming.",
+    "subtitle": "22 talen, beide kanten op."
+  },
+  "faces": {
+    "title": "Het scherm draait naar hen toe. Niets te installeren.",
+    "subtitle": "Jouw woorden draaien naar hen toe. Geen app op hun telefoon."
+  },
+  "free": {
+    "title": "5 gratis minuten. Geen abonnement.",
+    "subtitle": "Koop een pakket pas als je meer nodig hebt."
+  }
+}

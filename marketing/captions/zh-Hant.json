@@ -1,0 +1,30 @@
+{
+  "pair": "zh:ja",
+  "order": [
+    "hero",
+    "reply",
+    "destination",
+    "faces",
+    "free"
+  ],
+  "hero": {
+    "title": "開口說，對方聽到日語。",
+    "subtitle": "按住按鈕說話，會用日語大聲唸出來。"
+  },
+  "reply": {
+    "title": "對方的回答會用你的語言傳回來。",
+    "subtitle": "對方回答時，按住另一個按鈕。"
+  },
+  "destination": {
+    "title": "選擇你要去的地方。",
+    "subtitle": "22種語言，雙向口譯。"
+  },
+  "faces": {
+    "title": "螢幕會轉向對方。不用裝App。",
+    "subtitle": "你的話會轉向對方朗讀。對方手機上不用裝應用程式。"
+  },
+  "free": {
+    "title": "免費5分鐘。免訂閱。",
+    "subtitle": "只有需要更多時才購買分鐘包。"
+  }
+}

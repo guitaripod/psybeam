@@ -25,3 +25,15 @@ buildServer.json
 
 *.log
 .asc/
+
+# Generated marketing media: rebuilt by scripts/capture-screenshots.sh,
+# scripts/frame-screenshots.swift and marketing/video/tools; too large for git.
+marketing/appstore/raw/
+marketing/appstore/screenshots/
+marketing/appstore/cpp/*/*.png
+marketing/video/assets/*/
+marketing/video/final/
+marketing/video/preview-upload/
+marketing/video/smoke/
+marketing/video/audio-tests/
+marketing/video/work/restest/

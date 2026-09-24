@@ -1,0 +1,30 @@
+{
+  "pair": "sv:th",
+  "order": [
+    "hero",
+    "reply",
+    "destination",
+    "faces",
+    "free"
+  ],
+  "hero": {
+    "title": "Prata. De hör thailändska.",
+    "subtitle": "Håll in en knapp. Det sägs högt på thailändska."
+  },
+  "reply": {
+    "title": "Svaret kommer på ditt eget språk.",
+    "subtitle": "Håll in den andra knappen medan de svarar."
+  },
+  "destination": {
+    "title": "Välj resmål.",
+    "subtitle": "22 språk, båda vägarna."
+  },
+  "faces": {
+    "title": "Skärmen vänds mot dem. Inget att installera.",
+    "subtitle": "Dina ord vänds mot dem. Ingen app på deras telefon."
+  },
+  "free": {
+    "title": "5 gratis minuter. Ingen prenumeration.",
+    "subtitle": "Köp ett paket bara när du behöver mer."
+  }
+}

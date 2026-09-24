@@ -1,0 +1,30 @@
+{
+  "pair": "tr:en",
+  "order": [
+    "hero",
+    "reply",
+    "destination",
+    "faces",
+    "free"
+  ],
+  "hero": {
+    "title": "Konuş. İngilizce duyacaklar.",
+    "subtitle": "Bir düğmeyi basılı tut. Sesli olarak İngilizce söylenir."
+  },
+  "reply": {
+    "title": "Cevap kendi dilinde geri gelir.",
+    "subtitle": "Onlar cevap verirken diğer düğmeyi basılı tut."
+  },
+  "destination": {
+    "title": "Gideceğin yeri seç.",
+    "subtitle": "22 dil, iki yönde de."
+  },
+  "faces": {
+    "title": "Ekran onlara döner. Kurulacak bir şey yok.",
+    "subtitle": "Sözlerin onlara doğru döner. Telefonlarında uygulama yok."
+  },
+  "free": {
+    "title": "5 dakika ücretsiz. Abonelik yok.",
+    "subtitle": "Daha fazlasına ihtiyacın olduğunda paket satın al."
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "pair": "en:es",
+  "order": [
+    "hero",
+    "reply",
+    "destination",
+    "faces",
+    "free"
+  ],
+  "hero": {
+    "title": "Tal. De hører spansk.",
+    "subtitle": "Hold en knap nede. Det siges højt på spansk."
+  },
+  "reply": {
+    "title": "Svaret kommer på dit eget sprog.",
+    "subtitle": "Hold den anden knap nede, mens de svarer."
+  },
+  "destination": {
+    "title": "Vælg din destination.",
+    "subtitle": "22 sprog, talt begge veje."
+  },
+  "faces": {
+    "title": "Den vender mod dem. Intet at installere.",
+    "subtitle": "Dine ord vender mod dem. Ingen app på deres telefon."
+  },
+  "free": {
+    "title": "5 gratis minutter. Intet abonnement.",
+    "subtitle": "Køb en pakke, først når du har brug for mere."
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "pair": "en:th",
+  "order": [
+    "hero",
+    "reply",
+    "destination",
+    "faces",
+    "free"
+  ],
+  "hero": {
+    "title": "Snakk. De hører thai.",
+    "subtitle": "Hold inne en knapp. Det sies høyt på thai."
+  },
+  "reply": {
+    "title": "Svaret kommer tilbake på ditt eget språk.",
+    "subtitle": "Hold inne den andre knappen mens de svarer."
+  },
+  "destination": {
+    "title": "Velg reisemålet ditt.",
+    "subtitle": "22 språk, begge veier."
+  },
+  "faces": {
+    "title": "Skjermen vender mot dem. Ingenting å installere.",
+    "subtitle": "Ordene dine vender mot dem. Ingen app på telefonen deres."
+  },
+  "free": {
+    "title": "5 gratis minutter. Ingen abonnement.",
+    "subtitle": "Kjøp en pakke først når du trenger mer."
+  }
+}
