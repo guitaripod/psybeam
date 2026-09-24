@@ -1,0 +1,50 @@
+[
+  {
+    "at": 0.5,
+    "speaker": "traveler",
+    "event": "hold"
+  },
+  {
+    "at": 0.6,
+    "speaker": "traveler",
+    "event": "stream_source",
+    "text": "Hi, one tonkotsu ramen, not too spicy, please.",
+    "duration": 3.0
+  },
+  {
+    "at": 0.85,
+    "speaker": "traveler",
+    "event": "stream",
+    "text": "やあ、豚骨ラーメンです。辛すぎないようにお願いします。",
+    "duration": 3.0
+  },
+  {
+    "at": 4.2,
+    "speaker": "traveler",
+    "event": "release"
+  },
+  {
+    "at": 7.1,
+    "speaker": "local",
+    "event": "hold"
+  },
+  {
+    "at": 7.199999999999999,
+    "speaker": "local",
+    "event": "stream_source",
+    "text": "かしこまりました。しばずお待ちください。",
+    "duration": 1.8
+  },
+  {
+    "at": 7.449999999999999,
+    "speaker": "local",
+    "event": "stream",
+    "text": "Understood. Well then, please wait a moment.",
+    "duration": 3.0
+  },
+  {
+    "at": 10.8,
+    "speaker": "local",
+    "event": "release"
+  }
+]

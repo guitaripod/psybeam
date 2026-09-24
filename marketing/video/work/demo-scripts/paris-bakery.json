@@ -1,0 +1,50 @@
+[
+  {
+    "at": 0.5,
+    "speaker": "traveler",
+    "event": "hold"
+  },
+  {
+    "at": 0.6,
+    "speaker": "traveler",
+    "event": "stream_source",
+    "text": "Two croissants and a baguette, please.Is this one still warm?",
+    "duration": 3.0
+  },
+  {
+    "at": 0.85,
+    "speaker": "traveler",
+    "event": "stream",
+    "text": "Deux croissants et une baguette, s’il vous plaît. Celui-ci est encore chaud ?",
+    "duration": 3.0
+  },
+  {
+    "at": 4.2,
+    "speaker": "traveler",
+    "event": "release"
+  },
+  {
+    "at": 7.1,
+    "speaker": "local",
+    "event": "hold"
+  },
+  {
+    "at": 7.199999999999999,
+    "speaker": "local",
+    "event": "stream_source",
+    "text": "Oui, elle sort du four à l'instant.",
+    "duration": 3.0
+  },
+  {
+    "at": 7.449999999999999,
+    "speaker": "local",
+    "event": "stream",
+    "text": "Yes, it’s just come out of the oven.",
+    "duration": 3.0
+  },
+  {
+    "at": 10.8,
+    "speaker": "local",
+    "event": "release"
+  }
+]

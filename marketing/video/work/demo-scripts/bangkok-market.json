@@ -1,0 +1,50 @@
+[
+  {
+    "at": 0.5,
+    "speaker": "traveler",
+    "event": "hold"
+  },
+  {
+    "at": 0.6,
+    "speaker": "traveler",
+    "event": "stream_source",
+    "text": "One Pad Thai, medium spicy, with extra lime, please.",
+    "duration": 3.0
+  },
+  {
+    "at": 0.85,
+    "speaker": "traveler",
+    "event": "stream",
+    "text": "ผัดไทยรสกลางราดพริกเพิ่มด้วยมะนาวอีกหนึ่งซีก ขอหน่อย",
+    "duration": 3.0
+  },
+  {
+    "at": 4.2,
+    "speaker": "traveler",
+    "event": "release"
+  },
+  {
+    "at": 7.1,
+    "speaker": "local",
+    "event": "hold"
+  },
+  {
+    "at": 7.199999999999999,
+    "speaker": "local",
+    "event": "stream_source",
+    "text": "ได้ค่ะ รอสักครู่นะคะ",
+    "duration": 1.8
+  },
+  {
+    "at": 7.449999999999999,
+    "speaker": "local",
+    "event": "stream",
+    "text": "Sure, wait a sec,",
+    "duration": 1.53
+  },
+  {
+    "at": 9.33,
+    "speaker": "local",
+    "event": "release"
+  }
+]

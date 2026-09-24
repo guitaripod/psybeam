@@ -1,0 +1,9 @@
+raw/
+segments/
+qc_frames*/
+qc_final*/
+restest/
+audio_windows.json
+textcard/textcard
+textcard/*.png
+__pycache__/

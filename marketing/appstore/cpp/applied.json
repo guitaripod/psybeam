@@ -1,0 +1,98 @@
+{
+ "Japanese": {
+  "pageId": "dfcc082a-0570-4365-8b2e-9b8923027be5",
+  "versionId": "8107382f-c3b6-4857-8971-906dafb6bf49",
+  "localizations": {
+   "en-US": "26bd70a4-a115-40bb-9260-e4595cbbb88a"
+  },
+  "keywords": [
+   [
+    "japanese",
+    "ok"
+   ]
+  ]
+ },
+ "Spanish": {
+  "pageId": "f0337398-062b-41ad-a470-86e1b1e11100",
+  "versionId": "c15e1901-ac91-46ed-b09f-c8abfbfaddd5",
+  "localizations": {
+   "en-US": "becedf20-4c04-4a86-ba40-cca2f1c51c97"
+  },
+  "keywords": [
+   [
+    "spanish",
+    "ok"
+   ]
+  ]
+ },
+ "French": {
+  "pageId": "43b8aa90-7f7a-4279-ae0f-aecae2b144ca",
+  "versionId": "6d136f48-b894-441f-b5bf-49089df0948a",
+  "localizations": {
+   "en-US": "d917e7af-466a-4e28-9646-c922ccc4e498"
+  },
+  "keywords": [
+   [
+    "french",
+    "ok"
+   ]
+  ]
+ },
+ "Italian": {
+  "pageId": "79ce8d20-4f9d-4de3-a534-70ffbb003d82",
+  "versionId": "3eaf3ed4-183a-4ba2-ae45-0ac803861a9d",
+  "localizations": {
+   "en-US": "a7a1e176-c025-4103-af15-1f9c59233f29"
+  },
+  "keywords": [
+   [
+    "italian",
+    "Error: custom-pages localizations search-keywords add: failed to add: The provided entity includes a relationship with an invalid value: Keyword 'italian' does not exist for /v1/appStoreVersionLocaliz"
+   ]
+  ]
+ },
+ "Korean": {
+  "pageId": "4070d967-1ce4-4bcc-ae1b-81d1a75988ef",
+  "versionId": "b28df501-d6ee-418c-b628-a0f96d8a8e72",
+  "localizations": {
+   "en-US": "75d487b0-2390-4090-9a6c-c3ce486a21de"
+  },
+  "keywords": [
+   [
+    "korean",
+    "Error: custom-pages localizations search-keywords add: failed to add: The provided entity includes a relationship with an invalid value: Keyword 'korean' does not exist for /v1/appStoreVersionLocaliza"
+   ]
+  ]
+ },
+ "Thai": {
+  "pageId": "6ae7bad5-74d1-44b9-8b31-3852a93e8127",
+  "versionId": "56d1c4b7-dfef-446d-897b-9e6b5c61cdca",
+  "localizations": {
+   "en-US": "d1f8addb-e352-41e1-a5b8-82029903b564"
+  },
+  "keywords": [
+   [
+    "thai",
+    "Error: custom-pages localizations search-keywords add: failed to add: The provided entity includes a relationship with an invalid value: Keyword 'thai' does not exist for /v1/appStoreVersionLocalizati"
+   ]
+  ]
+ },
+ "接客・インバウンド向け": {
+  "pageId": "3545f662-682d-436d-a771-122010cf49ff",
+  "versionId": "c7c3f136-b087-4c41-8c60-c422cae42c0c",
+  "localizations": {
+   "en-US": "9a8ea6f1-5554-41e9-8399-a06c18f12900",
+   "ja": "75aa049f-abfe-49a0-b2e0-587b488877ad"
+  },
+  "keywords": [
+   [
+    "接客",
+    "ok"
+   ],
+   [
+    "インバウンド",
+    "ok"
+   ]
+  ]
+ }
+}

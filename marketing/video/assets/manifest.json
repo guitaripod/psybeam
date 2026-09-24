@@ -1,0 +1,511 @@
+{
+  "generated": "2026-09-24",
+  "resolution": "1088x1920",
+  "fps": 24,
+  "model": "LTX-2.5 distilled (text-to-video + image-to-video chaining)",
+  "translation_model": "gpt-realtime-translate (same session config as production mako mint)",
+  "stories": [
+    {
+      "id": "tokyo-ramen",
+      "local_language": "ja",
+      "shots": [
+        {
+          "file": "tokyo-ramen/shots/tokyo-ramen_1_establish.mp4",
+          "duration_s": 3.04,
+          "description": "Wide two-shot: traveler sits at a Tokyo ramen counter at night as the chef works behind it, steam rising.",
+          "has_dialogue": false,
+          "speaker": null
+        },
+        {
+          "file": "tokyo-ramen/shots/tokyo-ramen_2_traveler.mp4",
+          "duration_s": 4.04,
+          "description": "Traveler leans in, phone glowing, orders in English: \"Hi! One tonkotsu ramen, not too spicy, please.\"",
+          "has_dialogue": true,
+          "speaker": "traveler"
+        },
+        {
+          "file": "tokyo-ramen/shots/tokyo-ramen_3_local.mp4",
+          "duration_s": 4.04,
+          "description": "Chef nods and replies in Japanese: \"かしこまりました。少々お待ちください。\"",
+          "has_dialogue": true,
+          "speaker": "local"
+        },
+        {
+          "file": "tokyo-ramen/shots/tokyo-ramen_4_payoff.mp4",
+          "duration_s": 3.04,
+          "description": "Bowl arrives; traveler eats with chopsticks, smiling, Tokyo street lights behind her.",
+          "has_dialogue": false,
+          "speaker": null
+        }
+      ],
+      "translations": [
+        {
+          "direction": "traveler -> local",
+          "source_wav": "tokyo-ramen/audio/tokyo-ramen_2_traveler_source.wav",
+          "source_transcript": "Hi, one tonkotsu ramen, not too spicy, please.",
+          "output_wav": "tokyo-ramen/audio/tokyo-ramen_2_traveler_translated_ja.wav",
+          "output_transcript_json": "tokyo-ramen/audio/tokyo-ramen_2_traveler_translated_ja.json",
+          "output_transcript": "やあ、豚骨ラーメンです。辛すぎないようにお願いします。",
+          "output_language": "ja",
+          "latency_ms": {
+            "inputDurationMs": 4010,
+            "outputDurationMs": 6800,
+            "firstAudioLatencyMsFromSpeechStart": 562,
+            "firstAudioLatencyMsFromSpeechEnd": -3596,
+            "totalElapsedMs": 10276
+          }
+        },
+        {
+          "direction": "local -> traveler",
+          "source_wav": "tokyo-ramen/audio/tokyo-ramen_3_local_source.wav",
+          "source_transcript": "かしこまりました。しばずお待ちください。",
+          "output_wav": "tokyo-ramen/audio/tokyo-ramen_3_local_translated_en.wav",
+          "output_transcript_json": "tokyo-ramen/audio/tokyo-ramen_3_local_translated_en.json",
+          "output_transcript": "Understood. Well then, please wait a moment.",
+          "output_language": "en",
+          "latency_ms": {
+            "inputDurationMs": 4010,
+            "outputDurationMs": 6800,
+            "firstAudioLatencyMsFromSpeechStart": 566,
+            "firstAudioLatencyMsFromSpeechEnd": -3585,
+            "totalElapsedMs": 9632
+          }
+        }
+      ],
+      "notes": [
+        "Clean on first take: all four shots and both translation directions passed QC without retries."
+      ]
+    },
+    {
+      "id": "cdmx-tacos",
+      "local_language": "es",
+      "shots": [
+        {
+          "file": "cdmx-tacos/shots/cdmx-tacos_1_establish.mp4",
+          "duration_s": 3.04,
+          "description": "Wide two-shot: traveler steps up to a Mexico City taco stand at dusk as the taquero works the grill.",
+          "has_dialogue": false,
+          "speaker": null
+        },
+        {
+          "file": "cdmx-tacos/shots/cdmx-tacos_2_traveler.mp4",
+          "duration_s": 4.04,
+          "description": "Traveler holds up his phone, orders in English: \"Three al pastor tacos, one without onion, please.\"",
+          "has_dialogue": true,
+          "speaker": "traveler"
+        },
+        {
+          "file": "cdmx-tacos/shots/cdmx-tacos_3_local.mp4",
+          "duration_s": 4.04,
+          "description": "Taquero smiles, replies in Spanish: \"¡Claro! ¿Con salsa verde o roja?\"",
+          "has_dialogue": true,
+          "speaker": "local"
+        },
+        {
+          "file": "cdmx-tacos/shots/cdmx-tacos_4_payoff.mp4",
+          "duration_s": 3.04,
+          "description": "Plate of tacos slides across the counter; traveler smiles, about to bite.",
+          "has_dialogue": false,
+          "speaker": null
+        }
+      ],
+      "translations": [
+        {
+          "direction": "traveler -> local",
+          "source_wav": "cdmx-tacos/audio/cdmx-tacos_2_traveler_source.wav",
+          "source_transcript": "Three Al Pastor tacos, one without onion, please.",
+          "output_wav": "cdmx-tacos/audio/cdmx-tacos_2_traveler_translated_es.wav",
+          "output_transcript_json": "cdmx-tacos/audio/cdmx-tacos_2_traveler_translated_es.json",
+          "output_transcript": "Tres tacos al pastor, uno sin cebolla, por favor.",
+          "output_language": "es",
+          "latency_ms": {
+            "inputDurationMs": 4010,
+            "outputDurationMs": 6800,
+            "firstAudioLatencyMsFromSpeechStart": 741,
+            "firstAudioLatencyMsFromSpeechEnd": -3412,
+            "totalElapsedMs": 9483
+          }
+        },
+        {
+          "direction": "local -> traveler",
+          "source_wav": "cdmx-tacos/audio/cdmx-tacos_3_local_source.wav",
+          "source_transcript": "¡claro!¿Con salsa verde o roja?",
+          "output_wav": "cdmx-tacos/audio/cdmx-tacos_3_local_translated_en.wav",
+          "output_transcript_json": "cdmx-tacos/audio/cdmx-tacos_3_local_translated_en.json",
+          "output_transcript": "Sure, with green or red sauce.",
+          "output_language": "en",
+          "latency_ms": {
+            "inputDurationMs": 4010,
+            "outputDurationMs": 6800,
+            "firstAudioLatencyMsFromSpeechStart": 842,
+            "firstAudioLatencyMsFromSpeechEnd": -3301,
+            "totalElapsedMs": 9780
+          }
+        }
+      ],
+      "notes": [
+        "Clean on first take: all four shots and both translation directions passed QC without retries."
+      ]
+    },
+    {
+      "id": "paris-bakery",
+      "local_language": "fr",
+      "shots": [
+        {
+          "file": "paris-bakery/shots/paris-bakery_1_establish.mp4",
+          "duration_s": 3.04,
+          "description": "Wide two-shot: traveler steps up to a Paris boulangerie counter in the morning as the baker arranges croissants.",
+          "has_dialogue": false,
+          "speaker": null
+        },
+        {
+          "file": "paris-bakery/shots/paris-bakery_2_traveler.mp4",
+          "duration_s": 4.04,
+          "description": "Traveler holds up her phone, asks in English: \"Two croissants and a baguette, please. Is this one still warm?\"",
+          "has_dialogue": true,
+          "speaker": "traveler"
+        },
+        {
+          "file": "paris-bakery/shots/paris-bakery_3_local.mp4",
+          "duration_s": 4.04,
+          "description": "Baker smiles, replies in French: \"Oui, elle sort du four à l'instant !\"",
+          "has_dialogue": true,
+          "speaker": "local"
+        },
+        {
+          "file": "paris-bakery/shots/paris-bakery_4_payoff.mp4",
+          "duration_s": 3.04,
+          "description": "Baker hands over a bag of pastries; traveler smiles, holding it close.",
+          "has_dialogue": false,
+          "speaker": null
+        }
+      ],
+      "translations": [
+        {
+          "direction": "traveler -> local",
+          "source_wav": "paris-bakery/audio/paris-bakery_2_traveler_source.wav",
+          "source_transcript": "Two croissants and a baguette, please.Is this one still warm?",
+          "output_wav": "paris-bakery/audio/paris-bakery_2_traveler_translated_fr.wav",
+          "output_transcript_json": "paris-bakery/audio/paris-bakery_2_traveler_translated_fr.json",
+          "output_transcript": "Deux croissants et une baguette, s’il vous plaît. Celui-ci est encore chaud ?",
+          "output_language": "fr",
+          "latency_ms": {
+            "inputDurationMs": 4010,
+            "outputDurationMs": 6800,
+            "firstAudioLatencyMsFromSpeechStart": 555,
+            "firstAudioLatencyMsFromSpeechEnd": -3592,
+            "totalElapsedMs": 9344
+          }
+        },
+        {
+          "direction": "local -> traveler",
+          "source_wav": "paris-bakery/audio/paris-bakery_3_local_source.wav",
+          "source_transcript": "Oui, elle sort du four à l'instant.",
+          "output_wav": "paris-bakery/audio/paris-bakery_3_local_translated_en.wav",
+          "output_transcript_json": "paris-bakery/audio/paris-bakery_3_local_translated_en.json",
+          "output_transcript": "Yes, it’s just come out of the oven.",
+          "output_language": "en",
+          "latency_ms": {
+            "inputDurationMs": 4010,
+            "outputDurationMs": 6800,
+            "firstAudioLatencyMsFromSpeechStart": 739,
+            "firstAudioLatencyMsFromSpeechEnd": -3409,
+            "totalElapsedMs": 9503
+          }
+        }
+      ],
+      "notes": [
+        "Clean on first take: all four shots and both translation directions passed QC without retries."
+      ]
+    },
+    {
+      "id": "rome-trattoria",
+      "local_language": "it",
+      "shots": [
+        {
+          "file": "rome-trattoria/shots/rome-trattoria_1_establish.mp4",
+          "duration_s": 3.04,
+          "description": "Wide shot: a couple at a Rome trattoria terrace table as the waiter approaches with a notepad. Note: a second background figure resembling a waiter is visible seated at the table in this take — usable but worth a look before final cut.",
+          "has_dialogue": false,
+          "speaker": null
+        },
+        {
+          "file": "rome-trattoria/shots/rome-trattoria_2_traveler.mp4",
+          "duration_s": 4.04,
+          "description": "The couple orders in English: \"We'd love the cacio e pepe and a carafe of house red.\"",
+          "has_dialogue": true,
+          "speaker": "traveler"
+        },
+        {
+          "file": "rome-trattoria/shots/rome-trattoria_3_local.mp4",
+          "duration_s": 4.04,
+          "description": "Waiter nods, replies in Italian: \"Ottima scelta, arriva subito.\"",
+          "has_dialogue": true,
+          "speaker": "local"
+        },
+        {
+          "file": "rome-trattoria/shots/rome-trattoria_4_payoff.mp4",
+          "duration_s": 3.04,
+          "description": "Carafe of red wine arrives; the couple lean in together, smiling.",
+          "has_dialogue": false,
+          "speaker": null
+        }
+      ],
+      "translations": [
+        {
+          "direction": "traveler -> local",
+          "source_wav": "rome-trattoria/audio/rome-trattoria_2_traveler_source.wav",
+          "source_transcript": "We'd love the cacio e pepe and a carafe of house red.",
+          "output_wav": "rome-trattoria/audio/rome-trattoria_2_traveler_translated_it.wav",
+          "output_transcript_json": "rome-trattoria/audio/rome-trattoria_2_traveler_translated_it.json",
+          "output_transcript": "Adoriamo il cacio e pepe, e una caraffa di vino rosso della casa.",
+          "output_language": "it",
+          "latency_ms": {
+            "inputDurationMs": 4010,
+            "outputDurationMs": 6800,
+            "firstAudioLatencyMsFromSpeechStart": 553,
+            "firstAudioLatencyMsFromSpeechEnd": -3597,
+            "totalElapsedMs": 9481
+          }
+        },
+        {
+          "direction": "local -> traveler",
+          "source_wav": "rome-trattoria/audio/rome-trattoria_3_local_source.wav",
+          "source_transcript": "Ottima scelta, arriva subito.",
+          "output_wav": "rome-trattoria/audio/rome-trattoria_3_local_translated_en.wav",
+          "output_transcript_json": "rome-trattoria/audio/rome-trattoria_3_local_translated_en.json",
+          "output_transcript": "Great pick, it’s on its way.",
+          "output_language": "en",
+          "latency_ms": {
+            "inputDurationMs": 4010,
+            "outputDurationMs": 6800,
+            "firstAudioLatencyMsFromSpeechStart": 839,
+            "firstAudioLatencyMsFromSpeechEnd": -3311,
+            "totalElapsedMs": 9700
+          }
+        }
+      ],
+      "notes": [
+        "An extra background figure resembling a second waiter appears seated at the table in the establish/local shots; not disqualifying (faces/hands/limbs are clean) but flagged for the editor to crop around if it reads as cluttered."
+      ]
+    },
+    {
+      "id": "bangkok-market",
+      "local_language": "th",
+      "shots": [
+        {
+          "file": "bangkok-market/shots/bangkok-market_1_establish.mp4",
+          "duration_s": 3.04,
+          "description": "Wide two-shot: traveler steps up to a Bangkok night-market wok stall as the vendor tosses noodles in flame.",
+          "has_dialogue": false,
+          "speaker": null
+        },
+        {
+          "file": "bangkok-market/shots/bangkok-market_2_traveler.mp4",
+          "duration_s": 4.04,
+          "description": "Traveler holds up his phone, orders in English: \"One pad thai, medium spicy, with extra lime please.\"",
+          "has_dialogue": true,
+          "speaker": "traveler"
+        },
+        {
+          "file": "bangkok-market/shots/bangkok-market_3_local.mp4",
+          "duration_s": 4.04,
+          "description": "Vendor smiles, replies in Thai: \"ได้ค่ะ รอสักครู่นะคะ\"",
+          "has_dialogue": true,
+          "speaker": "local"
+        },
+        {
+          "file": "bangkok-market/shots/bangkok-market_4_payoff.mp4",
+          "duration_s": 3.04,
+          "description": "Plate of pad thai with lime slides across; traveler smiles, steam rising.",
+          "has_dialogue": false,
+          "speaker": null
+        }
+      ],
+      "translations": [
+        {
+          "direction": "traveler -> local",
+          "source_wav": "bangkok-market/audio/bangkok-market_2_traveler_source.wav",
+          "source_transcript": "One Pad Thai, medium spicy, with extra lime, please.",
+          "output_wav": "bangkok-market/audio/bangkok-market_2_traveler_translated_th.wav",
+          "output_transcript_json": "bangkok-market/audio/bangkok-market_2_traveler_translated_th.json",
+          "output_transcript": "ผัดไทยรสกลางราดพริกเพิ่มด้วยมะนาวอีกหนึ่งซีก ขอหน่อย",
+          "output_language": "th",
+          "latency_ms": {
+            "inputDurationMs": 4010,
+            "outputDurationMs": 6800,
+            "firstAudioLatencyMsFromSpeechStart": 833,
+            "firstAudioLatencyMsFromSpeechEnd": -3333,
+            "totalElapsedMs": 9678
+          }
+        },
+        {
+          "direction": "local -> traveler",
+          "source_wav": "bangkok-market/audio/bangkok-market_3_local_source.wav",
+          "source_transcript": "ได้ค่ะ รอสักครู่นะคะ",
+          "output_wav": "bangkok-market/audio/bangkok-market_3_local_translated_en.wav",
+          "output_transcript_json": "bangkok-market/audio/bangkok-market_3_local_translated_en.json",
+          "output_transcript": "Sure, wait a sec,",
+          "output_language": "en",
+          "latency_ms": {
+            "inputDurationMs": 4010,
+            "outputDurationMs": 6800,
+            "firstAudioLatencyMsFromSpeechStart": 569,
+            "firstAudioLatencyMsFromSpeechEnd": -3608,
+            "totalElapsedMs": 9647
+          }
+        }
+      ],
+      "notes": [
+        "Clean on first take: all four shots and both translation directions passed QC without retries."
+      ]
+    },
+    {
+      "id": "seoul-pharmacy",
+      "local_language": "ko",
+      "shots": [
+        {
+          "file": "seoul-pharmacy/shots/seoul-pharmacy_1_establish.mp4",
+          "duration_s": 3.04,
+          "description": "Wide two-shot: traveler steps up to a Seoul pharmacy counter, hand at her throat, as the pharmacist looks up.",
+          "has_dialogue": false,
+          "speaker": null
+        },
+        {
+          "file": "seoul-pharmacy/shots/seoul-pharmacy_2_traveler.mp4",
+          "duration_s": 4.04,
+          "description": "Traveler gestures at her throat, phone glowing, asks in English: \"Do you have something for a sore throat?\"",
+          "has_dialogue": true,
+          "speaker": "traveler"
+        },
+        {
+          "file": "seoul-pharmacy/shots/seoul-pharmacy_3_local.mp4",
+          "duration_s": 4.04,
+          "description": "Pharmacist nods, replies in Korean: \"네, 이 목캔디랑 이 약을 추천해요.\"",
+          "has_dialogue": true,
+          "speaker": "local"
+        },
+        {
+          "file": "seoul-pharmacy/shots/seoul-pharmacy_4_payoff.mp4",
+          "duration_s": 3.04,
+          "description": "Pharmacist sets medicine and throat candy on the counter; traveler smiles, reaching for them.",
+          "has_dialogue": false,
+          "speaker": null
+        }
+      ],
+      "translations": [
+        {
+          "direction": "traveler -> local",
+          "source_wav": "seoul-pharmacy/audio/seoul-pharmacy_2_traveler_source.wav",
+          "source_transcript": "Do you have something for a sore throat?",
+          "output_wav": "seoul-pharmacy/audio/seoul-pharmacy_2_traveler_translated_ko.wav",
+          "output_transcript_json": "seoul-pharmacy/audio/seoul-pharmacy_2_traveler_translated_ko.json",
+          "output_transcript": "그러니까 우리 목 아플 때 쓸 거 있나요?",
+          "output_language": "ko",
+          "latency_ms": {
+            "inputDurationMs": 4010,
+            "outputDurationMs": 6800,
+            "firstAudioLatencyMsFromSpeechStart": 841,
+            "firstAudioLatencyMsFromSpeechEnd": -3308,
+            "totalElapsedMs": 9643
+          }
+        },
+        {
+          "direction": "local -> traveler",
+          "source_wav": "seoul-pharmacy/audio/seoul-pharmacy_3_local_source.wav",
+          "source_transcript": "네.이 목��디랑 이 약을 추천해요.",
+          "output_wav": "seoul-pharmacy/audio/seoul-pharmacy_3_local_translated_en.wav",
+          "output_transcript_json": "seoul-pharmacy/audio/seoul-pharmacy_3_local_translated_en.json",
+          "output_transcript": "Yes, I recommend this throat candy and this medicine.",
+          "output_language": "en",
+          "latency_ms": {
+            "inputDurationMs": 4010,
+            "outputDurationMs": 6800,
+            "firstAudioLatencyMsFromSpeechStart": 881,
+            "firstAudioLatencyMsFromSpeechEnd": -3278,
+            "totalElapsedMs": 10139
+          }
+        }
+      ],
+      "notes": [
+        "EN->KO translation of \"Do you have something for a sore throat?\" needed 5 attempts: gpt-realtime-translate repeatedly mistranslated the concept (bronchitis, complexion, dry cough) before landing on a correct rendering. This looks like a genuine, reproducible model weakness for this phrase, not a one-off glitch -- worth flagging for the app's own translation-quality backlog. The local->EN reply also needed a retry after one run returned only 400ms of truncated output audio for a full-sentence transcript."
+      ]
+    },
+    {
+      "id": "kyoto-shop",
+      "local_language": "ja",
+      "shots": [
+        {
+          "file": "kyoto-shop/shots/kyoto-shop_1_establish.mp4",
+          "duration_s": 3.04,
+          "description": "Wide two-shot: a foreign tourist browses a Kyoto souvenir shop as the shopkeeper (the operator, holding the phone) looks on.",
+          "has_dialogue": false,
+          "speaker": null
+        },
+        {
+          "file": "kyoto-shop/shots/kyoto-shop_2_traveler.mp4",
+          "duration_s": 4.04,
+          "description": "Tourist holds up a folded textile, asks in English: \"Do you have this in a smaller size?\"",
+          "has_dialogue": true,
+          "speaker": "traveler"
+        },
+        {
+          "file": "kyoto-shop/shots/kyoto-shop_3_local.mp4",
+          "duration_s": 4.04,
+          "description": "Shopkeeper looks at his phone, then replies slowly and clearly in Japanese: \"はい、こちらに小さいサイズがございます。\" (regenerated twice: once to fix the customer's ethnicity/role — v1 read as an ambiguous local, not a foreign tourist — and once more with a slower, clearly-enunciated line after the first take's dialogue audio was too indistinct for the transcription model to hear \"小さい\" correctly).",
+          "has_dialogue": true,
+          "speaker": "local"
+        },
+        {
+          "file": "kyoto-shop/shots/kyoto-shop_4_payoff.mp4",
+          "duration_s": 3.04,
+          "description": "Shopkeeper sets down a smaller folded textile; tourist smiles, picking it up to compare.",
+          "has_dialogue": false,
+          "speaker": null
+        }
+      ],
+      "translations": [
+        {
+          "direction": "traveler -> local",
+          "source_wav": "kyoto-shop/audio/kyoto-shop_2_traveler_source.wav",
+          "source_transcript": "Do you have this in a smaller size?",
+          "output_wav": "kyoto-shop/audio/kyoto-shop_2_traveler_translated_ja.wav",
+          "output_transcript_json": "kyoto-shop/audio/kyoto-shop_2_traveler_translated_ja.json",
+          "output_transcript": "さて、これの小さいサイズはありますか?",
+          "output_language": "ja",
+          "latency_ms": {
+            "inputDurationMs": 4010,
+            "outputDurationMs": 6800,
+            "firstAudioLatencyMsFromSpeechStart": 865,
+            "firstAudioLatencyMsFromSpeechEnd": -3292,
+            "totalElapsedMs": 9550
+          }
+        },
+        {
+          "direction": "local -> traveler",
+          "source_wav": "kyoto-shop/audio/kyoto-shop_3_local_source.wav",
+          "source_transcript": "はい。こちらに小さいサイズがございます。",
+          "output_wav": "kyoto-shop/audio/kyoto-shop_3_local_translated_en.wav",
+          "output_transcript_json": "kyoto-shop/audio/kyoto-shop_3_local_translated_en.json",
+          "output_transcript": "Yes, over here, there's a small size.",
+          "output_language": "en",
+          "latency_ms": {
+            "inputDurationMs": 4010,
+            "outputDurationMs": 6800,
+            "firstAudioLatencyMsFromSpeechStart": 3679,
+            "firstAudioLatencyMsFromSpeechEnd": -478,
+            "totalElapsedMs": 10527
+          }
+        }
+      ],
+      "notes": [
+        "Regenerated twice: v1's customer read as an ambiguous local rather than a clearly foreign tourist (QC reject on role/ethnicity clarity) -- fixed with an explicit Western-appearance description. The shopkeeper's JA line was then regenerated a third time with slow, clearly-enunciated phrasing after the first take's audio was too indistinct for gpt-4o-mini-transcribe to hear \"chiisai\" correctly (it heard \"shai\"), which silently dropped 'small' from the translation."
+      ]
+    }
+  ],
+  "openai_spend_this_production_run": {
+    "total_connected_seconds": 136.4,
+    "note": "Sum of totalElapsedMs across every translate_audio.mjs call that produced a KEPT file (14 calls: 2 directions x 7 stories). Retries that were discarded are not counted here but are listed in each story's notes: seoul-pharmacy needed 5 extra discarded calls (4 for the EN->KO mistranslation, 1 for the truncated KO->EN run), kyoto-shop needed 2 extra discarded calls (both JA->EN attempts against the garbled v1/v2 dialogue audio, before the v3 video fix). Grand total across all calls (kept + discarded) this production run is ~206s (~3.4 min) of connected session time.",
+    "estimated_cost_usd": "~0.13 (206s / 60 * ($0.034/min translate + $0.003/min gpt-4o-mini-transcribe input)) for this production run; the earlier tool-build/test session (audio-tool.md) spent a separate ~0.12-0.15. Combined ~0.25-0.28, well under the $3 cap. No gpt-4o-mini-tts fallback calls were needed -- every dialogue line was eventually produced by LTX-2.5 itself."
+  }
+}

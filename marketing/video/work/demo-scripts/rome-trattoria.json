@@ -1,0 +1,50 @@
+[
+  {
+    "at": 0.5,
+    "speaker": "traveler",
+    "event": "hold"
+  },
+  {
+    "at": 0.6,
+    "speaker": "traveler",
+    "event": "stream_source",
+    "text": "We'd love the cacio e pepe and a carafe of house red.",
+    "duration": 3.0
+  },
+  {
+    "at": 0.85,
+    "speaker": "traveler",
+    "event": "stream",
+    "text": "Adoriamo il cacio e pepe, e una caraffa di vino rosso della casa.",
+    "duration": 3.0
+  },
+  {
+    "at": 4.2,
+    "speaker": "traveler",
+    "event": "release"
+  },
+  {
+    "at": 7.1,
+    "speaker": "local",
+    "event": "hold"
+  },
+  {
+    "at": 7.199999999999999,
+    "speaker": "local",
+    "event": "stream_source",
+    "text": "Ottima scelta, arriva subito.",
+    "duration": 2.61
+  },
+  {
+    "at": 7.449999999999999,
+    "speaker": "local",
+    "event": "stream",
+    "text": "Great pick, it’s on its way.",
+    "duration": 2.52
+  },
+  {
+    "at": 10.32,
+    "speaker": "local",
+    "event": "release"
+  }
+]

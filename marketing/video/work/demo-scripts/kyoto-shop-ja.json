@@ -1,0 +1,50 @@
+[
+  {
+    "at": 0.5,
+    "speaker": "local",
+    "event": "hold"
+  },
+  {
+    "at": 0.6,
+    "speaker": "local",
+    "event": "stream_source",
+    "text": "Do you have this in a smaller size?",
+    "duration": 3.0
+  },
+  {
+    "at": 0.85,
+    "speaker": "local",
+    "event": "stream",
+    "text": "さて、これの小さいサイズはありますか?",
+    "duration": 2.66
+  },
+  {
+    "at": 3.86,
+    "speaker": "local",
+    "event": "release"
+  },
+  {
+    "at": 6.76,
+    "speaker": "traveler",
+    "event": "hold"
+  },
+  {
+    "at": 6.86,
+    "speaker": "traveler",
+    "event": "stream_source",
+    "text": "はい。こちらに小さいサイズがございます。",
+    "duration": 1.8
+  },
+  {
+    "at": 7.11,
+    "speaker": "traveler",
+    "event": "stream",
+    "text": "Yes, over here, there's a small size.",
+    "duration": 3.0
+  },
+  {
+    "at": 10.46,
+    "speaker": "traveler",
+    "event": "release"
+  }
+]

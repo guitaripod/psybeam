@@ -1,0 +1,50 @@
+[
+  {
+    "at": 0.5,
+    "speaker": "traveler",
+    "event": "hold"
+  },
+  {
+    "at": 0.6,
+    "speaker": "traveler",
+    "event": "stream_source",
+    "text": "Three Al Pastor tacos, one without onion, please.",
+    "duration": 3.0
+  },
+  {
+    "at": 0.85,
+    "speaker": "traveler",
+    "event": "stream",
+    "text": "Tres tacos al pastor, uno sin cebolla, por favor.",
+    "duration": 3.0
+  },
+  {
+    "at": 4.2,
+    "speaker": "traveler",
+    "event": "release"
+  },
+  {
+    "at": 7.1,
+    "speaker": "local",
+    "event": "hold"
+  },
+  {
+    "at": 7.199999999999999,
+    "speaker": "local",
+    "event": "stream_source",
+    "text": "¡claro!¿Con salsa verde o roja?",
+    "duration": 2.79
+  },
+  {
+    "at": 7.449999999999999,
+    "speaker": "local",
+    "event": "stream",
+    "text": "Sure, with green or red sauce.",
+    "duration": 2.7
+  },
+  {
+    "at": 10.5,
+    "speaker": "local",
+    "event": "release"
+  }
+]

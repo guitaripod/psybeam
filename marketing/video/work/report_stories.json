@@ -1,0 +1,450 @@
+[
+ {
+  "name": "tokyo-ramen_1_establish",
+  "mode": "t2v",
+  "seed": 10001,
+  "seconds": 30.024237394332886,
+  "files": [
+   "/mnt/nvme8tb/comfyui-output/video/tokyo-ramen_1_establish_00001_.mp4"
+  ],
+  "vram_before_mib": 72257,
+  "vram_after_mib": 72248,
+  "last_frame": "/home/marcus/AI/comfyui/psybeam/frames/tokyo-ramen_1_establish_last.png",
+  "story": "tokyo-ramen",
+  "role": "establish",
+  "has_dialogue": false,
+  "speaker": null
+ },
+ {
+  "name": "tokyo-ramen_2_traveler",
+  "mode": "i2v",
+  "seed": 10002,
+  "seconds": 42.03194546699524,
+  "files": [
+   "/mnt/nvme8tb/comfyui-output/video/tokyo-ramen_2_traveler_00001_.mp4"
+  ],
+  "vram_before_mib": 72248,
+  "vram_after_mib": 72249,
+  "last_frame": "/home/marcus/AI/comfyui/psybeam/frames/tokyo-ramen_2_traveler_last.png",
+  "story": "tokyo-ramen",
+  "role": "traveler",
+  "has_dialogue": true,
+  "speaker": "traveler"
+ },
+ {
+  "name": "tokyo-ramen_3_local",
+  "mode": "i2v",
+  "seed": 10003,
+  "seconds": 42.031755447387695,
+  "files": [
+   "/mnt/nvme8tb/comfyui-output/video/tokyo-ramen_3_local_00001_.mp4"
+  ],
+  "vram_before_mib": 72249,
+  "vram_after_mib": 72256,
+  "last_frame": "/home/marcus/AI/comfyui/psybeam/frames/tokyo-ramen_3_local_last.png",
+  "story": "tokyo-ramen",
+  "role": "local",
+  "has_dialogue": true,
+  "speaker": "local"
+ },
+ {
+  "name": "tokyo-ramen_4_payoff",
+  "mode": "i2v",
+  "seed": 10004,
+  "seconds": 32.01707863807678,
+  "files": [
+   "/mnt/nvme8tb/comfyui-output/video/tokyo-ramen_4_payoff_00001_.mp4"
+  ],
+  "vram_before_mib": 72256,
+  "vram_after_mib": 72248,
+  "last_frame": "/home/marcus/AI/comfyui/psybeam/frames/tokyo-ramen_4_payoff_last.png",
+  "story": "tokyo-ramen",
+  "role": "payoff",
+  "has_dialogue": false,
+  "speaker": null
+ },
+ {
+  "name": "cdmx-tacos_1_establish",
+  "mode": "t2v",
+  "seed": 10101,
+  "seconds": 30.021557331085205,
+  "files": [
+   "/mnt/nvme8tb/comfyui-output/video/cdmx-tacos_1_establish_00001_.mp4"
+  ],
+  "vram_before_mib": 72248,
+  "vram_after_mib": 72255,
+  "last_frame": "/home/marcus/AI/comfyui/psybeam/frames/cdmx-tacos_1_establish_last.png",
+  "story": "cdmx-tacos",
+  "role": "establish",
+  "has_dialogue": false,
+  "speaker": null
+ },
+ {
+  "name": "cdmx-tacos_2_traveler",
+  "mode": "i2v",
+  "seed": 10102,
+  "seconds": 42.03174543380737,
+  "files": [
+   "/mnt/nvme8tb/comfyui-output/video/cdmx-tacos_2_traveler_00001_.mp4"
+  ],
+  "vram_before_mib": 72255,
+  "vram_after_mib": 72247,
+  "last_frame": "/home/marcus/AI/comfyui/psybeam/frames/cdmx-tacos_2_traveler_last.png",
+  "story": "cdmx-tacos",
+  "role": "traveler",
+  "has_dialogue": true,
+  "speaker": "traveler"
+ },
+ {
+  "name": "cdmx-tacos_3_local",
+  "mode": "i2v",
+  "seed": 10103,
+  "seconds": 42.02359366416931,
+  "files": [
+   "/mnt/nvme8tb/comfyui-output/video/cdmx-tacos_3_local_00001_.mp4"
+  ],
+  "vram_before_mib": 72247,
+  "vram_after_mib": 72248,
+  "last_frame": "/home/marcus/AI/comfyui/psybeam/frames/cdmx-tacos_3_local_last.png",
+  "story": "cdmx-tacos",
+  "role": "local",
+  "has_dialogue": true,
+  "speaker": "local"
+ },
+ {
+  "name": "cdmx-tacos_4_payoff",
+  "mode": "i2v",
+  "seed": 10104,
+  "seconds": 32.01963782310486,
+  "files": [
+   "/mnt/nvme8tb/comfyui-output/video/cdmx-tacos_4_payoff_00001_.mp4"
+  ],
+  "vram_before_mib": 72248,
+  "vram_after_mib": 72257,
+  "last_frame": "/home/marcus/AI/comfyui/psybeam/frames/cdmx-tacos_4_payoff_last.png",
+  "story": "cdmx-tacos",
+  "role": "payoff",
+  "has_dialogue": false,
+  "speaker": null
+ },
+ {
+  "name": "paris-bakery_1_establish",
+  "mode": "t2v",
+  "seed": 10201,
+  "seconds": 30.023547649383545,
+  "files": [
+   "/mnt/nvme8tb/comfyui-output/video/paris-bakery_1_establish_00001_.mp4"
+  ],
+  "vram_before_mib": 72257,
+  "vram_after_mib": 72248,
+  "last_frame": "/home/marcus/AI/comfyui/psybeam/frames/paris-bakery_1_establish_last.png",
+  "story": "paris-bakery",
+  "role": "establish",
+  "has_dialogue": false,
+  "speaker": null
+ },
+ {
+  "name": "paris-bakery_2_traveler",
+  "mode": "i2v",
+  "seed": 10202,
+  "seconds": 42.023730754852295,
+  "files": [
+   "/mnt/nvme8tb/comfyui-output/video/paris-bakery_2_traveler_00001_.mp4"
+  ],
+  "vram_before_mib": 72248,
+  "vram_after_mib": 72248,
+  "last_frame": "/home/marcus/AI/comfyui/psybeam/frames/paris-bakery_2_traveler_last.png",
+  "story": "paris-bakery",
+  "role": "traveler",
+  "has_dialogue": true,
+  "speaker": "traveler"
+ },
+ {
+  "name": "paris-bakery_3_local",
+  "mode": "i2v",
+  "seed": 10203,
+  "seconds": 42.025176763534546,
+  "files": [
+   "/mnt/nvme8tb/comfyui-output/video/paris-bakery_3_local_00001_.mp4"
+  ],
+  "vram_before_mib": 72248,
+  "vram_after_mib": 72248,
+  "last_frame": "/home/marcus/AI/comfyui/psybeam/frames/paris-bakery_3_local_last.png",
+  "story": "paris-bakery",
+  "role": "local",
+  "has_dialogue": true,
+  "speaker": "local"
+ },
+ {
+  "name": "paris-bakery_4_payoff",
+  "mode": "i2v",
+  "seed": 10204,
+  "seconds": 32.01838660240173,
+  "files": [
+   "/mnt/nvme8tb/comfyui-output/video/paris-bakery_4_payoff_00001_.mp4"
+  ],
+  "vram_before_mib": 72248,
+  "vram_after_mib": 72248,
+  "last_frame": "/home/marcus/AI/comfyui/psybeam/frames/paris-bakery_4_payoff_last.png",
+  "story": "paris-bakery",
+  "role": "payoff",
+  "has_dialogue": false,
+  "speaker": null
+ },
+ {
+  "name": "rome-trattoria_1_establish",
+  "mode": "t2v",
+  "seed": 10301,
+  "seconds": 30.024723529815674,
+  "files": [
+   "/mnt/nvme8tb/comfyui-output/video/rome-trattoria_1_establish_00001_.mp4"
+  ],
+  "vram_before_mib": 72248,
+  "vram_after_mib": 72259,
+  "last_frame": "/home/marcus/AI/comfyui/psybeam/frames/rome-trattoria_1_establish_last.png",
+  "story": "rome-trattoria",
+  "role": "establish",
+  "has_dialogue": false,
+  "speaker": null
+ },
+ {
+  "name": "rome-trattoria_2_traveler",
+  "mode": "i2v",
+  "seed": 10302,
+  "seconds": 42.0220890045166,
+  "files": [
+   "/mnt/nvme8tb/comfyui-output/video/rome-trattoria_2_traveler_00001_.mp4"
+  ],
+  "vram_before_mib": 72257,
+  "vram_after_mib": 72249,
+  "last_frame": "/home/marcus/AI/comfyui/psybeam/frames/rome-trattoria_2_traveler_last.png",
+  "story": "rome-trattoria",
+  "role": "traveler",
+  "has_dialogue": true,
+  "speaker": "traveler"
+ },
+ {
+  "name": "rome-trattoria_3_local",
+  "mode": "i2v",
+  "seed": 10303,
+  "seconds": 42.02505922317505,
+  "files": [
+   "/mnt/nvme8tb/comfyui-output/video/rome-trattoria_3_local_00001_.mp4"
+  ],
+  "vram_before_mib": 72249,
+  "vram_after_mib": 72248,
+  "last_frame": "/home/marcus/AI/comfyui/psybeam/frames/rome-trattoria_3_local_last.png",
+  "story": "rome-trattoria",
+  "role": "local",
+  "has_dialogue": true,
+  "speaker": "local"
+ },
+ {
+  "name": "rome-trattoria_4_payoff",
+  "mode": "i2v",
+  "seed": 10304,
+  "seconds": 32.02309465408325,
+  "files": [
+   "/mnt/nvme8tb/comfyui-output/video/rome-trattoria_4_payoff_00001_.mp4"
+  ],
+  "vram_before_mib": 72248,
+  "vram_after_mib": 72248,
+  "last_frame": "/home/marcus/AI/comfyui/psybeam/frames/rome-trattoria_4_payoff_last.png",
+  "story": "rome-trattoria",
+  "role": "payoff",
+  "has_dialogue": false,
+  "speaker": null
+ },
+ {
+  "name": "bangkok-market_1_establish",
+  "mode": "t2v",
+  "seed": 10401,
+  "seconds": 30.220908164978027,
+  "files": [
+   "/mnt/nvme8tb/comfyui-output/video/bangkok-market_1_establish_00001_.mp4"
+  ],
+  "vram_before_mib": 72248,
+  "vram_after_mib": 72247,
+  "last_frame": "/home/marcus/AI/comfyui/psybeam/frames/bangkok-market_1_establish_last.png",
+  "story": "bangkok-market",
+  "role": "establish",
+  "has_dialogue": false,
+  "speaker": null
+ },
+ {
+  "name": "bangkok-market_2_traveler",
+  "mode": "i2v",
+  "seed": 10402,
+  "seconds": 42.02836775779724,
+  "files": [
+   "/mnt/nvme8tb/comfyui-output/video/bangkok-market_2_traveler_00001_.mp4"
+  ],
+  "vram_before_mib": 72247,
+  "vram_after_mib": 72248,
+  "last_frame": "/home/marcus/AI/comfyui/psybeam/frames/bangkok-market_2_traveler_last.png",
+  "story": "bangkok-market",
+  "role": "traveler",
+  "has_dialogue": true,
+  "speaker": "traveler"
+ },
+ {
+  "name": "bangkok-market_3_local",
+  "mode": "i2v",
+  "seed": 10403,
+  "seconds": 42.02389335632324,
+  "files": [
+   "/mnt/nvme8tb/comfyui-output/video/bangkok-market_3_local_00001_.mp4"
+  ],
+  "vram_before_mib": 72248,
+  "vram_after_mib": 72248,
+  "last_frame": "/home/marcus/AI/comfyui/psybeam/frames/bangkok-market_3_local_last.png",
+  "story": "bangkok-market",
+  "role": "local",
+  "has_dialogue": true,
+  "speaker": "local"
+ },
+ {
+  "name": "bangkok-market_4_payoff",
+  "mode": "i2v",
+  "seed": 10404,
+  "seconds": 32.02455449104309,
+  "files": [
+   "/mnt/nvme8tb/comfyui-output/video/bangkok-market_4_payoff_00001_.mp4"
+  ],
+  "vram_before_mib": 72248,
+  "vram_after_mib": 72255,
+  "last_frame": "/home/marcus/AI/comfyui/psybeam/frames/bangkok-market_4_payoff_last.png",
+  "story": "bangkok-market",
+  "role": "payoff",
+  "has_dialogue": false,
+  "speaker": null
+ },
+ {
+  "name": "seoul-pharmacy_1_establish",
+  "mode": "t2v",
+  "seed": 10501,
+  "seconds": 30.03255271911621,
+  "files": [
+   "/mnt/nvme8tb/comfyui-output/video/seoul-pharmacy_1_establish_00001_.mp4"
+  ],
+  "vram_before_mib": 72254,
+  "vram_after_mib": 72247,
+  "last_frame": "/home/marcus/AI/comfyui/psybeam/frames/seoul-pharmacy_1_establish_last.png",
+  "story": "seoul-pharmacy",
+  "role": "establish",
+  "has_dialogue": false,
+  "speaker": null
+ },
+ {
+  "name": "seoul-pharmacy_2_traveler",
+  "mode": "i2v",
+  "seed": 10502,
+  "seconds": 42.02298045158386,
+  "files": [
+   "/mnt/nvme8tb/comfyui-output/video/seoul-pharmacy_2_traveler_00001_.mp4"
+  ],
+  "vram_before_mib": 72247,
+  "vram_after_mib": 72248,
+  "last_frame": "/home/marcus/AI/comfyui/psybeam/frames/seoul-pharmacy_2_traveler_last.png",
+  "story": "seoul-pharmacy",
+  "role": "traveler",
+  "has_dialogue": true,
+  "speaker": "traveler"
+ },
+ {
+  "name": "seoul-pharmacy_3_local",
+  "mode": "i2v",
+  "seed": 10503,
+  "seconds": 42.02554750442505,
+  "files": [
+   "/mnt/nvme8tb/comfyui-output/video/seoul-pharmacy_3_local_00001_.mp4"
+  ],
+  "vram_before_mib": 72248,
+  "vram_after_mib": 72248,
+  "last_frame": "/home/marcus/AI/comfyui/psybeam/frames/seoul-pharmacy_3_local_last.png",
+  "story": "seoul-pharmacy",
+  "role": "local",
+  "has_dialogue": true,
+  "speaker": "local"
+ },
+ {
+  "name": "seoul-pharmacy_4_payoff",
+  "mode": "i2v",
+  "seed": 10504,
+  "seconds": 32.023396253585815,
+  "files": [
+   "/mnt/nvme8tb/comfyui-output/video/seoul-pharmacy_4_payoff_00001_.mp4"
+  ],
+  "vram_before_mib": 72248,
+  "vram_after_mib": 72248,
+  "last_frame": "/home/marcus/AI/comfyui/psybeam/frames/seoul-pharmacy_4_payoff_last.png",
+  "story": "seoul-pharmacy",
+  "role": "payoff",
+  "has_dialogue": false,
+  "speaker": null
+ },
+ {
+  "name": "kyoto-shop_1_establish",
+  "mode": "t2v",
+  "seed": 10601,
+  "seconds": 30.022341012954712,
+  "files": [
+   "/mnt/nvme8tb/comfyui-output/video/kyoto-shop_1_establish_00001_.mp4"
+  ],
+  "vram_before_mib": 72248,
+  "vram_after_mib": 72249,
+  "last_frame": "/home/marcus/AI/comfyui/psybeam/frames/kyoto-shop_1_establish_last.png",
+  "story": "kyoto-shop",
+  "role": "establish",
+  "has_dialogue": false,
+  "speaker": null
+ },
+ {
+  "name": "kyoto-shop_2_traveler",
+  "mode": "i2v",
+  "seed": 10602,
+  "seconds": 42.023468017578125,
+  "files": [
+   "/mnt/nvme8tb/comfyui-output/video/kyoto-shop_2_traveler_00001_.mp4"
+  ],
+  "vram_before_mib": 72249,
+  "vram_after_mib": 72249,
+  "last_frame": "/home/marcus/AI/comfyui/psybeam/frames/kyoto-shop_2_traveler_last.png",
+  "story": "kyoto-shop",
+  "role": "traveler",
+  "has_dialogue": true,
+  "speaker": "traveler"
+ },
+ {
+  "name": "kyoto-shop_3_local",
+  "mode": "i2v",
+  "seed": 10603,
+  "seconds": 42.024165630340576,
+  "files": [
+   "/mnt/nvme8tb/comfyui-output/video/kyoto-shop_3_local_00001_.mp4"
+  ],
+  "vram_before_mib": 72269,
+  "vram_after_mib": 72248,
+  "last_frame": "/home/marcus/AI/comfyui/psybeam/frames/kyoto-shop_3_local_last.png",
+  "story": "kyoto-shop",
+  "role": "local",
+  "has_dialogue": true,
+  "speaker": "local"
+ },
+ {
+  "name": "kyoto-shop_4_payoff",
+  "mode": "i2v",
+  "seed": 10604,
+  "seconds": 32.01901412010193,
+  "files": [
+   "/mnt/nvme8tb/comfyui-output/video/kyoto-shop_4_payoff_00001_.mp4"
+  ],
+  "vram_before_mib": 72248,
+  "vram_after_mib": 72249,
+  "last_frame": "/home/marcus/AI/comfyui/psybeam/frames/kyoto-shop_4_payoff_last.png",
+  "story": "kyoto-shop",
+  "role": "payoff",
+  "has_dialogue": false,
+  "speaker": null
+ }
+]

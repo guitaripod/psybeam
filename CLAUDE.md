@@ -6,13 +6,13 @@ See `DESIGN.md` for the authoritative architecture, the backend decision, the st
 
 ## Status
 
-Shipping. Live on the App Store as **1.0.4** (released 2026-07-30); **1.1.0** (2026-09-04) adds 13 UI languages (22 total), audio-interruption recovery, share/rate from Settings, and a full ASO rewrite of the listing in 34 storefront locales. All spikes in `DESIGN.md` §11 are resolved; the handset single-operator model, WebRTC audio path and quiescence-based turn-taking are the shipped design. Store listing source of truth is `marketing/appstore/metadata/` (push with `asc metadata push`); the review backlog lives in `docs/review-1.0.1-backlog.md`.
+Shipping. Live on the App Store as **1.1.0** (2026-09-04: 22 UI languages, audio-interruption recovery, share/rate from Settings, a 34-locale ASO rewrite). **1.1.1** (submitted 2026-09-25) is the activation release: a first-launch "Where are you headed?" destination picker plus a try-it-yourself coach, the at-home en↔en pair bug fixed (GPS never sets their language to yours), a consent-decline recovery state, the rating prompt after 2 turns, AdServices attribution (AICredits 1.5.4) and the `psybeam://try` deep link used by the Try It Before Your Trip in-app event. Growth baseline and funnel: `scripts/funnel.sh` (mako D1) and the `psybeam-growth-baseline` memory. Marketing pipeline: `scripts/capture-screenshots.sh` + `scripts/frame-screenshots.swift` (captions in `marketing/captions/`, per-locale language pairs), custom product pages in `marketing/appstore/cpp/`, social videos and the App Preview in `marketing/video/` (LTX-2.5 scenes + real translation audio; README and POSTING.md there). All spikes in `DESIGN.md` §11 are resolved; the handset single-operator model, WebRTC audio path and quiescence-based turn-taking are the shipped design. Store listing source of truth is `marketing/appstore/metadata/` (push with `asc metadata push`); the review backlog lives in `docs/review-1.0.1-backlog.md`.
 
 ## Stack
 
 - **PsybeamKit** (`Sources/PsybeamKit`): platform-agnostic Swift 6 — `TranslationState`/`Side`/`CallState` enums, `RealtimeCallProviding`/`TranslationProviding`/`LocationLanguageProviding`/`Translating` **Sendable** protocols exposing `AsyncStream` (no UIKit/AVFoundation/Combine imports), provider DTOs, `CldrLanguageTable` + `LocaleSuggestion`, GRDB record structs. **Compiles and tests on Linux and macOS.**
 - **Psybeam** (`Psybeam/`, xcodegen): programmatic UIKit, MVVM. Combine `PassthroughSubject` lives **only** at the VM↔VC seam. `RealtimeCallService` (actor, owns `RTCPeerConnection` + `RTCAudioSession`), `LocationLanguageService` (actor over CoreLocation), `OpenAIRealtimeTranslate` adapter (the Azure fallback adapter is retired — Spike 1 disproved the output-language ceiling). Swift 6 strict concurrency, iOS 18+ deploy target / iOS 26 SDK, iPhone-only. Darwin-only — build on a Mac.
-- **Backend**: the shared **mako** AICredits worker (`mako.midgarcorp.cc`, repo `~/Dev/rust/pixie`) — token mint, credit metering, anonymous-first identity + SIWA. **Not in this repo** (the old in-repo `psybeam-worker` was vestigial and has been removed).
+- **Backend**: the shared **mako** AICredits worker (`mako.midgarcorp.cc`, repo `~/Dev/rust/mako`) — token mint, credit metering, anonymous-first identity + SIWA. **Not in this repo** (the old in-repo `psybeam-worker` was vestigial and has been removed).
 
 ## Backend
 
@@ -45,7 +45,7 @@ scripts/ios-test.sh      # PsybeamKit (SPM) + hosted iOS TranslationLeg tests on
 
 `ios-build.sh` runs `xcodegen generate` first, captures the real xcodebuild exit code via `pipefail`, surfaces Swift 6 concurrency errors, and asserts no `.swift` is newer than the built binary. Adding/removing any file → just run `ios-build.sh`. Never call `xcodebuild` raw.
 
-The backend (mako) lives in `~/Dev/rust/pixie` and is deployed from there — see that repo + `~/.config/midgar/OPERATIONS.md`. This repo builds only the iOS app.
+The backend (mako) lives in `~/Dev/rust/mako` and is deployed from there — see that repo + `~/.config/midgar/OPERATIONS.md`. This repo builds only the iOS app.
 
 ## Logging — agents read this
 
@@ -53,7 +53,7 @@ The backend (mako) lives in `~/Dev/rust/pixie` and is deployed from there — se
 
 ## Secrets / config
 
-`.env.local` (gitignored, made by `setup.sh`): `PSYBEAM_BUNDLE_ID`, `PSYBEAM_TEAM_ID`, `PSYBEAM_DEVICE_UDID`, `PSYBEAM_DEVICE_NAME` — never commit it. The app ships no API keys: all backend secrets (`OPENAI_API_KEY`, etc.) live on the shared **mako** worker (`~/Dev/rust/pixie`), managed there via `wrangler secret put`. The mako base URL is hardcoded in `AICreditsManager.swift` (no `Secrets.swift`).
+`.env.local` (gitignored, made by `setup.sh`): `PSYBEAM_BUNDLE_ID`, `PSYBEAM_TEAM_ID`, `PSYBEAM_DEVICE_UDID`, `PSYBEAM_DEVICE_NAME` — never commit it. The app ships no API keys: all backend secrets (`OPENAI_API_KEY`, etc.) live on the shared **mako** worker (`~/Dev/rust/mako`), managed there via `wrangler secret put`. The mako base URL is hardcoded in `AICreditsManager.swift` (no `Secrets.swift`).
 
 ## Reality
 

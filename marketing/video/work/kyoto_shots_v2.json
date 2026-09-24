@@ -1,0 +1,62 @@
+[
+ {
+  "story": "kyoto-shop",
+  "role": "establish",
+  "name": "kyoto-shop_1_establish",
+  "mode": "t2v",
+  "prompt": "Vertical wide establishing shot. Scene: a small traditional souvenir shop in Kyoto, wooden shelves of folded textiles and pottery, paper lanterns, soft daylight filtering through a shoji screen. Action: the tourist picks up a folded textile from a shelf and turns toward the shopkeeper, who stands behind a low wooden counter holding a phone. Characters: on one side, a Western tourist woman in her thirties, blonde hair pulled back, fair skin, sunglasses pushed up on her head, wearing a light linen sundress, a small crossbody bag, clearly a foreign visitor to Japan, browsing shelves; on the other side, a Japanese shopkeeper in his fifties, silver-gray hair, an indigo happi coat over a collared shirt, reading glasses on a cord around his neck. Camera: static wide shot, both figures clearly in frame, very slight handheld breathing motion, no cuts. Audio: ambient location sound only, no music, no voiceover narration.",
+  "seconds": 3,
+  "width": 1088,
+  "height": 1920,
+  "fps": 24,
+  "seed": 18378,
+  "has_dialogue": false,
+  "speaker": null,
+  "depends_on": null
+ },
+ {
+  "story": "kyoto-shop",
+  "role": "traveler",
+  "name": "kyoto-shop_2_traveler",
+  "mode": "i2v",
+  "prompt": "Vertical medium close-up shot. Scene: a small traditional souvenir shop in Kyoto, wooden shelves of folded textiles and pottery, paper lanterns, soft daylight filtering through a shoji screen, the same counter and lighting as before. Action: she holds up the folded textile and asks the shopkeeper in a polite, clear voice, in English: \"Do you have this in a smaller size?\". Character: a Western tourist woman in her thirties, blonde hair pulled back, fair skin, sunglasses pushed up on her head, wearing a light linen sundress, a small crossbody bag, clearly a foreign visitor to Japan, browsing shelves, same appearance and outfit as established. Camera: slow smooth push-in toward her as she speaks, settling on a medium close-up. Audio: ambient location sound only, no music, no voiceover narration, her line is the only speech, clearly audible and lip-synced.",
+  "seconds": 4,
+  "width": 1088,
+  "height": 1920,
+  "fps": 24,
+  "seed": 18379,
+  "has_dialogue": true,
+  "speaker": "traveler",
+  "depends_on": "kyoto-shop_1_establish"
+ },
+ {
+  "story": "kyoto-shop",
+  "role": "local",
+  "name": "kyoto-shop_3_local",
+  "mode": "i2v",
+  "prompt": "Vertical medium close-up shot. Scene: a small traditional souvenir shop in Kyoto, wooden shelves of folded textiles and pottery, paper lanterns, soft daylight filtering through a shoji screen, the same counter and lighting as before. Action: the shopkeeper looks down at a phone in hand, its screen showing only a soft, featureless blue-white glow, no visible text or icons in his hand, then nods and replies in a warm, clear voice, in Japanese: \"はい、こちらに小さいサイズがございます。\". Character: a Japanese shopkeeper in his fifties, silver-gray hair, an indigo happi coat over a collared shirt, reading glasses on a cord around his neck, same appearance and outfit as established. Camera: slow smooth push-in toward them as they speak, settling on a medium close-up. Audio: ambient location sound only, no music, no voiceover narration, their line is the only speech, clearly audible and lip-synced.",
+  "seconds": 4,
+  "width": 1088,
+  "height": 1920,
+  "fps": 24,
+  "seed": 18380,
+  "has_dialogue": true,
+  "speaker": "local",
+  "depends_on": "kyoto-shop_1_establish"
+ },
+ {
+  "story": "kyoto-shop",
+  "role": "payoff",
+  "name": "kyoto-shop_4_payoff",
+  "mode": "i2v",
+  "prompt": "Vertical medium close-up shot, continuous with the previous close-up on the traveler. Scene: a small traditional souvenir shop in Kyoto, wooden shelves of folded textiles and pottery, paper lanterns, soft daylight filtering through a shoji screen. Action: the shopkeeper reaches under the counter and sets a smaller folded textile down; the tourist smiles and nods, picking it up to compare. Character: a Western tourist woman in her thirties, blonde hair pulled back, fair skin, sunglasses pushed up on her head, wearing a light linen sundress, a small crossbody bag, clearly a foreign visitor to Japan, browsing shelves, same appearance and outfit as established, no new dialogue, just a warm satisfied reaction. Camera: static medium close-up, very slight handheld breathing motion. Audio: ambient location sound only, no music, no voiceover narration, no dialogue in this shot.",
+  "seconds": 3,
+  "width": 1088,
+  "height": 1920,
+  "fps": 24,
+  "seed": 18381,
+  "has_dialogue": false,
+  "speaker": null,
+  "depends_on": "kyoto-shop_2_traveler"
+ }
+]

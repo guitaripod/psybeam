@@ -1,0 +1,20 @@
+{
+  "en": {
+    "hold1": 0.5,
+    "cutaway1_start": 4.2,
+    "settle1": 5.8,
+    "hold2": 7.1,
+    "cutaway2_start": 10.8,
+    "settle2": 12.4,
+    "total": 14.0
+  },
+  "ja": {
+    "hold1": 0.5,
+    "cutaway1_start": 4.2,
+    "settle1": 5.8,
+    "hold2": 7.1,
+    "cutaway2_start": 10.23,
+    "settle2": 11.83,
+    "total": 13.43
+  }
+}

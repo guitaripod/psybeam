@@ -1,0 +1,66 @@
+[
+ {
+  "name": "kyoto-shop_1_establish",
+  "mode": "t2v",
+  "seed": 18378,
+  "seconds": 30.020792484283447,
+  "files": [
+   "/mnt/nvme8tb/comfyui-output/video/kyoto-shop_1_establish_00002_.mp4"
+  ],
+  "vram_before_mib": 72248,
+  "vram_after_mib": 72249,
+  "last_frame": "/home/marcus/AI/comfyui/psybeam/frames/kyoto-shop_1_establish_last.png",
+  "story": "kyoto-shop",
+  "role": "establish",
+  "has_dialogue": false,
+  "speaker": null
+ },
+ {
+  "name": "kyoto-shop_2_traveler",
+  "mode": "i2v",
+  "seed": 18379,
+  "seconds": 42.02578687667847,
+  "files": [
+   "/mnt/nvme8tb/comfyui-output/video/kyoto-shop_2_traveler_00002_.mp4"
+  ],
+  "vram_before_mib": 72249,
+  "vram_after_mib": 72249,
+  "last_frame": "/home/marcus/AI/comfyui/psybeam/frames/kyoto-shop_2_traveler_last.png",
+  "story": "kyoto-shop",
+  "role": "traveler",
+  "has_dialogue": true,
+  "speaker": "traveler"
+ },
+ {
+  "name": "kyoto-shop_3_local",
+  "mode": "i2v",
+  "seed": 18380,
+  "seconds": 42.02619028091431,
+  "files": [
+   "/mnt/nvme8tb/comfyui-output/video/kyoto-shop_3_local_00002_.mp4"
+  ],
+  "vram_before_mib": 72249,
+  "vram_after_mib": 72250,
+  "last_frame": "/home/marcus/AI/comfyui/psybeam/frames/kyoto-shop_3_local_last.png",
+  "story": "kyoto-shop",
+  "role": "local",
+  "has_dialogue": true,
+  "speaker": "local"
+ },
+ {
+  "name": "kyoto-shop_4_payoff",
+  "mode": "i2v",
+  "seed": 18381,
+  "seconds": 32.01857829093933,
+  "files": [
+   "/mnt/nvme8tb/comfyui-output/video/kyoto-shop_4_payoff_00002_.mp4"
+  ],
+  "vram_before_mib": 72250,
+  "vram_after_mib": 72250,
+  "last_frame": "/home/marcus/AI/comfyui/psybeam/frames/kyoto-shop_4_payoff_last.png",
+  "story": "kyoto-shop",
+  "role": "payoff",
+  "has_dialogue": false,
+  "speaker": null
+ }
+]
