@@ -3230,7 +3230,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "TRZYMAJ · IM"
+            "value" : "TRZYMAJ · ROZMÓWCA"
           }
         },
         "hi" : {
@@ -7038,7 +7038,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ŁĄCZENIE PONOWNE"
+            "value" : "PONOWNE ŁĄCZENIE"
           }
         },
         "hi" : {
