@@ -23,7 +23,6 @@ final class SettingsViewController: UIViewController {
     private var cancellables = Set<AnyCancellable>()
 
     private let brand = UIColor(red: 0.30, green: 0.62, blue: 1.0, alpha: 1)
-    private let languages = ["en", "es", "fr", "de", "it", "pt", "nl", "ru", "pl", "tr", "el", "ar", "he", "hi", "ja", "ko", "zh", "th", "vi", "id", "fi", "sv"]
 
     init(
         viewModel: ConversationViewModel,
@@ -371,7 +370,7 @@ final class SettingsViewController: UIViewController {
 
     private func setLanguageTitle(_ button: UIButton, code: String) {
         button.configuration?.attributedTitle = AttributedString(
-            Self.endonym(code),
+            LanguageNames.endonym(code),
             attributes: AttributeContainer([
                 .font: UIFont.systemFont(ofSize: 16, weight: .semibold),
                 .foregroundColor: UIColor.label,
@@ -380,8 +379,8 @@ final class SettingsViewController: UIViewController {
     }
 
     private func languageMenu(selected: String, isTraveler: Bool) -> UIMenu {
-        let actions = languages.map { code in
-            UIAction(title: Self.endonym(code), state: code == selected ? .on : .off) { [weak self] _ in
+        let actions = SupportedLanguages.codes.map { code in
+            UIAction(title: LanguageNames.endonym(code), state: code == selected ? .on : .off) { [weak self] _ in
                 if isTraveler { self?.viewModel.setTravelerLanguage(code) } else { self?.viewModel.setLocalLanguage(code) }
                 self?.refreshLanguageButtons()
             }
@@ -395,7 +394,18 @@ final class SettingsViewController: UIViewController {
     /// presenter — so bind to the published balance instead of only sampling it
     /// on appear. `@Published` emits the current value on subscribe, so the
     /// label is set immediately.
+    ///
+    /// A demo launch shows the documented free-tier grant instead of binding
+    /// live: simulators can never pass the App Attest check mako's identity
+    /// endpoint requires, so the real balance is always stuck at 0 there,
+    /// which would misrepresent what a real first launch shows.
     private func observeBalance() {
+        #if DEBUG
+        if ProcessInfo.processInfo.environment["PSYBEAM_DEMO"] != nil {
+            minutesLabel.text = String(localized: "\(DemoConfiguration.freeMinutesGrant) min")
+            return
+        }
+        #endif
         AICreditsManager.store.$balance
             .receive(on: DispatchQueue.main)
             .sink { [weak self] balance in self?.minutesLabel.text = String(localized: "\(balance) min") }
@@ -566,8 +576,4 @@ final class SettingsViewController: UIViewController {
     }
 
     @objc private func dismissSelf() { dismiss(animated: true) }
-
-    private static func endonym(_ code: String) -> String {
-        Locale(identifier: code).localizedString(forLanguageCode: code)?.capitalized ?? code.uppercased()
-    }
 }

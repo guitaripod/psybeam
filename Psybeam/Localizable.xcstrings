@@ -3401,6 +3401,142 @@
         }
       }
     },
+    "Hold %@ and say something. You’ll hear it in %@." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Halte „%1$@“ gedrückt und sag etwas. Du hörst es auf %2$@."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mantén pulsado «%1$@» y di algo. Lo oirás en %2$@."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maintenez « %1$@ » et dites quelque chose. Vous l’entendrez en %2$@."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tieni premuto «%1$@» e di’ qualcosa. Lo sentirai in %2$@."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "「%1$@」を長押しして、何か話してみてください。%2$@で聞こえます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "‘%1$@’ 버튼을 길게 누르고 아무 말이나 해 보세요. %2$@로 들려요."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Segure “%1$@” e diga alguma coisa. Você vai ouvir em %2$@."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "按住“%1$@”随便说句话，就能听到%2$@翻译。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "按住「%1$@」隨便說句話，就能聽到%2$@翻譯。"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اضغط مطولًا على «%1$@» وقل أي شيء. ستسمعه باللغة %2$@."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Удерживайте «%1$@» и скажите что-нибудь. Перевод прозвучит на языке: %2$@."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "“%1$@” düğmesini basılı tutun ve bir şey söyleyin. %2$@ olarak duyacaksınız."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "กด “%1$@” ค้างไว้แล้วพูดอะไรก็ได้ คุณจะได้ยินเป็นภาษา%2$@"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Giữ “%1$@” và nói gì đó. Bạn sẽ nghe thấy bằng %2$@."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tahan “%1$@” lalu ucapkan sesuatu. Anda akan mendengarnya dalam bahasa %2$@."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Houd ‘%1$@’ ingedrukt en zeg iets. U hoort het in het %2$@."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Przytrzymaj „%1$@” i powiedz coś. Usłyszysz to w języku: %2$@."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "“%1$@” दबाए रखें और कुछ भी कहें। आपको यह %2$@ में सुनाई देगा।"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "החזיקו את \"%1$@\" ואמרו משהו. תשמעו את זה ב%2$@."
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Κρατήστε πατημένο το «%1$@» και πείτε κάτι. Θα το ακούσετε στα %2$@."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pidä ”%1$@” painettuna ja sano jotain. Kuulet sen kielellä %2$@."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Håll in ”%1$@” och säg något. Du hör det på %2$@."
+          }
+        }
+      }
+    },
     "Hold a button and speak" : {
       "localizations" : {
         "de" : {
@@ -5441,6 +5577,142 @@
         }
       }
     },
+    "Now hold %@ and answer — or let someone answer you." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Halte jetzt „%@“ gedrückt und antworte – oder lass dir von jemandem antworten."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ahora mantén pulsado «%@» y responde, o deja que alguien te responda."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maintenez maintenant « %@ » et répondez, ou laissez quelqu’un vous répondre."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ora tieni premuto «%@» e rispondi, oppure lascia che qualcuno ti risponda."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "次は「%@」を長押しして答えてみましょう。誰かに答えてもらってもOKです。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이제 ‘%@’ 버튼을 길게 누르고 대답해 보세요. 다른 사람이 대답해도 좋아요."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agora segure “%@” e responda — ou deixe alguém responder para você."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "现在按住“%@”回答，或者请别人来回答你。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "現在按住「%@」回答，或是請別人來回答你。"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الآن اضغط مطولًا على «%@» وأجب، أو دع شخصًا آخر يجيبك."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Теперь удерживайте «%@» и ответьте — или дайте ответить кому-то другому."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şimdi “%@” düğmesini basılı tutup yanıt verin ya da size başka biri yanıt versin."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ตอนนี้กด “%@” ค้างไว้แล้วตอบ หรือให้คนอื่นตอบคุณก็ได้"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Giờ hãy giữ “%@” và trả lời — hoặc để ai đó trả lời bạn."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sekarang tahan “%@” lalu jawab — atau biarkan orang lain menjawab Anda."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Houd nu ‘%@’ ingedrukt en antwoord — of laat iemand anders u antwoorden."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Teraz przytrzymaj „%@” i odpowiedz — albo niech ktoś ci odpowie."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "अब “%@” दबाए रखें और जवाब दें — या किसी और को जवाब देने दें।"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "עכשיו החזיקו את \"%@\" וענו — או תנו למישהו אחר לענות לכם."
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Τώρα κρατήστε πατημένο το «%@» και απαντήστε — ή αφήστε κάποιον άλλον να σας απαντήσει."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pidä nyt ”%@” painettuna ja vastaa – tai anna jonkun muun vastata sinulle."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Håll nu in ”%@” och svara – eller låt någon annan svara dig."
+          }
+        }
+      }
+    },
     "OK" : {
       "localizations" : {
         "de" : {
@@ -6393,6 +6665,278 @@
         }
       }
     },
+    "Psybeam needs your OK to send speech to its cloud translator." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam braucht dein Okay, um Gesprochenes an seinen Cloud-Übersetzer zu senden."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam necesita tu permiso para enviar lo que se dice a su traductor en la nube."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam a besoin de votre accord pour envoyer la voix à son traducteur dans le cloud."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam ha bisogno del tuo consenso per inviare la voce al suo traduttore nel cloud."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeamが音声をクラウドの翻訳サービスに送るには、あなたの同意が必要です。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam이 음성을 클라우드 번역기로 보내려면 동의가 필요해요."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Psybeam precisa da sua permissão para enviar a fala ao tradutor na nuvem."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam 需要你的同意，才能把语音发送到云端翻译服务。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam 需要你的同意，才能將語音傳送到雲端翻譯服務。"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يحتاج Psybeam إلى موافقتك لإرسال الكلام إلى مترجمه السحابي."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam нужно ваше согласие, чтобы отправлять речь облачному переводчику."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam'in konuşmayı bulut çevirmenine gönderebilmesi için onayınız gerekiyor."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam ต้องได้รับความยินยอมจากคุณก่อน จึงจะส่งเสียงพูดไปยังตัวแปลบนคลาวด์ได้"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam cần bạn đồng ý để gửi giọng nói đến trình dịch trên đám mây."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam memerlukan persetujuan Anda untuk mengirim ucapan ke penerjemah cloud-nya."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam heeft uw toestemming nodig om spraak naar de cloudvertaler te sturen."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam potrzebuje Twojej zgody, aby wysyłać mowę do tłumacza w chmurze."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "आपकी आवाज़ को क्लाउड अनुवादक तक भेजने के लिए Psybeam को आपकी अनुमति चाहिए।"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ל-Psybeam נדרש האישור שלכם כדי לשלוח דיבור למתרגם בענן."
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Το Psybeam χρειάζεται τη συγκατάθεσή σας για να στέλνει την ομιλία στον μεταφραστή του στο cloud."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam tarvitsee lupasi, jotta se voi lähettää puhetta pilvessä toimivalle kääntäjälle."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam behöver ditt godkännande för att skicka tal till sin molnöversättare."
+          }
+        }
+      }
+    },
+    "Psybeam will speak their language for you." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam spricht für dich die Sprache vor Ort."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam hablará su idioma por ti."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam parlera leur langue à votre place."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam parlerà la loro lingua al posto tuo."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeamがあなたの代わりに現地の言葉で話します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam이 대신 현지 언어로 말해 드려요."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Psybeam vai falar o idioma deles por você."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam 会替你说他们的语言。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam 會替你說他們的語言。"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "سيتحدث Psybeam بلغتهم نيابةً عنك."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam будет говорить на их языке за вас."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam sizin yerinize onların dilini konuşur."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam จะพูดภาษาของพวกเขาแทนคุณ"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam sẽ nói ngôn ngữ của họ thay bạn."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam akan berbicara dalam bahasa mereka untuk Anda."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam spreekt hun taal voor u."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam będzie mówić w ich języku za Ciebie."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam आपकी ओर से उनकी भाषा बोलेगा।"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "האפליקציה Psybeam תדבר בשפה שלהם בשבילכם."
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Το Psybeam θα μιλά τη γλώσσα τους για εσάς."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam puhuu heidän kieltään puolestasi."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam talar deras språk åt dig."
+          }
+        }
+      }
+    },
     "RECONNECTING" : {
       "localizations" : {
         "de" : {
@@ -6661,6 +7205,142 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Betygsätt Psybeam"
+          }
+        }
+      }
+    },
+    "Review consent" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einwilligung ansehen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Revisar consentimiento"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Revoir le consentement"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rivedi il consenso"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "同意内容を確認"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "동의 내용 보기"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Revisar consentimento"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "查看同意事项"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "查看同意事項"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مراجعة الموافقة"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Посмотреть согласие"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Onayı gözden geçir"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ดูการให้ความยินยอม"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xem lại sự đồng ý"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tinjau persetujuan"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toestemming bekijken"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Przejrzyj zgodę"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "सहमति देखें"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "עיון בהסכמה"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Προβολή συγκατάθεσης"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tarkista suostumus"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Granska samtycke"
           }
         }
       }
@@ -8429,6 +9109,142 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Röstisolering låser sig till den närmaste rösten och dämpar bakgrundsljud — fungerar bäst på kaféer, gator och marknader. iOS låter dig bara byta det själv: tryck ovan, eller Kontrollpanelen → Mikrofonläge."
+          }
+        }
+      }
+    },
+    "Where are you headed?" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wohin geht die Reise?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿A dónde vas?"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Où partez-vous ?"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Qual è la tua meta?"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "旅行先はどちらですか？"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "어디로 떠나세요?"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Para onde você vai?"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你要去哪里？"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你要去哪裡？"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إلى أين وجهتك؟"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Куда направляетесь?"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nereye gidiyorsunuz?"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "คุณกำลังจะไปที่ไหน"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bạn sắp đi đâu?"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mau ke mana?"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Waar gaat de reis naartoe?"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dokąd się wybierasz?"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "आप कहाँ जा रहे हैं?"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "לאן נוסעים?"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Πού ταξιδεύετε;"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minne olet matkalla?"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vart är du på väg?"
           }
         }
       }

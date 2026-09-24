@@ -1,4 +1,5 @@
 import Foundation
+import PsybeamKit
 
 /// Raw values align with `UIUserInterfaceStyle` (unspecified/light/dark) so a
 /// stored mode maps straight onto a window override.
@@ -23,6 +24,14 @@ enum AppSettings {
         static let pendingReservedMinutes = "psybeam.pendingReservedMinutes"
         static let completedTurns = "psybeam.completedTurns"
         static let ratingPromptShownVersion = "psybeam.ratingPromptShownVersion"
+        static let firstRunStage = "psybeam.firstRunStage"
+    }
+
+    /// Progress through the destination picker and the try-it-yourself coach.
+    /// Unset on a fresh install and on updates from before the walkthrough.
+    static var firstRunStage: FirstRunStage {
+        get { FirstRunStage.resolve(stored: defaults.string(forKey: Key.firstRunStage), completedTurns: completedTurns) }
+        set { defaults.set(newValue.rawValue, forKey: Key.firstRunStage) }
     }
 
     /// Translation turns that actually produced text. Gates the rating prompt.
@@ -66,8 +75,11 @@ enum AppSettings {
         set { defaults.set(newValue, forKey: Key.travelerLanguage) }
     }
 
+    /// Never the traveler's own language: a missing or colliding value, such as
+    /// the en↔en pair an at-home GPS fix stored before 1.1.1, reads as the
+    /// default destination for the traveler's language.
     static var localLanguage: String {
-        get { defaults.string(forKey: Key.localLanguage) ?? "es" }
+        get { LanguagePair.local(stored: defaults.string(forKey: Key.localLanguage), traveler: travelerLanguage) }
         set { defaults.set(newValue, forKey: Key.localLanguage) }
     }
 

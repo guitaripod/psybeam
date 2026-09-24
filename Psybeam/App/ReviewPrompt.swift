@@ -7,11 +7,12 @@ import UIKit
 /// Rating count is both an App Store ranking input and the strongest conversion signal on a
 /// product page, and Psybeam shipped with no way to ask for one. The gate is completed translation
 /// *turns* — a turn only counts when a leg produced final, non-empty text, so a failed or silent
-/// hold never advances it. Four turns is two back-and-forth exchanges: enough that the user has
-/// seen the app do its job, not so many that only power users are ever asked.
+/// hold never advances it. Two turns is one full exchange, you spoke and they answered: the
+/// moment the app has visibly done its job. Asking later meant almost nobody was ever asked, and
+/// the system already caps how often the prompt can appear.
 @MainActor
 enum ReviewPrompt {
-    private static let turnsBeforeAsking = 4
+    private static let turnsBeforeAsking = 2
 
     /// Call when a translation turn finishes with text.
     static func recordCompletedTurn(in scene: UIWindowScene?) {

@@ -5,6 +5,7 @@ import UIKit
 final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
     private var creditsObservers: Set<AnyCancellable> = []
+    private var didReportAdAttribution = false
 
     func scene(
         _ scene: UIScene,
@@ -13,6 +14,9 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     ) {
         guard let windowScene = scene as? UIWindowScene else { return }
 
+        if connectionOptions.urlContexts.contains(where: { Self.isWalkthroughLink($0.url) }) {
+            AppSettings.firstRunStage = .chooseDestination
+        }
         NetworkMonitor.shared.start()
         observeCreditsEvents()
 
@@ -22,7 +26,47 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.window = window
         window.makeKeyAndVisible()
 
+        reportAdAttributionOnce()
         AppLogger.shared.info("scene connected", category: .app)
+    }
+
+    func sceneDidBecomeActive(_ scene: UIScene) {
+        reportAdAttributionOnce()
+    }
+
+    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+        guard URLContexts.contains(where: { Self.isWalkthroughLink($0.url) }),
+              let conversation = window?.rootViewController as? ConversationViewController
+        else { return }
+        AppLogger.shared.info("walkthrough link opened", category: .app)
+        conversation.replayWalkthrough()
+    }
+
+    /// `psybeam://try`, the in-app event's deep link, replays the destination
+    /// picker and try-it-yourself coach. A cold launch through it only has to
+    /// reset the stored stage: the conversation screen then runs the walkthrough
+    /// on its own once consent is settled.
+    private static func isWalkthroughLink(_ url: URL) -> Bool {
+        url.scheme?.lowercased() == "psybeam" && url.host?.lowercased() == "try"
+    }
+
+    /// Reports the install attribution once per launch, driven from scene
+    /// connection rather than scene activation.
+    ///
+    /// It must not wait for `sceneDidBecomeActive`: on the only launch that can
+    /// ever produce an attribution, the first one after an ad-driven install, a
+    /// permission alert is typically on screen, and a presented system alert keeps
+    /// the scene `inactive` until the user answers it. The AdServices token is
+    /// short-lived, so deferring capture until then loses the install. Nothing
+    /// here touches the launch critical path: the reporter returns immediately and
+    /// does its work on a detached task. Demo launches never report.
+    private func reportAdAttributionOnce() {
+        #if DEBUG
+        if ProcessInfo.processInfo.environment["PSYBEAM_DEMO"] != nil { return }
+        #endif
+        guard !didReportAdAttribution else { return }
+        didReportAdAttribution = true
+        AICreditsManager.shared.reportAdAttribution()
     }
 
     /// The AICredits package emits no logging of its own, so the store's

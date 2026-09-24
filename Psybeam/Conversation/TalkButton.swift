@@ -5,7 +5,14 @@ final class TalkButton: UIVisualEffectView {
     private let icon = UIImageView()
     private let hintLabel = UILabel()
     private let accent: UIColor
-    var onHold: ((Bool) -> Void)?
+    private var isActive = false
+    private var isBeckoning = false
+    private var pressAccepted = false
+
+    /// Asked on touch-down; returning false (no consent yet, mic denied) keeps
+    /// the button at rest instead of lighting it up for a hold that never started.
+    var onPress: (() -> Bool)?
+    var onRelease: (() -> Void)?
 
     init(accent: UIColor, hint: String, micSymbol: String) {
         self.accent = accent
@@ -66,10 +73,13 @@ final class TalkButton: UIVisualEffectView {
     required init?(coder: NSCoder) { fatalError() }
 
     func setActive(_ active: Bool) {
+        isActive = active
+        icon.removeAllSymbolEffects()
+        layer.removeAnimation(forKey: Self.beckonKey)
         if active {
             icon.addSymbolEffect(.pulse, options: .repeat(.continuous))
         } else {
-            icon.removeAllSymbolEffects()
+            startBeckonIfNeeded()
         }
         UIView.animate(withDuration: 0.18, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.4) {
             self.transform = active ? CGAffineTransform(scaleX: 1.06, y: 1.06) : .identity
@@ -78,14 +88,43 @@ final class TalkButton: UIVisualEffectView {
         }
     }
 
+    /// The first-run coach's pointer: a slow breathing glow that says "this
+    /// one" without looking like a live hold. Paused while the button is held.
+    func setBeckoning(_ beckoning: Bool) {
+        guard beckoning != isBeckoning else { return }
+        isBeckoning = beckoning
+        guard !isActive else { return }
+        icon.removeAllSymbolEffects()
+        layer.removeAnimation(forKey: Self.beckonKey)
+        startBeckonIfNeeded()
+    }
+
+    private static let beckonKey = "psybeam.beckon"
+
+    private func startBeckonIfNeeded() {
+        guard isBeckoning else { return }
+        icon.addSymbolEffect(.breathe, options: .repeat(.continuous))
+        let glow = CABasicAnimation(keyPath: "borderColor")
+        glow.fromValue = accent.withAlphaComponent(0.55).cgColor
+        glow.toValue = accent.cgColor
+        glow.duration = 0.9
+        glow.autoreverses = true
+        glow.repeatCount = .infinity
+        glow.isRemovedOnCompletion = false
+        glow.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        layer.add(glow, forKey: Self.beckonKey)
+    }
+
     @objc private func handlePress(_ gesture: UILongPressGestureRecognizer) {
         switch gesture.state {
         case .began:
-            setActive(true)
-            onHold?(true)
+            pressAccepted = onPress?() ?? false
+            if pressAccepted { setActive(true) }
         case .ended, .cancelled, .failed:
+            guard pressAccepted else { return }
+            pressAccepted = false
             setActive(false)
-            onHold?(false)
+            onRelease?()
         default:
             break
         }

@@ -16,6 +16,14 @@ final class ConversationViewController: UIViewController {
     private let promptLabel = UILabel()
     private let translatedLabel = UILabel()
     private let sourceLabel = UILabel()
+    private let coachLabel = UILabel()
+    private let consentButton = UIButton(type: .system)
+    /// Lifts the "not now" explanation until its button clears the cloud badge
+    /// and the talk buttons, as it must at the largest text sizes on small
+    /// screens. Active only while the button shows, so a hidden button never
+    /// pushes a caption up.
+    private lazy var consentButtonClearance = consentButton.bottomAnchor.constraint(
+        lessThanOrEqualTo: cloudBadge.topAnchor, constant: -12)
     private let cloudBadge = UILabel()
     private let gearGlass = UIVisualEffectView()
     private let gearIcon = UIImageView()
@@ -24,12 +32,11 @@ final class ConversationViewController: UIViewController {
     private let themLangButton = UIButton(type: .system)
     private let swapButton = UIButton(type: .system)
 
-    private let languages = ["en", "es", "fr", "de", "it", "pt", "nl", "ru", "pl", "tr", "el", "ar", "he", "hi", "ja", "ko", "zh", "th", "vi", "id", "fi", "sv"]
-
     private let travelerAccent = UIColor(red: 0.34, green: 0.74, blue: 1.0, alpha: 1)
     private let localAccent = UIColor(red: 0.42, green: 1.0, blue: 0.72, alpha: 1)
     private let errorRed = UIColor(red: 1.0, green: 0.32, blue: 0.36, alpha: 1)
     private let amber = UIColor(red: 1.0, green: 0.66, blue: 0.22, alpha: 1)
+    private let brand = UIColor(red: 0.30, green: 0.62, blue: 1.0, alpha: 1)
     private lazy var meButton = TalkButton(accent: travelerAccent, hint: String(localized: "HOLD · YOU"), micSymbol: "mic.fill")
     private lazy var themButton = TalkButton(accent: localAccent, hint: String(localized: "HOLD · THEM"), micSymbol: "person.wave.2.fill")
 
@@ -41,13 +48,25 @@ final class ConversationViewController: UIViewController {
     private var travelerText = ""
     private var localText = ""
     private var displayAudience: Side = .traveler
+    private var translationAudience: Side = .traveler
     private var hasTranslation = false
     private var turnProducedText = false
+    private var heldSide: Side?
+    private var pendingTurns: Set<Side> = []
     private var needsConsentOnAppear = false
+    private var needsDestinationOnAppear = false
+    private var sessionStarted = false
     private var micDenied = false
+    private var displayedPair: LanguagePair
+    private var firstRun = AppSettings.firstRunStage
+    #if DEBUG
+    private var demo: DemoConfiguration?
+    private var demoPlayer: DemoScriptPlayer?
+    #endif
 
     init(viewModel: ConversationViewModel) {
         self.viewModel = viewModel
+        self.displayedPair = viewModel.pair
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -63,7 +82,13 @@ final class ConversationViewController: UIViewController {
         if needsConsentOnAppear {
             needsConsentOnAppear = false
             presentConsent()
+        } else if needsDestinationOnAppear {
+            needsDestinationOnAppear = false
+            presentDestinationPicker()
         }
+        #if DEBUG
+        startDemoScriptIfNeeded()
+        #endif
     }
 
     private func primeHaptics() {
@@ -91,45 +116,69 @@ final class ConversationViewController: UIViewController {
         UIApplication.shared.isIdleTimerDisabled = false
     }
 
+    /// With consent already given, the session starts now, unless the
+    /// destination picker is still owed: then it starts once a destination is
+    /// set, so warm-up never mints a session in a language about to change.
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .black
         layoutVisualizer()
         layoutConvo()
         bind()
-        if !applyPreviewIfNeeded() {
-            convoRoot.alpha = 1
-            if AppSettings.aiConsentGranted {
-                startSession()
-            } else {
-                needsConsentOnAppear = true
-            }
+        registerForTraitChanges([UITraitPreferredContentSizeCategory.self]) { (self: ConversationViewController, _) in
+            self.refreshResting()
+        }
+        if applyPreviewIfNeeded() { return }
+        convoRoot.alpha = 1
+        updateLanguages(viewModel.pair)
+        if !AppSettings.aiConsentGranted {
+            needsConsentOnAppear = true
+        } else if firstRun.offersDestination {
+            needsDestinationOnAppear = true
+        } else {
+            startSession()
         }
     }
 
+    private var isDemo: Bool {
+        #if DEBUG
+        demo != nil
+        #else
+        false
+        #endif
+    }
+
+    private var needsConsent: Bool {
+        !AppSettings.aiConsentGranted && !isDemo
+    }
+
+    /// DEBUG-only screenshot and recording modes, selected by `PSYBEAM_DEMO`
+    /// and documented in `marketing/video/README.md`. Every mode renders
+    /// through the production paths and persists nothing.
     @discardableResult
     private func applyPreviewIfNeeded() -> Bool {
         #if DEBUG
-        guard let demo = ProcessInfo.processInfo.environment["PSYBEAM_DEMO"] else { return false }
+        let environment = ProcessInfo.processInfo.environment
+        let uiLanguage = Bundle.main.preferredLocalizations.first ?? "en"
+        guard let demo = DemoConfiguration(environment: environment, uiLanguage: uiLanguage) else { return false }
+        self.demo = demo
         convoRoot.alpha = 1
-        updateLanguages(LanguagePair(traveler: "en", local: "fr"))
-        switch demo {
+        firstRun = demo.initialStage
+        viewModel.showDemoPair(demo.phrasebook.pair)
+        updateLanguages(demo.phrasebook.pair)
+        switch demo.mode {
         case "listening":
-            render(legState: .listening(turn: .traveler, level: 0.7), speaker: .traveler)
-            handleText("Où est la pharmacie la plus proche ?", speaker: .traveler)
+            showDemoTurn(line: 0, finished: false)
         case "them":
-            render(legState: .listening(turn: .local, level: 0.7), speaker: .local)
-            handleText("It's just around the corner, on the left.", speaker: .local)
+            showDemoTurn(line: 1, finished: false)
+        case "coach-theirs":
+            showDemoTurn(line: 0, finished: true)
         default:
-            handleText("", speaker: .traveler)
+            refreshResting()
         }
-        visualizer.setLevel(0.6)
-        if demo == "settings" {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) { [weak self] in self?.openSettings() }
-        }
-        if demo == "consent" {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) { [weak self] in self?.presentConsent() }
-        }
+        visualizer.setLevel(demo.level ?? (["listening", "them", "settings", "consent"].contains(demo.mode) ? 0.6 : 0))
+        let mode = demo.mode
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) { [weak self] in self?.presentDemoSheet(for: mode) }
         return true
         #else
         return false
@@ -158,10 +207,10 @@ final class ConversationViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] source in self?.sourceLabel.text = source }
             .store(in: &cancellables)
-        viewModel.travelerLeg.finishedPublisher
-            .merge(with: viewModel.localLeg.finishedPublisher)
+        viewModel.travelerLeg.finishedPublisher.map { Side.traveler }
+            .merge(with: viewModel.localLeg.finishedPublisher.map { Side.local })
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] in self?.onTurnFinished() }
+            .sink { [weak self] speaker in self?.onTurnFinished(speaker) }
             .store(in: &cancellables)
         viewModel.languagePublisher
             .receive(on: DispatchQueue.main)
@@ -173,22 +222,27 @@ final class ConversationViewController: UIViewController {
             .store(in: &cancellables)
         location.detected
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] result in self?.viewModel.applyDetectedLanguage(result.language) }
+            .sink { [weak self] result in
+                guard let self, !self.isDemo else { return }
+                self.viewModel.applyDetectedLanguage(result.language)
+            }
             .store(in: &cancellables)
         NotificationCenter.default.publisher(for: UIApplication.didEnterBackgroundNotification)
             .sink { [weak self] _ in
                 self?.viewModel.end()
+                self?.abandonPendingTurns()
                 self?.restoreBrightness()
                 self?.visualizer.setPaused(true)
             }
             .store(in: &cancellables)
         NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)
             .sink { [weak self] _ in
-                self?.visualizer.setPaused(false)
-                self?.applyMaxBrightness()
-                self?.primeHaptics()
-                self?.recheckMicPermission()
-                if AppSettings.aiConsentGranted { self?.viewModel.warmUp() }
+                guard let self else { return }
+                self.visualizer.setPaused(false)
+                self.applyMaxBrightness()
+                self.primeHaptics()
+                self.recheckMicPermission()
+                if AppSettings.aiConsentGranted, self.sessionStarted { self.viewModel.warmUp() }
             }
             .store(in: &cancellables)
     }
@@ -250,12 +304,9 @@ final class ConversationViewController: UIViewController {
     /// prompt. The prompt language is the *recorded* language, not the device locale.
     private func handleText(_ text: String, speaker: Side) {
         if speaker == .traveler { travelerText = text } else { localText = text }
-        let spokenLanguage = speaker == .traveler ? viewModel.pair.traveler : viewModel.pair.local
+        let spokenLanguage = speaker == .traveler ? displayedPair.traveler : displayedPair.local
         let audience: Side = text.isEmpty ? speaker : speaker.other
-        if displayAudience != audience {
-            displayAudience = audience
-            applyFlip(animated: true)
-        }
+        setAudience(audience)
         if text.isEmpty {
             promptLabel.text = Self.speakPrompt(for: spokenLanguage)
             promptLabel.textColor = speaker == .traveler ? travelerAccent : localAccent
@@ -266,6 +317,9 @@ final class ConversationViewController: UIViewController {
         } else {
             hasTranslation = true
             turnProducedText = true
+            translationAudience = audience
+            translatedLabel.font = Self.captionFont
+            translatedLabel.textAlignment = .center
             translatedLabel.text = text
             translatedLabel.textColor = .white
             UIView.animate(withDuration: 0.2) {
@@ -275,7 +329,10 @@ final class ConversationViewController: UIViewController {
         }
     }
 
+    private static let captionFont = UIFont.systemFont(ofSize: 36, weight: .bold)
+
     private func startSession() {
+        sessionStarted = true
         requestMicPermission()
         location.start()
         viewModel.start()
@@ -301,11 +358,16 @@ final class ConversationViewController: UIViewController {
         let consent = ConsentViewController()
         consent.isModalInPresentation = true
         consent.onAgree = { [weak self] in
+            guard let self else { return }
+            guard !self.isDemo else {
+                self.dismiss(animated: true)
+                return
+            }
             AppSettings.aiConsentGranted = true
-            self?.dismiss(animated: true) { self?.startSession() }
+            self.dismiss(animated: true) { self.continueAfterConsent() }
         }
         consent.onDecline = { [weak self] in
-            self?.dismiss(animated: true)
+            self?.dismiss(animated: true) { self?.refreshResting() }
         }
         if let sheet = consent.sheetPresentationController {
             sheet.detents = [.large()]
@@ -314,12 +376,184 @@ final class ConversationViewController: UIViewController {
         present(consent, animated: true)
     }
 
+    private func continueAfterConsent() {
+        refreshResting()
+        if firstRun.offersDestination {
+            presentDestinationPicker()
+        } else {
+            startSession()
+        }
+    }
+
+    /// Shown once, after consent, to a user who has never finished a
+    /// translation. If something else is on screen the session starts anyway
+    /// and the picker waits for the next launch, so first run never stalls.
+    private func presentDestinationPicker() {
+        guard presentedViewController == nil else {
+            if !isDemo { startSession() }
+            return
+        }
+        let picker = DestinationPickerViewController(
+            destinations: SupportedLanguages.destinations(forTraveler: displayedPair.traveler))
+        picker.onPick = { [weak self] code in self?.finishDestination(choosing: code) }
+        picker.onSkip = { [weak self] in self?.finishDestination(choosing: nil) }
+        if let sheet = picker.sheetPresentationController {
+            sheet.detents = [.large()]
+            sheet.prefersGrabberVisible = true
+        }
+        present(picker, animated: true)
+    }
+
+    private func finishDestination(choosing code: String?) {
+        if let code { applyDestination(code) }
+        setFirstRun(firstRun.afterDestination)
+        if !isDemo, !sessionStarted { startSession() }
+    }
+
+    /// Replays the walkthrough from the destination picker. Opened by the
+    /// `psybeam://try` link that the "Try It Before Your Trip" in-app event
+    /// deep-links to; consent still comes first for anyone who hasn't given it.
+    func replayWalkthrough() {
+        guard !isDemo else { return }
+        setFirstRun(.chooseDestination)
+        refreshResting()
+        guard presentedViewController == nil else {
+            dismiss(animated: true) { [weak self] in self?.beginReplayedWalkthrough() }
+            return
+        }
+        beginReplayedWalkthrough()
+    }
+
+    private func beginReplayedWalkthrough() {
+        if needsConsent {
+            presentConsent()
+        } else {
+            presentDestinationPicker()
+        }
+    }
+
+    /// The screen takes the new pair now rather than on the view model's next
+    /// main-queue delivery, so the coach step that follows, and its VoiceOver
+    /// announcement, name the language just picked.
+    private func applyDestination(_ code: String) {
+        #if DEBUG
+        if isDemo {
+            showDemoPair(displayedPair.choosingLocal(code))
+            return
+        }
+        #endif
+        viewModel.setLocalLanguage(code)
+        updateLanguages(viewModel.pair)
+    }
+
     /// Released without anything being translated: drop the dangling prompt and
-    /// bring back the resting caption (the last reply, or the idle hint).
+    /// bring back the resting caption (the last reply, or the idle hint), facing
+    /// whoever it was meant for.
     private func restoreResting() {
+        if hasTranslation { setAudience(translationAudience) }
+        refreshResting()
         UIView.animate(withDuration: 0.25) {
             self.promptLabel.alpha = 0
             self.translatedLabel.alpha = 1
+        }
+    }
+
+    /// Everything the screen says between turns: why nothing can happen yet
+    /// (no consent), the first-run coach, or the idle hint. A translation on
+    /// screen is left alone, and so is a turn in progress.
+    private func refreshResting() {
+        consentButton.isHidden = !needsConsent
+        consentButtonClearance.isActive = needsConsent
+        refreshCoach()
+        guard heldSide == nil else { return }
+        if needsConsent {
+            hasTranslation = false
+            sourceLabel.text = ""
+            let explanation = String(localized: "Psybeam needs your OK to send speech to its cloud translator.")
+            showResting(NSAttributedString(
+                string: explanation, attributes: restingAttributes(size: 28, alpha: 0.85, style: .title1, maximumScale: 1.15)))
+        } else if !hasTranslation {
+            let placeholder = NSAttributedString(
+                string: String(localized: "Hold a button and speak"),
+                attributes: restingAttributes(size: 36, alpha: 0.55, style: .title1))
+            showResting(coachText(for: firstRun, size: 28, style: .title1) ?? placeholder)
+        }
+    }
+
+    private func showResting(_ caption: NSAttributedString) {
+        translatedLabel.attributedText = caption
+        setAudience(.traveler)
+    }
+
+    /// The coach's pointers: the button to hold next breathes, and once the
+    /// caption area holds a translation for them, the next step moves to a
+    /// line above the buttons. Both stand down while anyone is holding and
+    /// while a released turn is still settling, so the button just let go of
+    /// never breathes again for the moment before its turn completes.
+    private func refreshCoach() {
+        let idle = !needsConsent && heldSide == nil && pendingTurns.isEmpty
+        let beckoning = idle ? firstRun.beckoning : nil
+        meButton.setBeckoning(beckoning == .traveler)
+        themButton.setBeckoning(beckoning == .local)
+        let showsLine = idle && hasTranslation && firstRun == .holdTheirs
+        coachLabel.attributedText = showsLine ? coachText(for: firstRun, size: 17, style: .headline) : nil
+        UIView.animate(withDuration: 0.25) { self.coachLabel.alpha = showsLine ? 1 : 0 }
+    }
+
+    /// A coaching step's line, with each language in its button's colour. The
+    /// button to hold is named as it is printed on the button; the language
+    /// you'll hear is named in the UI language.
+    private func coachText(for stage: FirstRunStage, size: CGFloat, style: UIFont.TextStyle) -> NSAttributedString? {
+        let attributes = restingAttributes(size: size, alpha: 0.82, style: style)
+        switch stage {
+        case .holdYours:
+            let yours = LanguageNames.endonym(displayedPair.traveler)
+            let theirs = LanguageNames.inUILanguage(displayedPair.local)
+            let line = String(localized: "Hold \(yours) and say something. You’ll hear it in \(theirs).")
+            return highlight(line, [(yours, travelerAccent), (theirs, localAccent)], attributes)
+        case .holdTheirs:
+            let theirs = LanguageNames.endonym(displayedPair.local)
+            let line = String(localized: "Now hold \(theirs) and answer — or let someone answer you.")
+            return highlight(line, [(theirs, localAccent)], attributes)
+        case .chooseDestination, .done:
+            return nil
+        }
+    }
+
+    private func highlight(
+        _ text: String, _ marks: [(String, UIColor)], _ attributes: [NSAttributedString.Key: Any]
+    ) -> NSAttributedString {
+        let result = NSMutableAttributedString(string: text, attributes: attributes)
+        let source = text as NSString
+        for (word, color) in marks where !word.isEmpty {
+            let range = source.range(of: word)
+            if range.location != NSNotFound { result.addAttribute(.foregroundColor, value: color, range: range) }
+        }
+        return result
+    }
+
+    /// Resting text grows with Dynamic Type up to `maximumScale` times `size`.
+    /// The consent explanation stops sooner: it shares the space above the
+    /// talk buttons with its own button, and both must fit a 375×667 window.
+    private func restingAttributes(
+        size: CGFloat, alpha: CGFloat, style: UIFont.TextStyle, maximumScale: CGFloat = 1.4
+    ) -> [NSAttributedString.Key: Any] {
+        let paragraph = NSMutableParagraphStyle()
+        paragraph.alignment = .center
+        paragraph.lineSpacing = 2
+        paragraph.lineBreakStrategy = .standard
+        let font = UIFontMetrics(forTextStyle: style).scaledFont(
+            for: .systemFont(ofSize: size, weight: .bold), maximumPointSize: size * maximumScale, compatibleWith: traitCollection)
+        return [.font: font, .foregroundColor: UIColor.white.withAlphaComponent(alpha), .paragraphStyle: paragraph]
+    }
+
+    private func setFirstRun(_ stage: FirstRunStage) {
+        guard stage != firstRun else { return }
+        firstRun = stage
+        if !isDemo { AppSettings.firstRunStage = stage }
+        refreshResting()
+        if let line = coachText(for: stage, size: 17, style: .headline)?.string {
+            UIAccessibility.post(notification: .announcement, argument: line)
         }
     }
 
@@ -346,6 +580,7 @@ final class ConversationViewController: UIViewController {
         configureLanguageBar()
         configureTalkButtons()
         configureCloudBadge()
+        configureConsentButton()
         applyFlip(animated: false)
 
         let buttonRow = UIStackView(arrangedSubviews: [meButton, themButton])
@@ -354,10 +589,10 @@ final class ConversationViewController: UIViewController {
         buttonRow.spacing = 14
         buttonRow.translatesAutoresizingMaskIntoConstraints = false
 
-        [statusLabel, promptLabel, translatedLabel, sourceLabel, buttonRow, gearGlass, languageBarHost, cloudBadge].forEach { convoRoot.addSubview($0) }
+        [statusLabel, promptLabel, translatedLabel, sourceLabel, consentButton, coachLabel, buttonRow, gearGlass, languageBarHost, cloudBadge]
+            .forEach { convoRoot.addSubview($0) }
 
-        NSLayoutConstraint.activate([
-            translatedLabel.centerYAnchor.constraint(equalTo: convoRoot.centerYAnchor, constant: -40),
+        NSLayoutConstraint.activate(captionPlacement() + [
             translatedLabel.leadingAnchor.constraint(equalTo: convoRoot.leadingAnchor, constant: 28),
             translatedLabel.trailingAnchor.constraint(equalTo: convoRoot.trailingAnchor, constant: -28),
 
@@ -367,6 +602,11 @@ final class ConversationViewController: UIViewController {
             sourceLabel.topAnchor.constraint(equalTo: translatedLabel.bottomAnchor, constant: 16),
             sourceLabel.leadingAnchor.constraint(equalTo: convoRoot.leadingAnchor, constant: 28),
             sourceLabel.trailingAnchor.constraint(equalTo: convoRoot.trailingAnchor, constant: -28),
+
+            consentButton.topAnchor.constraint(equalTo: translatedLabel.bottomAnchor, constant: 28),
+            consentButton.centerXAnchor.constraint(equalTo: convoRoot.centerXAnchor),
+            consentButton.leadingAnchor.constraint(greaterThanOrEqualTo: convoRoot.leadingAnchor, constant: 28),
+            consentButton.trailingAnchor.constraint(lessThanOrEqualTo: convoRoot.trailingAnchor, constant: -28),
 
             promptLabel.centerYAnchor.constraint(equalTo: convoRoot.centerYAnchor, constant: -158),
             promptLabel.leadingAnchor.constraint(equalTo: convoRoot.leadingAnchor, constant: 28),
@@ -380,6 +620,10 @@ final class ConversationViewController: UIViewController {
             cloudBadge.bottomAnchor.constraint(equalTo: buttonRow.topAnchor, constant: -10),
             cloudBadge.centerXAnchor.constraint(equalTo: convoRoot.centerXAnchor),
 
+            coachLabel.bottomAnchor.constraint(equalTo: cloudBadge.topAnchor, constant: -16),
+            coachLabel.leadingAnchor.constraint(equalTo: convoRoot.leadingAnchor, constant: 28),
+            coachLabel.trailingAnchor.constraint(equalTo: convoRoot.trailingAnchor, constant: -28),
+
             gearGlass.topAnchor.constraint(equalTo: convoRoot.safeAreaLayoutGuide.topAnchor, constant: 8),
             gearGlass.leadingAnchor.constraint(equalTo: convoRoot.leadingAnchor, constant: 20),
             gearGlass.widthAnchor.constraint(equalToConstant: 46),
@@ -391,6 +635,18 @@ final class ConversationViewController: UIViewController {
             languageBarHost.trailingAnchor.constraint(lessThanOrEqualTo: convoRoot.trailingAnchor, constant: -20),
             languageBarHost.heightAnchor.constraint(equalToConstant: 42),
         ])
+    }
+
+    /// The caption sits just above centre, but gives way upward rather than let
+    /// it and its source line run into the coach line above the buttons. That
+    /// happens with a long caption on the smallest screens, including the
+    /// 375×667 window an iPad runs this iPhone app in. Centring ranks just
+    /// below the labels' compression resistance, so the caption moves instead
+    /// of the coach line or the cloud badge being squeezed.
+    private func captionPlacement() -> [NSLayoutConstraint] {
+        let center = translatedLabel.centerYAnchor.constraint(equalTo: convoRoot.centerYAnchor, constant: -40)
+        center.priority = .defaultHigh - 1
+        return [center, coachLabel.topAnchor.constraint(greaterThanOrEqualTo: sourceLabel.bottomAnchor, constant: 12)]
     }
 
     /// A flat translucent pill, deliberately NOT a glass effect view: live glass
@@ -445,12 +701,21 @@ final class ConversationViewController: UIViewController {
 
     private func makeLangMenu(isTraveler: Bool) -> UIMenu {
         let selected = isTraveler ? viewModel.pair.traveler : viewModel.pair.local
-        let actions = languages.map { code in
-            UIAction(title: Self.endonym(code), state: code == selected ? .on : .off) { [weak self] _ in
-                if isTraveler { self?.viewModel.setTravelerLanguage(code) } else { self?.viewModel.setLocalLanguage(code) }
+        let actions = SupportedLanguages.codes.map { code in
+            UIAction(title: LanguageNames.endonym(code), state: code == selected ? .on : .off) { [weak self] _ in
+                self?.chooseLanguage(code, isTraveler: isTraveler)
             }
         }
         return UIMenu(title: isTraveler ? String(localized: "You speak") : String(localized: "They speak"), children: actions)
+    }
+
+    /// Changing a language by hand means the user has found their way around the
+    /// screen, so the first-run coach stands down. Re-selecting the language
+    /// already set changes nothing, the coach included, as in Settings.
+    private func chooseLanguage(_ code: String, isTraveler: Bool) {
+        let before = viewModel.pair
+        if isTraveler { viewModel.setTravelerLanguage(code) } else { viewModel.setLocalLanguage(code) }
+        if viewModel.pair != before { setFirstRun(.done) }
     }
 
     private func setLangButtonTitle(_ button: UIButton, _ text: String, _ color: UIColor) {
@@ -463,6 +728,7 @@ final class ConversationViewController: UIViewController {
     @objc private func swapLanguages() {
         impact.impactOccurred()
         viewModel.swapLanguages()
+        setFirstRun(.done)
     }
 
     private func configureLabels() {
@@ -471,13 +737,11 @@ final class ConversationViewController: UIViewController {
         statusLabel.textAlignment = .center
         statusLabel.setContentHuggingPriority(.required, for: .vertical)
 
-        translatedLabel.font = .systemFont(ofSize: 36, weight: .bold)
+        translatedLabel.font = Self.captionFont
         translatedLabel.adjustsFontForContentSizeCategory = true
         translatedLabel.textColor = .white
         translatedLabel.textAlignment = .center
         translatedLabel.numberOfLines = 0
-        translatedLabel.text = String(localized: "Hold a button and speak")
-        translatedLabel.textColor = UIColor.white.withAlphaComponent(0.55)
 
         promptLabel.font = .systemFont(ofSize: 34, weight: .heavy)
         promptLabel.adjustsFontForContentSizeCategory = true
@@ -491,7 +755,11 @@ final class ConversationViewController: UIViewController {
         sourceLabel.textAlignment = .center
         sourceLabel.numberOfLines = 0
 
-        for label in [statusLabel, translatedLabel, sourceLabel, promptLabel] {
+        coachLabel.textAlignment = .center
+        coachLabel.numberOfLines = 0
+        coachLabel.alpha = 0
+
+        for label in [statusLabel, translatedLabel, sourceLabel, promptLabel, coachLabel] {
             label.translatesAutoresizingMaskIntoConstraints = false
             label.layer.shadowColor = UIColor.black.cgColor
             label.layer.shadowOpacity = 0.55
@@ -501,9 +769,31 @@ final class ConversationViewController: UIViewController {
         }
     }
 
+    /// The way back from "Not now": the resting caption says why nothing
+    /// happens, and this reopens the consent sheet. Tapping anywhere on the
+    /// screen, or holding a talk button, does the same.
+    private func configureConsentButton() {
+        var config = UIButton.Configuration.filled()
+        config.cornerStyle = .capsule
+        config.baseBackgroundColor = brand
+        config.baseForegroundColor = .white
+        config.image = UIImage(systemName: "cloud.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 15, weight: .semibold))
+        config.imagePadding = 8
+        config.attributedTitle = AttributedString(String(localized: "Review consent"), attributes: AttributeContainer([
+            .font: UIFontMetrics(forTextStyle: .headline).scaledFont(for: .systemFont(ofSize: 17, weight: .semibold), maximumPointSize: 26),
+        ]))
+        config.contentInsets = NSDirectionalEdgeInsets(top: 13, leading: 22, bottom: 13, trailing: 22)
+        consentButton.configuration = config
+        consentButton.translatesAutoresizingMaskIntoConstraints = false
+        consentButton.isHidden = true
+        consentButton.addAction(UIAction { [weak self] _ in self?.presentConsent() }, for: .touchUpInside)
+    }
+
     private func configureTalkButtons() {
-        meButton.onHold = { [weak self] down in self?.hold(.traveler, down: down) }
-        themButton.onHold = { [weak self] down in self?.hold(.local, down: down) }
+        meButton.onPress = { [weak self] in self?.pressBegan(.traveler) ?? false }
+        meButton.onRelease = { [weak self] in self?.pressEnded(.traveler) }
+        themButton.onPress = { [weak self] in self?.pressBegan(.local) ?? false }
+        themButton.onRelease = { [weak self] in self?.pressEnded(.local) }
     }
 
     /// The honest-floor indicator for the bystander who can't consent to cloud
@@ -525,31 +815,69 @@ final class ConversationViewController: UIViewController {
         cloudBadge.accessibilityLabel = String(localized: "Translated by cloud AI")
     }
 
-    private func hold(_ speaker: Side, down: Bool) {
-        if down {
-            guard AppSettings.aiConsentGranted else { presentConsent(); return }
-            if AVAudioApplication.shared.recordPermission == .denied {
-                render(legState: .permissionDenied(.microphone), speaker: speaker)
-                return
-            }
-            impact.impactOccurred()
-            release.prepare()
-            turnProducedText = false
-            viewModel.holdDown(speaker)
-        } else {
-            release.impactOccurred()
-            impact.prepare()
-            viewModel.holdUp(speaker)
-            if !turnProducedText { restoreResting() }
+    /// Returns whether the hold started. A press without consent re-presents
+    /// the consent sheet and one with the microphone denied shows how to fix
+    /// it; neither lights the button, since nothing is listening.
+    private func pressBegan(_ speaker: Side) -> Bool {
+        guard AppSettings.aiConsentGranted else {
+            presentConsent()
+            return false
         }
+        if AVAudioApplication.shared.recordPermission == .denied {
+            render(legState: .permissionDenied(.microphone), speaker: speaker)
+            return false
+        }
+        impact.impactOccurred()
+        release.prepare()
+        beginHold(speaker)
+        viewModel.holdDown(speaker)
+        return true
+    }
+
+    private func pressEnded(_ speaker: Side) {
+        release.impactOccurred()
+        impact.prepare()
+        viewModel.holdUp(speaker)
+        endHold()
+    }
+
+    /// Screen-side bookkeeping for a hold, shared by live holds and scripted
+    /// demo holds so both drive the same coach and caption state.
+    private func beginHold(_ speaker: Side) {
+        heldSide = speaker
+        turnProducedText = false
+        pendingTurns.insert(speaker)
+        refreshCoach()
+    }
+
+    private func endHold() {
+        let speaker = heldSide
+        heldSide = nil
+        if turnProducedText {
+            refreshCoach()
+        } else {
+            if let speaker { pendingTurns.remove(speaker) }
+            restoreResting()
+        }
+    }
+
+    /// Ending the session cancels a released turn's settle, so a turn still
+    /// settling will never report finished. Forgetting it keeps the coach from
+    /// waiting on it forever.
+    private func abandonPendingTurns() {
+        pendingTurns.removeAll()
+        refreshCoach()
     }
 
     /// The closing delta of a turn — give it a body: a success tap and a small
     /// settle so the caption reads as committed, not merely paused mid-stream.
-    private func onTurnFinished() {
+    private func onTurnFinished(_ speaker: Side) {
         notify.notificationOccurred(.success)
         notify.prepare()
-        ReviewPrompt.recordCompletedTurn(in: view.window?.windowScene)
+        if !isDemo { ReviewPrompt.recordCompletedTurn(in: view.window?.windowScene) }
+        pendingTurns.remove(speaker)
+        setFirstRun(firstRun.after(turnBy: speaker))
+        refreshCoach()
         let base = translatedLabel.transform
         UIView.animate(withDuration: 0.14, animations: {
             self.translatedLabel.transform = base.scaledBy(x: 1.035, y: 1.035)
@@ -586,6 +914,9 @@ final class ConversationViewController: UIViewController {
         gearGlass.accessibilityLabel = String(localized: "Settings")
     }
 
+    /// Settings can withdraw consent or change either language, so the resting
+    /// state is recomputed when it closes; a changed pair ends the coach just
+    /// as it does from the language bar.
     @objc private func openSettings() {
         impact.impactOccurred()
         visualizer.setPaused(true)
@@ -593,7 +924,13 @@ final class ConversationViewController: UIViewController {
             viewModel: viewModel,
             onBrightnessChanged: { [weak self] in self?.applyMaxBrightness() }
         )
-        settings.onDismiss = { [weak self] in self?.visualizer.setPaused(false) }
+        let pairBeforeSettings = viewModel.pair
+        settings.onDismiss = { [weak self] in
+            guard let self else { return }
+            self.visualizer.setPaused(false)
+            if self.viewModel.pair != pairBeforeSettings { self.setFirstRun(.done) }
+            self.refreshResting()
+        }
         if let sheet = settings.sheetPresentationController {
             sheet.detents = [.large()]
             sheet.prefersGrabberVisible = true
@@ -616,15 +953,23 @@ final class ConversationViewController: UIViewController {
         }
     }
 
+    private func setAudience(_ audience: Side) {
+        guard displayAudience != audience else { return }
+        displayAudience = audience
+        applyFlip(animated: true)
+    }
+
     private func updateLanguages(_ pair: LanguagePair) {
-        meButton.languageLabel.text = Self.endonym(pair.traveler)
-        themButton.languageLabel.text = Self.endonym(pair.local)
-        meButton.accessibilityLabel = String(localized: "Hold to speak \(Self.endonym(pair.traveler))")
-        themButton.accessibilityLabel = String(localized: "Hold while they speak \(Self.endonym(pair.local))")
-        setLangButtonTitle(youLangButton, Self.endonym(pair.traveler), travelerAccent)
-        setLangButtonTitle(themLangButton, Self.endonym(pair.local), localAccent)
+        displayedPair = pair
+        meButton.languageLabel.text = LanguageNames.endonym(pair.traveler)
+        themButton.languageLabel.text = LanguageNames.endonym(pair.local)
+        meButton.accessibilityLabel = String(localized: "Hold to speak \(LanguageNames.endonym(pair.traveler))")
+        themButton.accessibilityLabel = String(localized: "Hold while they speak \(LanguageNames.endonym(pair.local))")
+        setLangButtonTitle(youLangButton, LanguageNames.endonym(pair.traveler), travelerAccent)
+        setLangButtonTitle(themLangButton, LanguageNames.endonym(pair.local), localAccent)
         youLangButton.menu = makeLangMenu(isTraveler: true)
         themLangButton.menu = makeLangMenu(isTraveler: false)
+        refreshResting()
     }
 
     private func pin(_ subview: UIView) {
@@ -645,21 +990,21 @@ final class ConversationViewController: UIViewController {
         }
     }
 
-    /// Only acts while mic access is denied — taps are otherwise inert, so this
-    /// never competes with the hold-to-talk buttons during normal use.
+    /// Opens the Settings app while mic access is denied, and the consent sheet
+    /// while consent is missing; otherwise taps are inert, so this never
+    /// competes with the hold-to-talk buttons during normal use.
     @objc private func handleScreenTap() {
-        guard micDenied, let url = URL(string: UIApplication.openSettingsURLString) else { return }
-        UIApplication.shared.open(url)
+        if micDenied, let url = URL(string: UIApplication.openSettingsURLString) {
+            UIApplication.shared.open(url)
+        } else if needsConsent {
+            presentConsent()
+        }
     }
 
     private func recheckMicPermission() {
         guard micDenied, AVAudioApplication.shared.recordPermission == .granted else { return }
         micDenied = false
         render(legState: .idle, speaker: .traveler)
-    }
-
-    private static func endonym(_ code: String) -> String {
-        Locale(identifier: code).localizedString(forLanguageCode: code)?.capitalized ?? code.uppercased()
     }
 
     private static func speakPrompt(for code: String) -> String {
@@ -678,3 +1023,83 @@ final class ConversationViewController: UIViewController {
         "he": "דבר עכשיו", "fi": "Puhu nyt",
     ]
 }
+
+#if DEBUG
+extension ConversationViewController: DemoStage {
+    func demoHold(_ speaker: Side) {
+        talkButton(for: speaker).setActive(true)
+        beginHold(speaker)
+        handleText("", speaker: speaker)
+        sourceLabel.text = ""
+        render(legState: .listening(turn: speaker, level: 0), speaker: speaker)
+    }
+
+    func demoRelease(_ speaker: Side) {
+        talkButton(for: speaker).setActive(false)
+        render(legState: .idle, speaker: speaker)
+        endHold()
+    }
+
+    func demoCaption(_ text: String, speaker: Side) {
+        handleText(text, speaker: speaker)
+    }
+
+    func demoSource(_ text: String) {
+        sourceLabel.text = text
+    }
+
+    func demoState(_ state: TranslationState, speaker: Side) {
+        render(legState: state, speaker: speaker)
+    }
+
+    func demoPair(_ pair: LanguagePair) {
+        showDemoPair(pair)
+    }
+
+    func demoLevel(_ level: Float) {
+        visualizer.setLevel(level)
+    }
+
+    func demoTurnFinished(_ speaker: Side) {
+        onTurnFinished(speaker)
+    }
+
+    private func showDemoPair(_ pair: LanguagePair) {
+        viewModel.showDemoPair(pair)
+        updateLanguages(pair)
+    }
+
+    private func talkButton(for speaker: Side) -> TalkButton {
+        speaker == .traveler ? meButton : themButton
+    }
+
+    /// A still of one phrase-table line mid-turn (the button held, the caption
+    /// facing its listener), or finished and released when `finished`.
+    private func showDemoTurn(line: Int, finished: Bool) {
+        guard let book = demo?.phrasebook else { return }
+        let speaker = DemoPhrasebook.speaker(ofLine: line)
+        demoHold(speaker)
+        demoSource(book.source(line: line))
+        demoCaption(book.caption(line: line), speaker: speaker)
+        guard finished else { return }
+        demoRelease(speaker)
+        demoTurnFinished(speaker)
+    }
+
+    private func presentDemoSheet(for mode: String) {
+        switch mode {
+        case "settings": openSettings()
+        case "consent": presentConsent()
+        case "destination": presentDestinationPicker()
+        default: break
+        }
+    }
+
+    private func startDemoScriptIfNeeded() {
+        guard let demo, demo.mode == "script", demoPlayer == nil else { return }
+        let player = DemoScriptPlayer(events: demo.script, phrasebook: demo.phrasebook, stage: self)
+        demoPlayer = player
+        player.start()
+    }
+}
+#endif

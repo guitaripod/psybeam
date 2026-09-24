@@ -20,4 +20,12 @@ final class AICreditsManager: Sendable {
             config: config,
             purchaseProvider: RevenueCatPurchaseProvider(apiKey: revenueCatPublicKey))
     }
+
+    /// Reports the Apple Ads install attribution once per install, off the main
+    /// actor. The result is logged token-free.
+    func reportAdAttribution() {
+        client.startAdAttributionReporting { result in
+            AppLogger.shared.info("ad attribution \(result.logDescription)", category: .auth)
+        }
+    }
 }

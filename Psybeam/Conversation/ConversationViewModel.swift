@@ -102,39 +102,49 @@ final class ConversationViewModel {
 
     func setLocalLanguage(_ code: String) {
         languageLocked = true
-        applyLocal(code)
+        apply(pair.choosingLocal(code))
     }
 
     func setTravelerLanguage(_ code: String) {
-        guard code != pair.traveler else { return }
         languageLocked = true
-        pair = LanguagePair(traveler: code, local: pair.local)
-        AppSettings.travelerLanguage = code
-        updateLegs()
-        languagePublisher.send(pair)
+        apply(pair.choosingTraveler(code))
     }
 
     func swapLanguages() {
-        guard pair.traveler != pair.local else { return }
-        pair = LanguagePair(traveler: pair.local, local: pair.traveler)
-        AppSettings.travelerLanguage = pair.traveler
-        AppSettings.localLanguage = pair.local
         languageLocked = true
-        updateLegs()
-        languagePublisher.send(pair)
+        apply(pair.swapped)
     }
 
+    #if DEBUG
+    /// Shows a demo's pair everywhere the view model is read, Settings
+    /// included, without storing it or letting GPS replace it.
+    func showDemoPair(_ demoPair: LanguagePair) {
+        languageLocked = true
+        pair = demoPair
+        updateLegs()
+    }
+    #endif
+
+    /// A GPS fix counts toward settling the language even when it is ignored
+    /// for resolving to your own language: being at home is a real answer, and
+    /// warm-up should stop waiting for one.
     func applyDetectedLanguage(_ code: String) {
         guard AppSettings.autoDetectLocation, !languageLocked else { return }
         languageResolved = true
-        applyLocal(code)
+        if let detected = pair.applyingDetectedLocal(code) { apply(detected) }
         if warmUpArmed, !warmedUp { performWarmUp() }
     }
 
-    private func applyLocal(_ code: String) {
-        guard code != pair.local else { return }
-        pair = LanguagePair(traveler: pair.traveler, local: code)
-        AppSettings.localLanguage = code
+    /// Their language is stored on every change, even when only yours moved:
+    /// an unstored one is derived from yours, so a later change to yours, or a
+    /// repaired same-language pair, would otherwise come back as a different
+    /// destination on the next launch. Yours is stored only once it changes, so
+    /// it keeps following the device language until you choose one.
+    private func apply(_ next: LanguagePair) {
+        guard next != pair else { return }
+        if next.traveler != pair.traveler { AppSettings.travelerLanguage = next.traveler }
+        AppSettings.localLanguage = next.local
+        pair = next
         updateLegs()
         languagePublisher.send(pair)
     }

@@ -23,7 +23,7 @@ settings:
     GENERATE_INFOPLIST_FILE: NO
     IPHONEOS_DEPLOYMENT_TARGET: "18.0"
     TARGETED_DEVICE_FAMILY: "1"
-    MARKETING_VERSION: "1.1.0"
+    MARKETING_VERSION: "1.1.1"
     CURRENT_PROJECT_VERSION: "1"
   configs:
     Debug:
@@ -43,7 +43,7 @@ packages:
     from: "147.0.0"
   AICredits:
     url: git@github.com:guitaripod/AICredits.git
-    from: "1.4.0"
+    from: "1.5.4"
   MidgarKit:
     url: https://github.com/guitaripod/MidgarKit
     from: "2.0.0"
@@ -88,6 +88,10 @@ targets:
         NSLocationWhenInUseUsageDescription: Psybeam suggests the local language for where you are as you cross borders.
         NSCameraUsageDescription: Psybeam does not take photos or videos. Camera access is requested only by the real-time audio framework and is never used.
         ITSAppUsesNonExemptEncryption: false
+        CFBundleURLTypes:
+          - CFBundleURLName: com.guitaripod.psybeam
+            CFBundleURLSchemes:
+              - psybeam
         UIRequiresFullScreen: true
     entitlements:
       path: Psybeam/Psybeam.entitlements
