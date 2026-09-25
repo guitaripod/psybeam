@@ -874,7 +874,7 @@ final class ConversationViewController: UIViewController {
     private func onTurnFinished(_ speaker: Side) {
         notify.notificationOccurred(.success)
         notify.prepare()
-        if !isDemo { ReviewPrompt.recordCompletedTurn(in: view.window?.windowScene) }
+        if !isDemo { ReviewPrompt.recordSuccess(in: view.window?.windowScene) }
         pendingTurns.remove(speaker)
         setFirstRun(firstRun.after(turnBy: speaker))
         refreshCoach()

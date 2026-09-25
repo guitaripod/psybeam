@@ -19,6 +19,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     ) -> Bool {
         warmUpLaunchServicesReceiptPath()
         _ = DatabaseManager.shared
+        AppSettings.migrateLegacyReviewPromptStateIfNeeded()
         AppLogger.shared.info("app launched", category: .app)
         return true
     }
