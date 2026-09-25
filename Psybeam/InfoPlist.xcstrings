@@ -110,7 +110,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Psybeam nie robi zdjęć ani nagrań wideo. Dostęp do aparatu jest wymagany wyłącznie przez framework audio czasu rzeczywistego i nigdy nie jest wykorzystywany."
+            "value" : "Psybeam nie robi zdjęć ani nagrań wideo. O dostęp do aparatu prosi wyłącznie framework audio czasu rzeczywistego i nigdy nie jest on wykorzystywany."
           }
         },
         "hi" : {

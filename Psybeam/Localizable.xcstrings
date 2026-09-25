@@ -1870,7 +1870,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sztuczna inteligencja w chmurze"
+            "value" : "AI w chmurze"
           }
         },
         "hi" : {
@@ -8670,7 +8670,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Przetłumaczone przez sztuczną inteligencję w chmurze"
+            "value" : "Przetłumaczone przez AI w chmurze"
           }
         },
         "hi" : {
@@ -9486,7 +9486,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wycofaj zgodę na sztuczną inteligencję w chmurze"
+            "value" : "Wycofaj zgodę na AI w chmurze"
           }
         },
         "hi" : {
