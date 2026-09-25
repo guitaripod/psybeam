@@ -6766,7 +6766,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Psybeam potrzebuje Twojej zgody, aby wysyłać mowę do tłumacza w chmurze."
+            "value" : "Psybeam potrzebuje twojej zgody, aby wysyłać mowę do tłumacza w chmurze."
           }
         },
         "hi" : {
@@ -6902,7 +6902,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Psybeam będzie mówić w ich języku za Ciebie."
+            "value" : "Psybeam będzie mówić w ich języku za ciebie."
           }
         },
         "hi" : {
@@ -10030,7 +10030,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dźwięk Twojej rozmowy jest przesyłany bezpośrednio do OpenAI w celu przetłumaczenia, a następnie odtwarzany w odpowiedzi — nigdy nie przechodzi przez nasze serwery. Zobacz naszą Politykę prywatności, aby dowiedzieć się, jak przetwarza go OpenAI. Zapis rozmowy pozostaje na tym urządzeniu."
+            "value" : "Dźwięk twojej rozmowy jest przesyłany bezpośrednio do OpenAI w celu przetłumaczenia, a następnie odtwarzany w odpowiedzi — nigdy nie przechodzi przez nasze serwery. Zobacz naszą Politykę prywatności, aby dowiedzieć się, jak przetwarza go OpenAI. Zapis rozmowy pozostaje na tym urządzeniu."
           }
         },
         "hi" : {
