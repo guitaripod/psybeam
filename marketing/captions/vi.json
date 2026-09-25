@@ -4,8 +4,7 @@
     "hero",
     "reply",
     "destination",
-    "faces",
-    "free"
+    "faces"
   ],
   "hero": {
     "title": "Nói đi. Họ sẽ nghe tiếng Hàn.",
@@ -22,9 +21,5 @@
   "faces": {
     "title": "Màn hình quay về phía họ. Không cần cài gì.",
     "subtitle": "Lời của bạn quay về phía họ. Không có app nào trên điện thoại của họ."
-  },
-  "free": {
-    "title": "5 phút miễn phí. Không cần đăng ký gói.",
-    "subtitle": "Chỉ mua thêm gói khi bạn cần nhiều hơn."
   }
 }

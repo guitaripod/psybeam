@@ -4,8 +4,7 @@
     "hero",
     "reply",
     "destination",
-    "faces",
-    "free"
+    "faces"
   ],
   "hero": {
     "title": "Snakk. De hører thai.",
@@ -22,9 +21,5 @@
   "faces": {
     "title": "Skjermen vender mot dem. Ingenting å installere.",
     "subtitle": "Ordene dine vender mot dem. Ingen app på telefonen deres."
-  },
-  "free": {
-    "title": "5 gratis minutter. Ingen abonnement.",
-    "subtitle": "Kjøp en pakke først når du trenger mer."
   }
 }

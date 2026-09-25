@@ -4,8 +4,7 @@
     "hero",
     "reply",
     "destination",
-    "faces",
-    "free"
+    "faces"
   ],
   "hero": {
     "title": "Parlez. Ils entendent l'espagnol.",
@@ -22,9 +21,5 @@
   "faces": {
     "title": "Elle se tourne vers eux. Rien à installer.",
     "subtitle": "Vos mots se tournent vers eux. Aucune app sur leur téléphone."
-  },
-  "free": {
-    "title": "5 minutes gratuites. Sans abonnement.",
-    "subtitle": "Achetez un forfait seulement quand vous en avez besoin."
   }
 }

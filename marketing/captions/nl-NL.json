@@ -4,8 +4,7 @@
     "hero",
     "reply",
     "destination",
-    "faces",
-    "free"
+    "faces"
   ],
   "hero": {
     "title": "Spreek. Zij horen Frans.",
@@ -22,9 +21,5 @@
   "faces": {
     "title": "Het scherm draait naar hen toe. Niets te installeren.",
     "subtitle": "Jouw woorden draaien naar hen toe. Geen app op hun telefoon."
-  },
-  "free": {
-    "title": "5 gratis minuten. Geen abonnement.",
-    "subtitle": "Koop een pakket pas als je meer nodig hebt."
   }
 }

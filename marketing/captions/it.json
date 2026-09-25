@@ -4,8 +4,7 @@
     "hero",
     "reply",
     "destination",
-    "faces",
-    "free"
+    "faces"
   ],
   "hero": {
     "title": "Parla. Sentiranno l'inglese.",
@@ -22,9 +21,5 @@
   "faces": {
     "title": "Si gira verso di loro. Niente da installare.",
     "subtitle": "Le tue parole si girano verso di loro. Nessuna app sul loro telefono."
-  },
-  "free": {
-    "title": "5 minuti gratis. Nessun abbonamento.",
-    "subtitle": "Compra un pacchetto solo quando ne hai bisogno."
   }
 }

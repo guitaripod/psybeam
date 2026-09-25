@@ -4,8 +4,7 @@
     "hero",
     "reply",
     "destination",
-    "faces",
-    "free"
+    "faces"
   ],
   "hero": {
     "title": "Tal. De hører spansk.",
@@ -22,9 +21,5 @@
   "faces": {
     "title": "Den vender mod dem. Intet at installere.",
     "subtitle": "Dine ord vender mod dem. Ingen app på deres telefon."
-  },
-  "free": {
-    "title": "5 gratis minutter. Intet abonnement.",
-    "subtitle": "Køb en pakke, først når du har brug for mere."
   }
 }

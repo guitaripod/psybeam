@@ -4,8 +4,7 @@
     "hero",
     "reply",
     "destination",
-    "faces",
-    "free"
+    "faces"
   ],
   "hero": {
     "title": "Fale. Vão ouvir espanhol.",
@@ -22,9 +21,5 @@
   "faces": {
     "title": "O ecrã volta-se para eles. Nada para instalar.",
     "subtitle": "As suas palavras voltam-se para eles. Nenhuma app no telefone deles."
-  },
-  "free": {
-    "title": "5 minutos grátis. Sem subscrição.",
-    "subtitle": "Compre um pacote só quando precisar de mais."
   }
 }

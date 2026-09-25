@@ -4,8 +4,7 @@
     "hero",
     "reply",
     "destination",
-    "faces",
-    "free"
+    "faces"
   ],
   "hero": {
     "title": "Speak. They hear Spanish.",
@@ -22,9 +21,5 @@
   "faces": {
     "title": "It faces them. Nothing to install.",
     "subtitle": "Your words turn to face them. No app on their phone."
-  },
-  "free": {
-    "title": "5 free minutes. No subscription.",
-    "subtitle": "Buy a pack only when you need more."
   }
 }

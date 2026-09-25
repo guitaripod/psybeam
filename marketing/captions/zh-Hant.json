@@ -4,8 +4,7 @@
     "hero",
     "reply",
     "destination",
-    "faces",
-    "free"
+    "faces"
   ],
   "hero": {
     "title": "開口說，對方聽到日語。",
@@ -22,9 +21,5 @@
   "faces": {
     "title": "螢幕會轉向對方。不用裝App。",
     "subtitle": "你的話會轉向對方朗讀。對方手機上不用裝應用程式。"
-  },
-  "free": {
-    "title": "免費5分鐘。免訂閱。",
-    "subtitle": "只有需要更多時才購買分鐘包。"
   }
 }

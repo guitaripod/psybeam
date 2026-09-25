@@ -4,8 +4,7 @@
     "hero",
     "reply",
     "destination",
-    "faces",
-    "free"
+    "faces"
   ],
   "hero": {
     "title": "Prata. De hör thailändska.",
@@ -22,9 +21,5 @@
   "faces": {
     "title": "Skärmen vänds mot dem. Inget att installera.",
     "subtitle": "Dina ord vänds mot dem. Ingen app på deras telefon."
-  },
-  "free": {
-    "title": "5 gratis minuter. Ingen prenumeration.",
-    "subtitle": "Köp ett paket bara när du behöver mer."
   }
 }

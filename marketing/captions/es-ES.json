@@ -4,8 +4,7 @@
     "hero",
     "reply",
     "destination",
-    "faces",
-    "free"
+    "faces"
   ],
   "hero": {
     "title": "Habla. Oirán inglés.",
@@ -22,9 +21,5 @@
   "faces": {
     "title": "Se gira hacia ellos. Nada que instalar.",
     "subtitle": "Tus palabras se giran hacia ellos. Sin apps en su teléfono."
-  },
-  "free": {
-    "title": "5 minutos gratis. Sin suscripción.",
-    "subtitle": "Compra un paquete solo cuando necesites más."
   }
 }

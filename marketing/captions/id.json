@@ -4,8 +4,7 @@
     "hero",
     "reply",
     "destination",
-    "faces",
-    "free"
+    "faces"
   ],
   "hero": {
     "title": "Bicara. Mereka dengar bahasa Jepang.",
@@ -22,9 +21,5 @@
   "faces": {
     "title": "Layarnya menghadap mereka. Tak perlu instal apa pun.",
     "subtitle": "Kata-katamu berputar menghadap mereka. Tak ada aplikasi di ponsel mereka."
-  },
-  "free": {
-    "title": "5 menit gratis. Tanpa berlangganan.",
-    "subtitle": "Beli paket hanya saat butuh lebih."
   }
 }

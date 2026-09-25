@@ -4,8 +4,7 @@
     "hero",
     "reply",
     "destination",
-    "faces",
-    "free"
+    "faces"
   ],
   "hero": {
     "title": "Fale. Eles ouvirão inglês.",
@@ -22,9 +21,5 @@
   "faces": {
     "title": "A tela se vira para eles. Nada para instalar.",
     "subtitle": "Suas palavras se voltam para eles. Nenhum app no telefone deles."
-  },
-  "free": {
-    "title": "5 minutos grátis. Sem assinatura.",
-    "subtitle": "Compre um pacote só quando precisar de mais."
   }
 }

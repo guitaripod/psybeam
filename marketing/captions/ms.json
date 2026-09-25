@@ -4,8 +4,7 @@
     "hero",
     "reply",
     "destination",
-    "faces",
-    "free"
+    "faces"
   ],
   "hero": {
     "title": "Bercakap. Mereka dengar Jepun.",
@@ -22,9 +21,5 @@
   "faces": {
     "title": "Skrin menghadap mereka. Tiada apa untuk dipasang.",
     "subtitle": "Kata-kata anda berpusing menghadap mereka. Tiada apl pada telefon mereka."
-  },
-  "free": {
-    "title": "5 minit percuma. Tiada langganan.",
-    "subtitle": "Beli pek hanya apabila anda perlukan lebih."
   }
 }

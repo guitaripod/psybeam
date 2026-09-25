@@ -4,8 +4,7 @@
     "hero",
     "reply",
     "destination",
-    "faces",
-    "free"
+    "faces"
   ],
   "hero": {
     "title": "Mluvte. Uslyší italštinu.",
@@ -22,9 +21,5 @@
   "faces": {
     "title": "Otočí se k nim. Nic k instalaci.",
     "subtitle": "Vaše slova se otočí k nim. Na jejich telefonu žádná aplikace."
-  },
-  "free": {
-    "title": "5 minut zdarma. Žádné předplatné.",
-    "subtitle": "Balíček kupte, až budete potřebovat víc."
   }
 }

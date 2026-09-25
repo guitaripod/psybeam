@@ -4,8 +4,7 @@
     "hero",
     "reply",
     "destination",
-    "faces",
-    "free"
+    "faces"
   ],
   "hero": {
     "title": "Sprechen. Sie hören Italienisch.",
@@ -22,9 +21,5 @@
   "faces": {
     "title": "Sie wendet sich ihnen zu. Nichts zu installieren.",
     "subtitle": "Ihre Worte drehen sich zu ihnen. Keine App auf ihrem Handy."
-  },
-  "free": {
-    "title": "5 Freiminuten. Kein Abo.",
-    "subtitle": "Kaufen Sie ein Paket erst, wenn Sie mehr brauchen."
   }
 }

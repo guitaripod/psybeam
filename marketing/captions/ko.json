@@ -4,8 +4,7 @@
     "hero",
     "reply",
     "destination",
-    "faces",
-    "free"
+    "faces"
   ],
   "hero": {
     "title": "말하면, 일본어로 들려요.",
@@ -22,9 +21,5 @@
   "faces": {
     "title": "화면이 상대를 향해요. 설치할 필요 없어요.",
     "subtitle": "당신의 말이 상대를 향해 돌아가요. 상대 폰엔 앱이 필요 없어요."
-  },
-  "free": {
-    "title": "무료 5분. 구독 없음.",
-    "subtitle": "더 필요할 때만 패키지를 구매하세요."
   }
 }
