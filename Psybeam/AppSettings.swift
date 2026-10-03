@@ -16,6 +16,7 @@ enum AppSettings {
         static let travelerLanguage = "psybeam.travelerLanguage"
         static let localLanguage = "psybeam.localLanguage"
         static let autoDetectLocation = "psybeam.autoDetectLocation"
+        static let locationOffered = "psybeam.locationOffered"
         static let keepScreenBright = "psybeam.keepScreenBright"
         static let turnChime = "psybeam.turnChime"
         static let appearance = "psybeam.appearance"
@@ -115,6 +116,13 @@ enum AppSettings {
     static var autoDetectLocation: Bool {
         get { (defaults.object(forKey: Key.autoDetectLocation) as? Bool) ?? true }
         set { defaults.set(newValue, forKey: Key.autoDetectLocation) }
+    }
+
+    /// Whether the one-time offer to suggest their language by location has
+    /// been shown, whatever the answer.
+    static var locationOffered: Bool {
+        get { defaults.bool(forKey: Key.locationOffered) }
+        set { defaults.set(newValue, forKey: Key.locationOffered) }
     }
 
     static var keepScreenBright: Bool {

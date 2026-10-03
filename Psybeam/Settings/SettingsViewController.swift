@@ -9,6 +9,7 @@ import AICreditsUI
 final class SettingsViewController: UIViewController {
     private let viewModel: ConversationViewModel
     private let onBrightnessChanged: () -> Void
+    private let onAutoDetectEnabled: () -> Void
     var onDismiss: (() -> Void)?
 
     private let gradient = CAGradientLayer()
@@ -26,10 +27,12 @@ final class SettingsViewController: UIViewController {
 
     init(
         viewModel: ConversationViewModel,
-        onBrightnessChanged: @escaping () -> Void
+        onBrightnessChanged: @escaping () -> Void,
+        onAutoDetectEnabled: @escaping () -> Void
     ) {
         self.viewModel = viewModel
         self.onBrightnessChanged = onBrightnessChanged
+        self.onAutoDetectEnabled = onAutoDetectEnabled
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -474,7 +477,11 @@ final class SettingsViewController: UIViewController {
         AVCaptureDevice.showSystemUserInterface(.microphoneModes)
     }
 
-    @objc private func autoChanged(_ sender: UISwitch) { impact.impactOccurred(); AppSettings.autoDetectLocation = sender.isOn }
+    @objc private func autoChanged(_ sender: UISwitch) {
+        impact.impactOccurred()
+        AppSettings.autoDetectLocation = sender.isOn
+        if sender.isOn { onAutoDetectEnabled() }
+    }
     @objc private func brightChanged(_ sender: UISwitch) { impact.impactOccurred(); AppSettings.keepScreenBright = sender.isOn; onBrightnessChanged() }
     @objc private func chimeChanged(_ sender: UISwitch) { impact.impactOccurred(); AppSettings.turnChime = sender.isOn }
 

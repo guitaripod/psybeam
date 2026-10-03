@@ -361,7 +361,8 @@ final class ConversationViewController: UIViewController {
     private func startSession() {
         sessionStarted = true
         micDenied = AVAudioApplication.shared.recordPermission == .denied
-        location.start()
+        location.startIfAuthorized()
+        if !location.isAuthorized { viewModel.stopWaitingForLocation() }
         viewModel.start()
         warmUpIfMicGranted()
         refreshBalance()
@@ -785,7 +786,7 @@ final class ConversationViewController: UIViewController {
             gearGlass.heightAnchor.constraint(equalToConstant: 46),
 
             languageBarHost.centerYAnchor.constraint(equalTo: gearGlass.centerYAnchor),
-            languageBarHost.centerXAnchor.constraint(equalTo: convoRoot.centerXAnchor),
+            languageBarCentering(),
             languageBarHost.leadingAnchor.constraint(greaterThanOrEqualTo: gearGlass.trailingAnchor, constant: 8),
             languageBarHost.trailingAnchor.constraint(lessThanOrEqualTo: convoRoot.trailingAnchor, constant: -20),
             languageBarHost.heightAnchor.constraint(equalToConstant: 42),
@@ -802,6 +803,15 @@ final class ConversationViewController: UIViewController {
         let center = translatedLabel.centerYAnchor.constraint(equalTo: convoRoot.centerYAnchor, constant: -40)
         center.priority = .defaultHigh - 1
         return [center, coachLabel.topAnchor.constraint(greaterThanOrEqualTo: sourceLabel.bottomAnchor, constant: 12)]
+    }
+
+    /// Centred when it fits, but free to slide right: centred, the room left of
+    /// it ends at the gear, which on a 375pt screen is too narrow for two long
+    /// language names and made them wrap.
+    private func languageBarCentering() -> NSLayoutConstraint {
+        let centering = languageBarHost.centerXAnchor.constraint(equalTo: convoRoot.centerXAnchor)
+        centering.priority = .defaultHigh
+        return centering
     }
 
     /// A flat translucent pill, deliberately NOT a glass effect view: live glass
@@ -1056,8 +1066,10 @@ final class ConversationViewController: UIViewController {
         notify.prepare()
         if !isDemo { ReviewPrompt.recordSuccess(in: view.window?.windowScene) }
         pendingTurns.remove(speaker)
+        let before = firstRun
         setFirstRun(firstRun.after(turnBy: speaker))
         refreshCoach()
+        if before != .done, firstRun == .done { scheduleLocationOffer() }
         let base = translatedLabel.transform
         UIView.animate(withDuration: 0.14, animations: {
             self.translatedLabel.transform = base.scaledBy(x: 1.035, y: 1.035)
@@ -1066,6 +1078,28 @@ final class ConversationViewController: UIViewController {
                 self.translatedLabel.transform = base
             }
         })
+    }
+
+    /// Finishing the walkthrough is the first time the destination matters
+    /// beyond the practice, so it is when Psybeam says what location is for
+    /// and offers to use it, once. Settings' auto-detect switch is the way back.
+    private func scheduleLocationOffer() {
+        guard !isDemo, !AppSettings.locationOffered, AppSettings.autoDetectLocation, location.isUndetermined else { return }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in self?.presentLocationOffer() }
+    }
+
+    private func presentLocationOffer() {
+        guard presentedViewController == nil, heldSide == nil, location.isUndetermined else { return }
+        AppSettings.locationOffered = true
+        let alert = UIAlertController(
+            title: nil,
+            message: String(localized: "Psybeam can pick their language from where you are. Tap Allow when iOS asks."),
+            preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: String(localized: "Not now"), style: .cancel))
+        alert.addAction(UIAlertAction(title: String(localized: "Use my location"), style: .default) { [weak self] _ in
+            self?.location.requestAuthorization()
+        })
+        present(alert, animated: true)
     }
 
     private func configureGearButton() {
@@ -1102,7 +1136,8 @@ final class ConversationViewController: UIViewController {
         visualizer.setPaused(true)
         let settings = SettingsViewController(
             viewModel: viewModel,
-            onBrightnessChanged: { [weak self] in self?.applyMaxBrightness() }
+            onBrightnessChanged: { [weak self] in self?.applyMaxBrightness() },
+            onAutoDetectEnabled: { [weak self] in self?.location.requestAuthorization() }
         )
         let pairBeforeSettings = viewModel.pair
         settings.onDismiss = { [weak self] in
@@ -1290,6 +1325,9 @@ extension ConversationViewController: DemoStage {
     }
 
     private func startDebugPressIfNeeded() {
+        if LaunchOverrides.current.locationOffer {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in self?.presentLocationOffer() }
+        }
         guard let side = LaunchOverrides.current.press else { return }
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) { [weak self] in _ = self?.pressBegan(side) }
     }

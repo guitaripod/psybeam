@@ -125,6 +125,11 @@ final class ConversationViewModel {
     }
     #endif
 
+    /// Without location access no fix is coming, so warm-up must not wait for one.
+    func stopWaitingForLocation() {
+        languageResolved = true
+    }
+
     /// A GPS fix counts toward settling the language even when it is ignored
     /// for resolving to your own language: being at home is a real answer, and
     /// warm-up should stop waiting for one.

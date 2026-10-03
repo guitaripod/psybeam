@@ -7527,6 +7527,142 @@
         }
       }
     },
+    "Psybeam can pick their language from where you are. Tap Allow when iOS asks." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam kann ihre Sprache anhand deines Standorts wählen. Tippe auf „Erlauben“, wenn iOS fragt."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam peut choisir leur langue d’après l’endroit où vous êtes. Touchez « Autoriser » quand iOS vous le demande."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam puede elegir su idioma según dónde estés. Toca «Permitir» cuando iOS te lo pida."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam può scegliere la loro lingua in base a dove ti trovi. Tocca “Consenti” quando iOS lo chiede."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeamは現在地から相手の言語を選べます。iOSで確認が表示されたら「許可」をタップしてください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam이 현재 위치를 바탕으로 상대방의 언어를 골라 줄 수 있습니다. iOS에서 묻는 창이 뜨면 ‘허용’을 탭하세요."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Psybeam pode escolher o idioma deles de acordo com o lugar onde você está. Toque em “Permitir” quando o iOS perguntar."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam 可以根据你所在的位置选择对方的语言。iOS 询问时请点按“允许”。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam 可以根據你所在的位置選擇對方的語言。iOS 詢問時請點一下「允許」。"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يمكن لـ Psybeam اختيار لغتهم بحسب مكانك. اضغط على «سماح» عندما يسألك iOS."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam может выбрать их язык по вашему местоположению. Нажмите «Разрешить», когда iOS спросит."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam, bulunduğunuz yere göre onların dilini seçebilir. iOS sorduğunda “İzin Ver”e dokunun."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam เลือกภาษาของอีกฝ่ายตามที่ที่คุณอยู่ได้ แตะ “อนุญาต” เมื่อ iOS ถาม"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam có thể chọn ngôn ngữ của họ theo nơi bạn đang ở. Chạm “Cho phép” khi iOS hỏi."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam dapat memilih bahasa mereka berdasarkan lokasi Anda. Ketuk “Izinkan” saat iOS bertanya."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam kan hun taal kiezen op basis van waar je bent. Tik op “Sta toe” als iOS ernaar vraagt."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam może wybrać ich język na podstawie Twojej lokalizacji. Stuknij „Zezwól”, gdy iOS zapyta."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam आपकी लोकेशन के आधार पर उनकी भाषा चुन सकता है। iOS के पूछने पर “अनुमति दें” पर टैप करें।"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam יכול לבחור את השפה שלהם לפי המקום שבו אתם נמצאים. הקישו על “אפשר” כש-iOS ישאל."
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Το Psybeam μπορεί να επιλέξει τη γλώσσα τους από το σημείο όπου βρίσκεστε. Πατήστε «Να επιτραπεί» όταν το ζητήσει το iOS."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam voi valita heidän kielensä sijaintisi mukaan. Napauta “Salli”, kun iOS kysyy."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam kan välja deras språk utifrån var du är. Tryck på “Tillåt” när iOS frågar."
+          }
+        }
+      }
+    },
     "Psybeam needs your OK to send speech to its cloud translator." : {
       "localizations" : {
         "de" : {
@@ -9563,6 +9699,142 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Översättning av OpenAI"
+          }
+        }
+      }
+    },
+    "Use my location" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meinen Standort verwenden"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utiliser ma position"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usar mi ubicación"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usa la mia posizione"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "位置情報を使う"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "내 위치 사용"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usar minha localização"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "使用我的位置"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "使用我的位置"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "استخدام موقعي"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Использовать мою геопозицию"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konumumu Kullan"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ใช้ตำแหน่งของฉัน"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dùng vị trí của tôi"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gunakan lokasi saya"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mijn locatie gebruiken"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Użyj mojej lokalizacji"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "मेरी लोकेशन इस्तेमाल करें"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "שימוש במיקום שלי"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Χρήση της τοποθεσίας μου"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Käytä sijaintiani"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Använd min plats"
           }
         }
       }

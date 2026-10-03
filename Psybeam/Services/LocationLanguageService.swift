@@ -15,16 +15,25 @@ final class LocationLanguageService: NSObject {
         manager.delegate = self
     }
 
-    func start() {
+    var isAuthorized: Bool {
+        manager.authorizationStatus == .authorizedWhenInUse || manager.authorizationStatus == .authorizedAlways
+    }
+
+    var isUndetermined: Bool {
+        manager.authorizationStatus == .notDetermined
+    }
+
+    /// Never prompts: a launch only takes a fix when the user already allowed
+    /// location. The prompt comes from `requestAuthorization()`, from something
+    /// the user just did.
+    func startIfAuthorized() {
         AppLogger.shared.info("location start status=\(manager.authorizationStatus.rawValue)", category: .location)
-        switch manager.authorizationStatus {
-        case .notDetermined:
-            manager.requestWhenInUseAuthorization()
-        case .authorizedWhenInUse, .authorizedAlways:
-            manager.requestLocation()
-        default:
-            break
-        }
+        if isAuthorized { manager.requestLocation() }
+    }
+
+    func requestAuthorization() {
+        AppLogger.shared.info("location authorization requested status=\(manager.authorizationStatus.rawValue)", category: .location)
+        if isUndetermined { manager.requestWhenInUseAuthorization() } else { startIfAuthorized() }
     }
 
     private func resolve(latitude: Double, longitude: Double) async {
