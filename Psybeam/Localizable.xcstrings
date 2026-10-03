@@ -137,6 +137,460 @@
         }
       }
     },
+    "%lld minutes left. Tap to top up." : {
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld minute left. Tap to top up."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld minutes left. Tap to top up."
+                }
+              }
+            }
+          }
+        },
+        "de" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Noch %lld Minute. Tippe zum Aufladen."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Noch %lld Minuten. Tippe zum Aufladen."
+                }
+              }
+            }
+          }
+        },
+        "fr" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Il reste %lld minute. Touchez pour en ajouter."
+                }
+              },
+              "many" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Il reste %lld de minutes. Touchez pour en ajouter."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Il reste %lld minutes. Touchez pour en ajouter."
+                }
+              }
+            }
+          }
+        },
+        "es" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Queda %lld minuto. Toca para recargar."
+                }
+              },
+              "many" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Quedan %lld de minutos. Toca para recargar."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Quedan %lld minutos. Toca para recargar."
+                }
+              }
+            }
+          }
+        },
+        "it" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Resta %lld minuto. Tocca per ricaricare."
+                }
+              },
+              "many" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Restano %lld di minuti. Tocca per ricaricare."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Restano %lld minuti. Tocca per ricaricare."
+                }
+              }
+            }
+          }
+        },
+        "ja" : {
+          "variations" : {
+            "plural" : {
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "残り%lld分。タップして追加できます。"
+                }
+              }
+            }
+          }
+        },
+        "ko" : {
+          "variations" : {
+            "plural" : {
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld분 남았습니다. 탭하여 충전하세요."
+                }
+              }
+            }
+          }
+        },
+        "pt-BR" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Resta %lld minuto. Toque para recarregar."
+                }
+              },
+              "many" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Restam %lld de minutos. Toque para recarregar."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Restam %lld minutos. Toque para recarregar."
+                }
+              }
+            }
+          }
+        },
+        "zh-Hans" : {
+          "variations" : {
+            "plural" : {
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "剩余 %lld 分钟。点按即可充值。"
+                }
+              }
+            }
+          }
+        },
+        "zh-Hant" : {
+          "variations" : {
+            "plural" : {
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "剩餘 %lld 分鐘。點一下即可儲值。"
+                }
+              }
+            }
+          }
+        },
+        "ar" : {
+          "variations" : {
+            "plural" : {
+              "zero" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "تبقّت %lld دقيقة. اضغط للشحن."
+                }
+              },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "تبقّت دقيقة واحدة. اضغط للشحن."
+                }
+              },
+              "two" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "تبقّت دقيقتان. اضغط للشحن."
+                }
+              },
+              "few" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "تبقّت %lld دقائق. اضغط للشحن."
+                }
+              },
+              "many" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "تبقّت %lld دقيقة. اضغط للشحن."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "تبقّت %lld دقيقة. اضغط للشحن."
+                }
+              }
+            }
+          }
+        },
+        "ru" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Осталась %lld минута. Нажмите, чтобы пополнить."
+                }
+              },
+              "few" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Осталось %lld минуты. Нажмите, чтобы пополнить."
+                }
+              },
+              "many" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Осталось %lld минут. Нажмите, чтобы пополнить."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Осталось %lld минуты. Нажмите, чтобы пополнить."
+                }
+              }
+            }
+          }
+        },
+        "tr" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld dakika kaldı. Yüklemek için dokunun."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld dakika kaldı. Yüklemek için dokunun."
+                }
+              }
+            }
+          }
+        },
+        "th" : {
+          "variations" : {
+            "plural" : {
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "เหลือ %lld นาที แตะเพื่อเติมเวลา"
+                }
+              }
+            }
+          }
+        },
+        "vi" : {
+          "variations" : {
+            "plural" : {
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Còn %lld phút. Chạm để nạp thêm."
+                }
+              }
+            }
+          }
+        },
+        "id" : {
+          "variations" : {
+            "plural" : {
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Sisa %lld menit. Ketuk untuk menambah."
+                }
+              }
+            }
+          }
+        },
+        "nl" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Nog %lld minuut. Tik om bij te vullen."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Nog %lld minuten. Tik om bij te vullen."
+                }
+              }
+            }
+          }
+        },
+        "pl" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Została %lld minuta. Dotknij, aby doładować."
+                }
+              },
+              "few" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Zostały %lld minuty. Dotknij, aby doładować."
+                }
+              },
+              "many" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Zostało %lld minut. Dotknij, aby doładować."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Zostało %lld minuty. Dotknij, aby doładować."
+                }
+              }
+            }
+          }
+        },
+        "hi" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld मिनट शेष। टॉप अप करने के लिए टैप करें।"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld मिनट शेष। टॉप अप करने के लिए टैप करें।"
+                }
+              }
+            }
+          }
+        },
+        "he" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "נותרה דקה אחת. הקישו כדי להוסיף."
+                }
+              },
+              "two" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "נותרו שתי דקות. הקישו כדי להוסיף."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "נותרו %lld דקות. הקישו כדי להוסיף."
+                }
+              }
+            }
+          }
+        },
+        "el" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Απομένει %lld λεπτό. Πατήστε για αναπλήρωση."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Απομένουν %lld λεπτά. Πατήστε για αναπλήρωση."
+                }
+              }
+            }
+          }
+        },
+        "fi" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld minuutti jäljellä. Lisää napauttamalla."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld minuuttia jäljellä. Lisää napauttamalla."
+                }
+              }
+            }
+          }
+        },
+        "sv" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld minut kvar. Tryck för att fylla på."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld minuter kvar. Tryck för att fylla på."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "Account" : {
       "localizations" : {
         "de" : {
@@ -4761,6 +5215,142 @@
         }
       }
     },
+    "Microphone access is off, so Psybeam can’t hear you. Turn it on in Settings to translate." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Mikrofonzugriff ist aus, daher kann Psybeam dich nicht hören. Aktiviere ihn in den Einstellungen, um zu übersetzen."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L’accès au micro est désactivé : Psybeam ne peut pas vous entendre. Activez-le dans Réglages pour traduire."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El acceso al micrófono está desactivado, así que Psybeam no puede oírte. Actívalo en Ajustes para traducir."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L’accesso al microfono è disattivato, quindi Psybeam non può sentirti. Attivalo in Impostazioni per tradurre."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "マイクへのアクセスがオフのため、Psybeamはあなたの声を聞き取れません。翻訳するには、設定でオンにしてください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "마이크 접근이 꺼져 있어 Psybeam이 목소리를 들을 수 없습니다. 번역하려면 설정에서 켜 주세요."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O acesso ao microfone está desativado, então o Psybeam não consegue ouvir você. Ative-o em Ajustes para traduzir."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "麦克风访问已关闭，Psybeam 听不到你说话。请在“设置”中开启后再翻译。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "麥克風存取已關閉，Psybeam 聽不到你說話。請在「設定」中開啟後再翻譯。"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الوصول إلى الميكروفون متوقف، لذا لا يستطيع Psybeam سماعك. فعّله من الإعدادات للترجمة."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Доступ к микрофону выключен, поэтому Psybeam не слышит вас. Включите его в настройках, чтобы переводить."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mikrofon erişimi kapalı, bu yüzden Psybeam sizi duyamıyor. Çeviri yapmak için Ayarlar’dan açın."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "การเข้าถึงไมโครโฟนปิดอยู่ Psybeam จึงไม่ได้ยินเสียงของคุณ เปิดในการตั้งค่าเพื่อแปล"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quyền truy cập micrô đang tắt nên Psybeam không nghe được bạn. Hãy bật trong Cài đặt để dịch."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Akses mikrofon dimatikan sehingga Psybeam tidak dapat mendengar Anda. Aktifkan di Pengaturan untuk menerjemahkan."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toegang tot de microfoon staat uit, dus Psybeam kan je niet horen. Zet het aan in Instellingen om te vertalen."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dostęp do mikrofonu jest wyłączony, więc Psybeam Cię nie słyszy. Włącz go w Ustawieniach, aby tłumaczyć."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "माइक्रोफ़ोन का एक्सेस बंद है, इसलिए Psybeam आपको सुन नहीं सकता। अनुवाद के लिए इसे सेटिंग्स में चालू करें।"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "הגישה למיקרופון כבויה, ולכן Psybeam לא יכול לשמוע אתכם. הפעילו אותה בהגדרות כדי לתרגם."
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Η πρόσβαση στο μικρόφωνο είναι απενεργοποιημένη, οπότε το Psybeam δεν μπορεί να σας ακούσει. Ενεργοποιήστε την στις Ρυθμίσεις για να μεταφράσετε."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mikrofonin käyttö on pois päältä, joten Psybeam ei kuule sinua. Ota se käyttöön Asetuksissa, jotta voit kääntää."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mikrofonåtkomsten är avstängd, så Psybeam kan inte höra dig. Slå på den i Inställningar för att översätta."
+          }
+        }
+      }
+    },
     "Minutes" : {
       "localizations" : {
         "de" : {
@@ -5441,6 +6031,142 @@
         }
       }
     },
+    "No connection. Translation needs the internet." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Verbindung. Zum Übersetzen wird Internet benötigt."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune connexion. La traduction nécessite Internet."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin conexión. Traducir requiere internet."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nessuna connessione. La traduzione richiede internet."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "接続がありません。翻訳にはインターネット接続が必要です。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "연결 없음. 번역하려면 인터넷이 필요합니다."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sem conexão. A tradução precisa de internet."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无网络连接。翻译需要联网。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "沒有網路連線。翻譯需要連上網際網路。"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لا يوجد اتصال. تحتاج الترجمة إلى الإنترنت."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Нет соединения. Для перевода нужен интернет."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bağlantı yok. Çeviri için internet gerekir."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ไม่มีการเชื่อมต่อ การแปลต้องใช้อินเทอร์เน็ต"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Không có kết nối. Dịch cần có internet."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tidak ada koneksi. Penerjemahan memerlukan internet."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geen verbinding. Vertalen vereist internet."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Brak połączenia. Tłumaczenie wymaga internetu."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "कोई कनेक्शन नहीं। अनुवाद के लिए इंटरनेट चाहिए।"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "אין חיבור. תרגום דורש אינטרנט."
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Δεν υπάρχει σύνδεση. Η μετάφραση χρειάζεται διαδίκτυο."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ei yhteyttä. Kääntäminen vaatii internetyhteyden."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ingen anslutning. Översättning kräver internet."
+          }
+        }
+      }
+    },
     "Not now" : {
       "localizations" : {
         "de" : {
@@ -5981,6 +6707,142 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "INGA MINUTER KVAR"
+          }
+        }
+      }
+    },
+    "Open Settings" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einstellungen öffnen"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvrir les Réglages"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abrir Ajustes"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apri Impostazioni"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "設定を開く"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "설정 열기"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abrir Ajustes"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打开设置"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打開設定"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "فتح الإعدادات"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Открыть настройки"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayarları Aç"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เปิดการตั้งค่า"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mở Cài đặt"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buka Pengaturan"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Instellingen"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otwórz Ustawienia"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "सेटिंग्स खोलें"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "פתיחת הגדרות"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Άνοιγμα Ρυθμίσεων"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Avaa Asetukset"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Öppna Inställningar"
           }
         }
       }
@@ -7885,142 +8747,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Byt språk"
-          }
-        }
-      }
-    },
-    "TAP TO ENABLE MIC" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "TIPPEN FÜR MIKROFON"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "TOCA PARA ACTIVAR EL MICRO"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "TOUCHEZ POUR ACTIVER LE MICRO"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "TOCCA PER ATTIVARE IL MICRO"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "タップしてマイクを許可"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "탭하여 마이크 허용"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "TOQUE PARA ATIVAR O MICROFONE"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "点按以开启麦克风"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "點一下以開啟麥克風"
-          }
-        },
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "اضغط لتفعيل الميكروفون"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "НАЖМИТЕ, ЧТОБЫ ВКЛЮЧИТЬ МИКРОФОН"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "MİKROFONU AÇMAK İÇİN DOKUNUN"
-          }
-        },
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "แตะเพื่อเปิดไมโครโฟน"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "CHẠM ĐỂ BẬT MICRÔ"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "KETUK UNTUK MENGAKTIFKAN MIK"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "TIK OM MICROFOON IN TE SCHAKELEN"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "DOTKNIJ, ABY WŁĄCZYĆ MIKROFON"
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "माइक चालू करने के लिए टैप करें"
-          }
-        },
-        "he" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "הקישו כדי להפעיל את המיקרופון"
-          }
-        },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ΠΑΤΗΣΤΕ ΓΙΑ ΕΝΕΡΓΟΠΟΙΗΣΗ ΜΙΚΡΟΦΩΝΟΥ"
-          }
-        },
-        "fi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "OTA MIKROFONI KÄYTTÖÖN NAPAUTTAMALLA"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "TRYCK FÖR ATT AKTIVERA MIKROFONEN"
           }
         }
       }
@@ -10061,6 +10787,278 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ljudet från ditt samtal skickas direkt till OpenAI för översättning och läses sedan upp — det passerar aldrig våra servrar. Se vår sekretesspolicy för hur OpenAI hanterar det. Ditt transkript stannar på den här enheten."
+          }
+        }
+      }
+    },
+    "Your first hold asks for the microphone. Tap Allow so Psybeam can hear you." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beim ersten Halten wird nach dem Mikrofon gefragt. Tippe auf „Erlauben“, damit Psybeam dich hören kann."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Votre premier appui demande l’accès au micro. Touchez « Autoriser » pour que Psybeam vous entende."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Al mantener pulsado por primera vez se pedirá el micrófono. Toca «Permitir» para que Psybeam pueda oírte."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La prima volta che tieni premuto, ti verrà chiesto il microfono. Tocca “Consenti” così Psybeam può sentirti."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最初に長押しすると、マイクの使用許可を求められます。Psybeamがあなたの声を聞き取れるよう「許可」をタップしてください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "처음 길게 누르면 마이크 접근을 요청합니다. Psybeam이 내 목소리를 들을 수 있도록 ‘허용’을 탭하세요."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No primeiro toque longo, o microfone será solicitado. Toque em “Permitir” para o Psybeam poder ouvir você."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "首次按住时会请求使用麦克风。请点按“允许”，Psybeam 才能听到你说话。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "第一次按住時會要求使用麥克風。請點一下「允許」，Psybeam 才能聽到你說話。"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "عند أول ضغطة مطوّلة سيُطلب منك استخدام الميكروفون. اضغط على «سماح» ليتمكّن Psybeam من سماعك."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "При первом нажатии с удержанием появится запрос на доступ к микрофону. Нажмите «Разрешить», чтобы Psybeam мог вас слышать."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İlk basılı tutuşunuzda mikrofon izni istenir. Psybeam sizi duyabilsin diye “İzin Ver”e dokunun."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เมื่อกดค้างครั้งแรก จะมีการขอใช้ไมโครโฟน แตะ “อนุญาต” เพื่อให้ Psybeam ได้ยินเสียงของคุณ"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lần nhấn giữ đầu tiên sẽ yêu cầu quyền dùng micrô. Chạm “Cho phép” để Psybeam nghe được bạn."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tahan pertama kali akan meminta akses mikrofon. Ketuk “Izinkan” agar Psybeam dapat mendengar Anda."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bij je eerste keer vasthouden wordt om de microfoon gevraagd. Tik op “Sta toe” zodat Psybeam je kan horen."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pierwsze przytrzymanie wyświetli prośbę o dostęp do mikrofonu. Stuknij „Zezwól”, aby Psybeam mógł Cię słyszeć."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "पहली बार दबाकर रखने पर माइक्रोफ़ोन की अनुमति मांगी जाएगी। “अनुमति दें” पर टैप करें ताकि Psybeam आपको सुन सके।"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "בלחיצה הממושכת הראשונה תתבקש גישה למיקרופון. הקישו על “אפשר” כדי ש-Psybeam יוכל לשמוע אתכם."
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Στο πρώτο παρατεταμένο πάτημα θα ζητηθεί πρόσβαση στο μικρόφωνο. Πατήστε «Να επιτραπεί» για να σας ακούει το Psybeam."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ensimmäinen pitkä painallus pyytää mikrofonin käyttöoikeutta. Napauta “Salli”, jotta Psybeam kuulee sinut."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Första gången du håller in knappen frågar iOS om mikrofonen. Tryck på “Tillåt” så att Psybeam kan höra dig."
+          }
+        }
+      }
+    },
+    "You’re out of minutes. Tap to buy more." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deine Minuten sind aufgebraucht. Tippe, um mehr zu kaufen."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vous n’avez plus de minutes. Touchez pour en acheter."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Te has quedado sin minutos. Toca para comprar más."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hai finito i minuti. Tocca per acquistarne altri."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "利用時間がなくなりました。タップして追加で購入できます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이용 시간이 모두 소진되었습니다. 탭하여 추가로 구매하세요."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seus minutos acabaram. Toque para comprar mais."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "时长已用完。点按即可购买更多。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "分鐘數已用完。點一下即可購買更多。"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "انتهت دقائقك. اضغط لشراء المزيد."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Минуты закончились. Нажмите, чтобы купить ещё."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dakikanız kalmadı. Daha fazlasını satın almak için dokunun."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เวลาใช้งานของคุณหมดแล้ว แตะเพื่อซื้อเพิ่ม"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bạn đã hết phút sử dụng. Chạm để mua thêm."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menit Anda habis. Ketuk untuk membeli lagi."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Je minuten zijn op. Tik om meer te kopen."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skończyły Ci się minuty. Dotknij, aby dokupić."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "आपके मिनट समाप्त हो गए हैं। और खरीदने के लिए टैप करें।"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "נגמרו לכם הדקות. הקישו כדי לרכוש עוד."
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Τα λεπτά σας εξαντλήθηκαν. Πατήστε για να αγοράσετε κι άλλα."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minuutit ovat loppu. Osta lisää napauttamalla."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dina minuter har tagit slut. Tryck för att köpa mer."
           }
         }
       }

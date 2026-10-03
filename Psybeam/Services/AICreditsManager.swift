@@ -6,8 +6,10 @@ import AICreditsUI
 final class AICreditsManager: Sendable {
     static let shared = AICreditsManager()
 
+    static let lowBalanceThreshold = 5
+
     @MainActor static let store = AICreditsStore(
-        client: AICreditsManager.shared.client, lowBalanceThreshold: 5)
+        client: AICreditsManager.shared.client, lowBalanceThreshold: lowBalanceThreshold)
 
     let client: AICreditsClient
     let baseURL = URL(string: "https://mako.midgarcorp.cc")!
@@ -15,7 +17,7 @@ final class AICreditsManager: Sendable {
     private let revenueCatPublicKey = "appl_MLWBSJBJGebbpfhFwNhhFDvvKfI"
 
     private init() {
-        let config = AICreditsConfig(baseURL: baseURL, appID: appID, lowBalanceThreshold: 5)
+        let config = AICreditsConfig(baseURL: baseURL, appID: appID, lowBalanceThreshold: Self.lowBalanceThreshold)
         client = AICreditsClient(
             config: config,
             purchaseProvider: RevenueCatPurchaseProvider(apiKey: revenueCatPublicKey))

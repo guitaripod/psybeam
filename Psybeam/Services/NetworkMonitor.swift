@@ -6,6 +6,7 @@ import Network
 /// failure that could have many causes.
 final class NetworkMonitor: @unchecked Sendable {
     static let shared = NetworkMonitor()
+    static let didChange = Notification.Name("com.guitaripod.psybeam.network.didChange")
 
     private let monitor = NWPathMonitor()
     private let queue = DispatchQueue(label: "com.guitaripod.psybeam.network")
@@ -22,9 +23,12 @@ final class NetworkMonitor: @unchecked Sendable {
     func start() {
         monitor.pathUpdateHandler = { [weak self] path in
             guard let self else { return }
+            let reachable = path.status == .satisfied
             self.lock.lock()
-            self.online = path.status == .satisfied
+            let changed = self.online != reachable
+            self.online = reachable
             self.lock.unlock()
+            if changed { NotificationCenter.default.post(name: Self.didChange, object: nil) }
         }
         monitor.start(queue: queue)
     }

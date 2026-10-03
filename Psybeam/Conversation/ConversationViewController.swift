@@ -24,6 +24,10 @@ final class ConversationViewController: UIViewController {
     /// pushes a caption up.
     private lazy var consentButtonClearance = consentButton.bottomAnchor.constraint(
         lessThanOrEqualTo: cloudBadge.topAnchor, constant: -12)
+    private let micSettingsButton = UIButton(type: .system)
+    private lazy var micSettingsButtonClearance = micSettingsButton.bottomAnchor.constraint(
+        lessThanOrEqualTo: cloudBadge.topAnchor, constant: -12)
+    private let noticeButton = UIButton(type: .system)
     private let cloudBadge = UILabel()
     private let gearGlass = UIVisualEffectView()
     private let gearIcon = UIImageView()
@@ -57,6 +61,8 @@ final class ConversationViewController: UIViewController {
     private var needsDestinationOnAppear = false
     private var sessionStarted = false
     private var micDenied = false
+    private var knownBalance: Int?
+    private var shownNotice: SessionNotice?
     private var displayedPair: LanguagePair
     private var firstRun = AppSettings.firstRunStage
     #if DEBUG
@@ -88,6 +94,7 @@ final class ConversationViewController: UIViewController {
         }
         #if DEBUG
         startDemoScriptIfNeeded()
+        startDebugPressIfNeeded()
         #endif
     }
 
@@ -242,7 +249,24 @@ final class ConversationViewController: UIViewController {
                 self.applyMaxBrightness()
                 self.primeHaptics()
                 self.recheckMicPermission()
-                if AppSettings.aiConsentGranted, self.sessionStarted { self.viewModel.warmUp() }
+                if AppSettings.aiConsentGranted, self.sessionStarted {
+                    self.warmUpIfMicGranted()
+                    self.refreshBalance()
+                }
+            }
+            .store(in: &cancellables)
+        NotificationCenter.default.publisher(for: NetworkMonitor.didChange)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in self?.connectivityChanged() }
+            .store(in: &cancellables)
+        AICreditsManager.store.$balance
+            .dropFirst()
+            .removeDuplicates()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] balance in
+                guard let self, self.knownBalance != nil else { return }
+                self.knownBalance = balance
+                self.refreshNotice()
             }
             .store(in: &cancellables)
     }
@@ -268,6 +292,8 @@ final class ConversationViewController: UIViewController {
         case .quotaExhausted:
             visualizer.apply(.error)
             setStatus(String(localized: "OUT OF MINUTES"), color: errorRed)
+            knownBalance = 0
+            refreshNotice()
             presentStoreIfPossible()
         case .offline:
             visualizer.apply(.error)
@@ -275,7 +301,8 @@ final class ConversationViewController: UIViewController {
         case .permissionDenied:
             visualizer.apply(.error)
             micDenied = true
-            setStatus(String(localized: "TAP TO ENABLE MIC"), color: errorRed)
+            setStatus("", color: .clear)
+            refreshResting()
         case .error(.unsupportedLanguage):
             visualizer.apply(.error)
             setStatus(String(localized: "LANGUAGE NOT SUPPORTED"), color: errorRed)
@@ -333,10 +360,100 @@ final class ConversationViewController: UIViewController {
 
     private func startSession() {
         sessionStarted = true
-        requestMicPermission()
+        micDenied = AVAudioApplication.shared.recordPermission == .denied
         location.start()
         viewModel.start()
+        warmUpIfMicGranted()
+        refreshBalance()
+        refreshNotice()
+        refreshResting()
+    }
+
+    /// Warming up opens the audio path, which on a first run would raise the
+    /// microphone prompt before the user has pressed anything. So the warm-up
+    /// waits until the permission is granted, whether that is already so or
+    /// the user's first hold has just granted it.
+    private func warmUpIfMicGranted() {
+        guard AVAudioApplication.shared.recordPermission == .granted else { return }
         viewModel.warmUp()
+    }
+
+    private var isOnline: Bool {
+        #if DEBUG
+        if LaunchOverrides.current.offline { return false }
+        #endif
+        return NetworkMonitor.shared.isOnline
+    }
+
+    private func connectivityChanged() {
+        if isOnline, knownBalance == nil, sessionStarted { refreshBalance() }
+        refreshNotice()
+    }
+
+    /// Reads the balance for the upfront notice. A failed read leaves the
+    /// balance unknown, which shows nothing: the hold still reports the truth.
+    private func refreshBalance() {
+        #if DEBUG
+        if let forced = LaunchOverrides.current.balance {
+            knownBalance = forced
+            refreshNotice()
+            return
+        }
+        #endif
+        Task {
+            do {
+                knownBalance = try await AICreditsManager.shared.client.balance().balance
+                refreshNotice()
+            } catch {
+                AppLogger.shared.warn("balance check failed: \(error)", category: .ui)
+            }
+        }
+    }
+
+    /// The upfront state of the session: offline, out of minutes, or running
+    /// low. Users with minutes and a connection see nothing at all.
+    private func refreshNotice() {
+        let notice = isDemo || !sessionStarted ? nil : SessionNotice.evaluate(
+            isOnline: isOnline, balance: knownBalance, lowThreshold: AICreditsManager.lowBalanceThreshold)
+        guard notice != shownNotice else { return }
+        shownNotice = notice
+        if let notice {
+            AppLogger.shared.info("session notice \(notice)", category: .ui)
+            configureNotice(notice)
+        }
+        UIView.animate(withDuration: 0.25) { self.noticeButton.alpha = notice == nil ? 0 : 1 }
+        noticeButton.isUserInteractionEnabled = notice?.offersStore ?? false
+        if let text = noticeButton.accessibilityLabel, notice != nil {
+            UIAccessibility.post(notification: .announcement, argument: text)
+        }
+    }
+
+    private func configureNotice(_ notice: SessionNotice) {
+        let (text, symbol, tint): (String, String, UIColor) = switch notice {
+        case .offline:
+            (String(localized: "No connection. Translation needs the internet."), "wifi.slash", amber)
+        case .outOfMinutes:
+            (String(localized: "You’re out of minutes. Tap to buy more."), "hourglass", errorRed)
+        case .lowMinutes(let minutes):
+            (String(localized: "\(minutes) minutes left. Tap to top up."), "hourglass.bottomhalf.filled", amber)
+        }
+        var config = UIButton.Configuration.plain()
+        config.image = UIImage(systemName: symbol, withConfiguration: UIImage.SymbolConfiguration(pointSize: 14, weight: .semibold))
+        config.imagePadding = 8
+        config.imageColorTransformer = UIConfigurationColorTransformer { _ in tint }
+        config.attributedTitle = AttributedString(text, attributes: AttributeContainer([
+            .font: UIFontMetrics(forTextStyle: .subheadline).scaledFont(for: .systemFont(ofSize: 14, weight: .semibold), maximumPointSize: 22),
+            .foregroundColor: UIColor.white,
+        ]))
+        config.titleAlignment = .leading
+        config.contentInsets = NSDirectionalEdgeInsets(top: 9, leading: 14, bottom: 9, trailing: 16)
+        config.background.backgroundColor = UIColor(white: 0.05, alpha: 0.72)
+        config.background.strokeColor = tint.withAlphaComponent(0.6)
+        config.background.strokeWidth = 1
+        config.background.cornerRadius = 18
+        noticeButton.configuration = config
+        noticeButton.accessibilityLabel = text
+        noticeButton.accessibilityTraits = notice.offersStore ? .button : .staticText
     }
 
     /// On a 402 from /start (out of credits) the leg surfaces `.quotaExhausted`;
@@ -462,11 +579,20 @@ final class ConversationViewController: UIViewController {
     /// (no consent), the first-run coach, or the idle hint. A translation on
     /// screen is left alone, and so is a turn in progress.
     private func refreshResting() {
+        let showsMicSettings = !needsConsent && micDenied
         consentButton.isHidden = !needsConsent
         consentButtonClearance.isActive = needsConsent
+        micSettingsButton.isHidden = !showsMicSettings
+        micSettingsButtonClearance.isActive = showsMicSettings
         refreshCoach()
         guard heldSide == nil else { return }
-        if needsConsent {
+        if showsMicSettings {
+            hasTranslation = false
+            sourceLabel.text = ""
+            let explanation = String(localized: "Microphone access is off, so Psybeam can’t hear you. Turn it on in Settings to translate.")
+            showResting(NSAttributedString(
+                string: explanation, attributes: restingAttributes(size: 28, alpha: 0.85, style: .title1, maximumScale: 1.15)))
+        } else if needsConsent {
             hasTranslation = false
             sourceLabel.text = ""
             let explanation = String(localized: "Psybeam needs your OK to send speech to its cloud translator.")
@@ -495,9 +621,26 @@ final class ConversationViewController: UIViewController {
         let beckoning = idle ? firstRun.beckoning : nil
         meButton.setBeckoning(beckoning == .traveler)
         themButton.setBeckoning(beckoning == .local)
-        let showsLine = idle && hasTranslation && firstRun == .holdTheirs
-        coachLabel.attributedText = showsLine ? coachText(for: firstRun, size: 17, style: .headline) : nil
-        UIView.animate(withDuration: 0.25) { self.coachLabel.alpha = showsLine ? 1 : 0 }
+        let line = idle ? coachLine() : nil
+        coachLabel.attributedText = line
+        UIView.animate(withDuration: 0.25) { self.coachLabel.alpha = line == nil ? 0 : 1 }
+    }
+
+    /// Above the buttons: why the first hold is about to ask for the
+    /// microphone, then, once the caption area holds a translation for them,
+    /// the walkthrough's next step.
+    private func coachLine() -> NSAttributedString? {
+        if showsMicrophoneReason {
+            return NSAttributedString(
+                string: String(localized: "Your first hold asks for the microphone. Tap Allow so Psybeam can hear you."),
+                attributes: restingAttributes(size: 17, alpha: 0.82, style: .headline))
+        }
+        guard hasTranslation, firstRun == .holdTheirs else { return nil }
+        return coachText(for: firstRun, size: 17, style: .headline)
+    }
+
+    private var showsMicrophoneReason: Bool {
+        !isDemo && sessionStarted && AVAudioApplication.shared.recordPermission == .undetermined
     }
 
     /// A coaching step's line, with each language in its button's colour. The
@@ -581,6 +724,8 @@ final class ConversationViewController: UIViewController {
         configureTalkButtons()
         configureCloudBadge()
         configureConsentButton()
+        configureMicSettingsButton()
+        configureNoticeButton()
         applyFlip(animated: false)
 
         let buttonRow = UIStackView(arrangedSubviews: [meButton, themButton])
@@ -589,7 +734,7 @@ final class ConversationViewController: UIViewController {
         buttonRow.spacing = 14
         buttonRow.translatesAutoresizingMaskIntoConstraints = false
 
-        [statusLabel, promptLabel, translatedLabel, sourceLabel, consentButton, coachLabel, buttonRow, gearGlass, languageBarHost, cloudBadge]
+        [statusLabel, promptLabel, translatedLabel, sourceLabel, consentButton, micSettingsButton, noticeButton, coachLabel, buttonRow, gearGlass, languageBarHost, cloudBadge]
             .forEach { convoRoot.addSubview($0) }
 
         NSLayoutConstraint.activate(captionPlacement() + [
@@ -607,6 +752,16 @@ final class ConversationViewController: UIViewController {
             consentButton.centerXAnchor.constraint(equalTo: convoRoot.centerXAnchor),
             consentButton.leadingAnchor.constraint(greaterThanOrEqualTo: convoRoot.leadingAnchor, constant: 28),
             consentButton.trailingAnchor.constraint(lessThanOrEqualTo: convoRoot.trailingAnchor, constant: -28),
+
+            micSettingsButton.topAnchor.constraint(equalTo: translatedLabel.bottomAnchor, constant: 28),
+            micSettingsButton.centerXAnchor.constraint(equalTo: convoRoot.centerXAnchor),
+            micSettingsButton.leadingAnchor.constraint(greaterThanOrEqualTo: convoRoot.leadingAnchor, constant: 28),
+            micSettingsButton.trailingAnchor.constraint(lessThanOrEqualTo: convoRoot.trailingAnchor, constant: -28),
+
+            noticeButton.topAnchor.constraint(equalTo: gearGlass.bottomAnchor, constant: 12),
+            noticeButton.centerXAnchor.constraint(equalTo: convoRoot.centerXAnchor),
+            noticeButton.leadingAnchor.constraint(greaterThanOrEqualTo: convoRoot.leadingAnchor, constant: 20),
+            noticeButton.trailingAnchor.constraint(lessThanOrEqualTo: convoRoot.trailingAnchor, constant: -20),
 
             promptLabel.centerYAnchor.constraint(equalTo: convoRoot.centerYAnchor, constant: -158),
             promptLabel.leadingAnchor.constraint(equalTo: convoRoot.leadingAnchor, constant: 28),
@@ -773,20 +928,38 @@ final class ConversationViewController: UIViewController {
     /// happens, and this reopens the consent sheet. Tapping anywhere on the
     /// screen, or holding a talk button, does the same.
     private func configureConsentButton() {
+        styleResolveButton(consentButton, title: String(localized: "Review consent"), symbol: "cloud.fill")
+        consentButton.addAction(UIAction { [weak self] _ in self?.presentConsent() }, for: .touchUpInside)
+    }
+
+    /// The way out of a denied microphone: the caption says why nothing
+    /// happens, and this opens the app's page in Settings.
+    private func configureMicSettingsButton() {
+        styleResolveButton(micSettingsButton, title: String(localized: "Open Settings"), symbol: "gearshape.fill")
+        micSettingsButton.addTarget(self, action: #selector(openAppSettings), for: .touchUpInside)
+    }
+
+    private func configureNoticeButton() {
+        noticeButton.translatesAutoresizingMaskIntoConstraints = false
+        noticeButton.alpha = 0
+        noticeButton.isUserInteractionEnabled = false
+        noticeButton.addAction(UIAction { [weak self] _ in self?.presentStoreIfPossible() }, for: .touchUpInside)
+    }
+
+    private func styleResolveButton(_ button: UIButton, title: String, symbol: String) {
         var config = UIButton.Configuration.filled()
         config.cornerStyle = .capsule
         config.baseBackgroundColor = brand
         config.baseForegroundColor = .white
-        config.image = UIImage(systemName: "cloud.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 15, weight: .semibold))
+        config.image = UIImage(systemName: symbol, withConfiguration: UIImage.SymbolConfiguration(pointSize: 15, weight: .semibold))
         config.imagePadding = 8
-        config.attributedTitle = AttributedString(String(localized: "Review consent"), attributes: AttributeContainer([
+        config.attributedTitle = AttributedString(title, attributes: AttributeContainer([
             .font: UIFontMetrics(forTextStyle: .headline).scaledFont(for: .systemFont(ofSize: 17, weight: .semibold), maximumPointSize: 26),
         ]))
         config.contentInsets = NSDirectionalEdgeInsets(top: 13, leading: 22, bottom: 13, trailing: 22)
-        consentButton.configuration = config
-        consentButton.translatesAutoresizingMaskIntoConstraints = false
-        consentButton.isHidden = true
-        consentButton.addAction(UIAction { [weak self] _ in self?.presentConsent() }, for: .touchUpInside)
+        button.configuration = config
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.isHidden = true
     }
 
     private func configureTalkButtons() {
@@ -816,16 +989,23 @@ final class ConversationViewController: UIViewController {
     }
 
     /// Returns whether the hold started. A press without consent re-presents
-    /// the consent sheet and one with the microphone denied shows how to fix
-    /// it; neither lights the button, since nothing is listening.
+    /// the consent sheet, the first press asks for the microphone, and one with
+    /// the microphone denied shows how to fix it; none of them lights the
+    /// button, since nothing is listening.
     private func pressBegan(_ speaker: Side) -> Bool {
         guard AppSettings.aiConsentGranted else {
             presentConsent()
             return false
         }
-        if AVAudioApplication.shared.recordPermission == .denied {
+        switch AVAudioApplication.shared.recordPermission {
+        case .denied:
             render(legState: .permissionDenied(.microphone), speaker: speaker)
             return false
+        case .undetermined:
+            requestMicPermission()
+            return false
+        default:
+            break
         }
         impact.impactOccurred()
         release.prepare()
@@ -981,30 +1161,44 @@ final class ConversationViewController: UIViewController {
         ])
     }
 
+    /// Asked from the user's own first hold, so the system dialog is the direct
+    /// result of what they just did and the coach line has already said why.
     private func requestMicPermission() {
         AVAudioApplication.requestRecordPermission { [weak self] granted in
-            guard !granted else { return }
-            Task { @MainActor in
-                self?.render(legState: .permissionDenied(.microphone), speaker: .traveler)
-            }
+            Task { @MainActor in self?.micPermissionAnswered(granted: granted) }
         }
     }
 
-    /// Opens the Settings app while mic access is denied, and the consent sheet
-    /// while consent is missing; otherwise taps are inert, so this never
-    /// competes with the hold-to-talk buttons during normal use.
-    @objc private func handleScreenTap() {
-        if micDenied, let url = URL(string: UIApplication.openSettingsURLString) {
-            UIApplication.shared.open(url)
-        } else if needsConsent {
-            presentConsent()
+    private func micPermissionAnswered(granted: Bool) {
+        AppLogger.shared.info("microphone permission \(granted ? "granted" : "denied")", category: .ui)
+        guard granted else {
+            render(legState: .permissionDenied(.microphone), speaker: .traveler)
+            return
         }
-    }
-
-    private func recheckMicPermission() {
-        guard micDenied, AVAudioApplication.shared.recordPermission == .granted else { return }
         micDenied = false
-        render(legState: .idle, speaker: .traveler)
+        refreshResting()
+        warmUpIfMicGranted()
+    }
+
+    /// Opens the consent sheet while consent is missing; otherwise taps are
+    /// inert, so this never competes with the hold-to-talk buttons.
+    @objc private func handleScreenTap() {
+        if needsConsent { presentConsent() }
+    }
+
+    @objc private func openAppSettings() {
+        guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
+        UIApplication.shared.open(url)
+    }
+
+    /// Back from Settings, the screen follows whatever the switch now says.
+    private func recheckMicPermission() {
+        guard sessionStarted else { return }
+        let denied = AVAudioApplication.shared.recordPermission == .denied
+        guard denied != micDenied else { return }
+        micDenied = denied
+        if !denied { render(legState: .idle, speaker: .traveler) }
+        refreshResting()
     }
 
     private static func speakPrompt(for code: String) -> String {
@@ -1093,6 +1287,11 @@ extension ConversationViewController: DemoStage {
         case "destination": presentDestinationPicker()
         default: break
         }
+    }
+
+    private func startDebugPressIfNeeded() {
+        guard let side = LaunchOverrides.current.press else { return }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) { [weak self] in _ = self?.pressBegan(side) }
     }
 
     private func startDemoScriptIfNeeded() {
