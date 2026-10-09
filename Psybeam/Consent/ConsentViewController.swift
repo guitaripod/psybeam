@@ -7,6 +7,7 @@ final class ConsentViewController: UIViewController {
     var onDecline: (() -> Void)?
 
     private let brand = UIColor(red: 0.30, green: 0.62, blue: 1.0, alpha: 1)
+    private static let readableWidth: CGFloat = 560
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
         traitCollection.userInterfaceStyle == .dark ? .lightContent : .darkContent
@@ -109,8 +110,8 @@ final class ConsentViewController: UIViewController {
 
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             scrollView.bottomAnchor.constraint(equalTo: buttons.topAnchor, constant: -12),
 
             content.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
@@ -123,12 +124,26 @@ final class ConsentViewController: UIViewController {
             stack.topAnchor.constraint(greaterThanOrEqualTo: content.topAnchor, constant: 16),
             stack.bottomAnchor.constraint(lessThanOrEqualTo: content.bottomAnchor, constant: -16),
             stack.centerYAnchor.constraint(equalTo: content.centerYAnchor),
-            stack.leadingAnchor.constraint(equalTo: content.leadingAnchor, constant: 32),
-            stack.trailingAnchor.constraint(equalTo: content.trailingAnchor, constant: -32),
+            stack.leadingAnchor.constraint(greaterThanOrEqualTo: content.leadingAnchor, constant: 32),
+            stack.trailingAnchor.constraint(lessThanOrEqualTo: content.trailingAnchor, constant: -32),
+            stack.widthAnchor.constraint(lessThanOrEqualToConstant: Self.readableWidth),
+            stack.centerXAnchor.constraint(equalTo: content.centerXAnchor),
+            preferredWidth(of: stack, within: content.widthAnchor, inset: 64),
 
-            buttons.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
-            buttons.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
+            buttons.leadingAnchor.constraint(greaterThanOrEqualTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 24),
+            buttons.trailingAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -24),
+            buttons.widthAnchor.constraint(lessThanOrEqualToConstant: Self.readableWidth),
+            buttons.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+            preferredWidth(of: buttons, within: view.safeAreaLayoutGuide.widthAnchor, inset: 48),
             buttons.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
         ])
+    }
+
+    /// Fills the container less its side margins until the readable width
+    /// caps it, so a narrow screen keeps its margins and a wide one a column.
+    private func preferredWidth(of view: UIView, within container: NSLayoutDimension, inset: CGFloat) -> NSLayoutConstraint {
+        let width = view.widthAnchor.constraint(equalTo: container, constant: -inset)
+        width.priority = .defaultHigh
+        return width
     }
 }

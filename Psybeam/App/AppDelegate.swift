@@ -1,7 +1,7 @@
 import UIKit
 
 enum OrientationCoordinator {
-    nonisolated(unsafe) static var mask: UIInterfaceOrientationMask = .portrait
+    nonisolated(unsafe) static var mask: UIInterfaceOrientationMask = .allButUpsideDown
 }
 
 @main

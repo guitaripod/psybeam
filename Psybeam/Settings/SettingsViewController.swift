@@ -115,11 +115,12 @@ final class SettingsViewController: UIViewController {
         view.addSubview(header)
         view.addSubview(scrollView)
         scrollView.addSubview(content)
+        let column = makeReadableColumn()
 
         NSLayoutConstraint.activate([
             header.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 12),
-            header.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            header.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            header.leadingAnchor.constraint(equalTo: column.leadingAnchor),
+            header.trailingAnchor.constraint(equalTo: column.trailingAnchor),
 
             scrollView.topAnchor.constraint(equalTo: header.bottomAnchor, constant: 10),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -128,8 +129,8 @@ final class SettingsViewController: UIViewController {
 
             content.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
             content.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor, constant: -40),
-            content.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            content.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            content.leadingAnchor.constraint(equalTo: column.leadingAnchor),
+            content.trailingAnchor.constraint(equalTo: column.trailingAnchor),
         ])
 
         configureLanguageButton(youButton)
@@ -208,6 +209,29 @@ final class SettingsViewController: UIViewController {
         content.addArrangedSubview(spacer(16))
         content.addArrangedSubview(footer)
     }
+
+    /// The 20 pt margins of a phone-width screen inside the safe area, held to
+    /// a readable width and centred on a wide sheet, so the cards neither run
+    /// under a vertical bar nor stretch across an inner display.
+    private func makeReadableColumn() -> UILayoutGuide {
+        let column = UILayoutGuide()
+        view.addLayoutGuide(column)
+        let margin = column.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20)
+        margin.priority = .defaultHigh
+        let trailingMargin = column.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20)
+        trailingMargin.priority = .defaultHigh
+        NSLayoutConstraint.activate([
+            margin,
+            trailingMargin,
+            column.leadingAnchor.constraint(greaterThanOrEqualTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
+            column.trailingAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+            column.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+            column.widthAnchor.constraint(lessThanOrEqualToConstant: Self.readableColumnWidth),
+        ])
+        return column
+    }
+
+    private static let readableColumnWidth: CGFloat = 600
 
     private func doneConfig() -> UIButton.Configuration {
         var config = UIButton.Configuration.gray()
