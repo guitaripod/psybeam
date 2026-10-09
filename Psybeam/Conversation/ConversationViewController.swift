@@ -872,7 +872,7 @@ final class ConversationViewController: UIViewController {
     /// language names and made them wrap.
     private func makeLanguageBarCenterX() -> NSLayoutConstraint {
         let centering = languageBarHost.centerXAnchor.constraint(equalTo: convoRoot.leftAnchor)
-        centering.priority = .defaultHigh
+        centering.priority = .defaultHigh - 1
         return centering
     }
 
@@ -962,6 +962,7 @@ final class ConversationViewController: UIViewController {
             config.imagePadding = 3
             config.contentInsets = NSDirectionalEdgeInsets(top: 6, leading: 10, bottom: 6, trailing: 10)
             button.configuration = config
+            button.setContentCompressionResistancePriority(.required, for: .horizontal)
         }
         youLangButton.tintColor = travelerAccent
         themLangButton.tintColor = localAccent
