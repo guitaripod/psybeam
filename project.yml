@@ -96,6 +96,7 @@ targets:
               - psybeam
               - com.guitaripod.psybeam
         UIRequiresFullScreen: true
+        CADisableMinimumFrameDurationOnPhone: true
         LSApplicationQueriesSchemes:
           - com.guitaripod.embr
           - com.guitaripod.helia
