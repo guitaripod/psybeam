@@ -46,7 +46,7 @@ packages:
     from: "1.5.4"
   MidgarKit:
     url: https://github.com/guitaripod/MidgarKit
-    from: "2.0.0"
+    branch: portal-3.0
 
 targets:
   Psybeam:
@@ -94,7 +94,25 @@ targets:
           - CFBundleURLName: com.guitaripod.psybeam
             CFBundleURLSchemes:
               - psybeam
+              - com.guitaripod.psybeam
         UIRequiresFullScreen: true
+        LSApplicationQueriesSchemes:
+          - com.guitaripod.embr
+          - com.guitaripod.helia
+          - com.guitaripod.payday
+          - com.guitaripod.pixie
+          - com.guitaripod.psybeam
+          - com.guitaripod.tailscode
+          - com.marcusziade.aotd
+          - com.marcusziade.doublekick
+          - com.marcusziade.dreameater
+          - com.marcusziade.inventory
+          - com.marcusziade.knowtheflag
+          - com.marcusziade.psywave
+          - com.marcusziade.sforesight
+          - com.marcusziade.solarbeam
+          - com.midgarcorp.flaccy
+          - com.midgarcorp.flaccy.mac
     entitlements:
       path: Psybeam/Psybeam.entitlements
       properties:

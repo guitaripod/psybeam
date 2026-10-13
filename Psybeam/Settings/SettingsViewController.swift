@@ -136,6 +136,8 @@ final class SettingsViewController: UIViewController {
         configureLanguageButton(youButton)
         configureLanguageButton(themButton)
 
+        addMidgarEntry()
+
         let languageCard = addSection(String(localized: "Languages"))
         languageCard.addArrangedSubview(row(icon: "person.fill", tint: brand, String(localized: "You speak"), control: youButton))
         languageCard.addArrangedSubview(divider())
@@ -195,9 +197,6 @@ final class SettingsViewController: UIViewController {
         moreCard.addArrangedSubview(divider())
         moreCard.addArrangedSubview(row(icon: "star.fill", tint: .systemYellow,
             control: linkButton(String(localized: "Rate Psybeam"), color: brand, #selector(ratePsybeam))))
-        moreCard.addArrangedSubview(divider())
-        moreCard.addArrangedSubview(row(icon: "square.stack.3d.up.fill", tint: brand,
-            control: linkButton(String(localized: "More Apps"), color: brand, #selector(openMoreApps))))
 
         let footer = UILabel()
         let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
@@ -240,6 +239,14 @@ final class SettingsViewController: UIViewController {
         config.attributedTitle = AttributedString(String(localized: "Done"), attributes: AttributeContainer([.font: UIFont.systemFont(ofSize: 16, weight: .semibold)]))
         config.contentInsets = NSDirectionalEdgeInsets(top: 7, leading: 16, bottom: 7, trailing: 16)
         return config
+    }
+
+    /// The Midgar portal doorway, the first thing in the stack because this screen opens with no upsell.
+    private func addMidgarEntry() {
+        let entry = MidgarEntryView()
+        entry.translatesAutoresizingMaskIntoConstraints = false
+        entry.heightAnchor.constraint(equalToConstant: MidgarEntryView.preferredHeight).isActive = true
+        content.addArrangedSubview(entry)
     }
 
     @discardableResult
@@ -528,11 +535,6 @@ final class SettingsViewController: UIViewController {
     @objc private func openPrivacyPolicy() {
         impact.impactOccurred()
         UIApplication.shared.open(Links.privacyPolicy)
-    }
-
-    @objc private func openMoreApps() {
-        impact.impactOccurred()
-        Midgar.present(from: self)
     }
 
     /// The share sheet gets the text and the URL as separate items so Messages and Mail render
