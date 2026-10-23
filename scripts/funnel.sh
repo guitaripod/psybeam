@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-readonly MAKO_DIR="$HOME/Dev/rust/mako"
+readonly MAKO_DIR="$(cd "$(dirname "$0")/../../../services/intelligence" && pwd)"
 readonly DB_NAME="openai-image-proxy"
 readonly APP_ID="psybeam"
 
