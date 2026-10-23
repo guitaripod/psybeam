@@ -1,7 +1,8 @@
 import UIKit
+import MidgarCore
 
 enum OrientationCoordinator {
-    nonisolated(unsafe) static var mask: UIInterfaceOrientationMask = .allButUpsideDown
+    static let mask: UIInterfaceOrientationMask = .allButUpsideDown
 }
 
 @main
@@ -17,10 +18,12 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
+        PsybeamMidgar.configureLogging()
         warmUpLaunchServicesReceiptPath()
         _ = DatabaseManager.shared
-        AppSettings.migrateLegacyReviewPromptStateIfNeeded()
-        AppLogger.shared.info("app launched", category: .app)
+        PsybeamMidgar.shared.start()
+        ReviewPrompt.beginSession()
+        MidgarLog.info("app launched", category: .app)
         return true
     }
 

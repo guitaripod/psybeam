@@ -4,6 +4,7 @@ import PsybeamKit
 import SwiftUI
 import UIKit
 import AICreditsUI
+import MidgarCore
 
 final class ConversationViewController: UIViewController {
     private let viewModel: ConversationViewModel
@@ -429,7 +430,7 @@ final class ConversationViewController: UIViewController {
                 knownBalance = try await AICreditsManager.shared.client.balance().balance
                 refreshNotice()
             } catch {
-                AppLogger.shared.warn("balance check failed: \(error)", category: .ui)
+                MidgarLog.notice("balance check failed: \(error)", category: .ui)
             }
         }
     }
@@ -442,7 +443,7 @@ final class ConversationViewController: UIViewController {
         guard notice != shownNotice else { return }
         shownNotice = notice
         if let notice {
-            AppLogger.shared.info("session notice \(notice)", category: .ui)
+            MidgarLog.info("session notice \(notice)", category: .ui)
             configureNotice(notice)
         }
         UIView.animate(withDuration: 0.25) { self.noticeButton.alpha = notice == nil ? 0 : 1 }
@@ -1332,7 +1333,7 @@ final class ConversationViewController: UIViewController {
     }
 
     private func micPermissionAnswered(granted: Bool) {
-        AppLogger.shared.info("microphone permission \(granted ? "granted" : "denied")", category: .ui)
+        MidgarLog.info("microphone permission \(granted ? "granted" : "denied")", category: .ui)
         guard granted else {
             render(legState: .permissionDenied(.microphone), speaker: .traveler)
             return

@@ -46,7 +46,11 @@ packages:
     from: "1.5.4"
   MidgarKit:
     url: https://github.com/guitaripod/MidgarKit
-    from: "3.0.0"
+    exactVersion: 4.2.0
+
+x-midgar-keychain-groups: &midgarKeychainGroups
+  - $(AppIdentifierPrefix)$(PRODUCT_BUNDLE_IDENTIFIER)
+  - $(AppIdentifierPrefix)cc.midgarcorp.shared
 
 targets:
   Psybeam:
@@ -119,10 +123,13 @@ targets:
       properties:
         com.apple.developer.applesignin:
           - Default
+        keychain-access-groups: *midgarKeychainGroups
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: ${PSYBEAM_BUNDLE_ID}
         PRODUCT_NAME: Psybeam
+        SWIFT_APPROACHABLE_CONCURRENCY: YES
+        SWIFT_DEFAULT_ACTOR_ISOLATION: MainActor
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.travel
         INFOPLIST_KEY_UIRequiresFullScreen: YES

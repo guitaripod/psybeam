@@ -2,8 +2,12 @@ import Foundation
 import AICreditsCore
 import AICreditsRevenueCat
 import AICreditsUI
+import MidgarCore
 
-final class AICreditsManager: Sendable {
+/// Owns the AICredits client and the one `AICreditsStore` the screens read. The client talks to mako through the
+/// gateway at `PsybeamMidgar.intelligenceURL`, so every mako call, the app's own and AICredits', reaches
+/// `api.midgarcorp.cc`.
+nonisolated final class AICreditsManager: Sendable {
     static let shared = AICreditsManager()
 
     static let lowBalanceThreshold = 5
@@ -12,8 +16,8 @@ final class AICreditsManager: Sendable {
         client: AICreditsManager.shared.client, lowBalanceThreshold: lowBalanceThreshold)
 
     let client: AICreditsClient
-    let baseURL = URL(string: "https://mako.midgarcorp.cc")!
-    private let appID = "psybeam"
+    let baseURL = PsybeamMidgar.intelligenceURL
+    private let appID = PsybeamMidgar.appID
     private let revenueCatPublicKey = "appl_MLWBSJBJGebbpfhFwNhhFDvvKfI"
 
     private init() {
@@ -27,7 +31,7 @@ final class AICreditsManager: Sendable {
     /// actor. The result is logged token-free.
     func reportAdAttribution() {
         client.startAdAttributionReporting { result in
-            AppLogger.shared.info("ad attribution \(result.logDescription)", category: .auth)
+            MidgarLog.info("ad attribution \(result.logDescription)", category: .auth)
         }
     }
 }

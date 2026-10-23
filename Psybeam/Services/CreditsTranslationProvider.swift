@@ -1,8 +1,9 @@
 import Foundation
 import PsybeamKit
 import AICreditsCore
+import MidgarCore
 
-/// `TranslationProviding` backed by the shared AICredits worker, and the billing
+/// `TranslationProviding` backed by mako behind the gateway, and the billing
 /// coordinator for the conversation. Each direction runs its own WebRTC leg with
 /// its own session and `ek_`, but talk-time is summed across both legs and
 /// rounded to whole minutes exactly ONCE: every `/settle` charges only the
@@ -12,30 +13,29 @@ import AICreditsCore
 /// because the two legs report concurrently into the shared running total.
 actor CreditsTranslationProvider: TranslationProviding {
     private let client: AICreditsClient
-    private let baseURL: URL
-    private let appID = "psybeam"
+    private let gateway: MakoGateway
 
     private var openSessions = 0
     private var conversationSeconds = 0
     private var billedMinutes = 0
 
-    init(client: AICreditsClient, baseURL: URL) {
+    init(client: AICreditsClient, gateway: MakoGateway = PsybeamMidgar.shared.mako) {
         self.client = client
-        self.baseURL = baseURL
+        self.gateway = gateway
     }
 
     func requestSession(pair: LanguagePair, direction: Side) async throws -> SessionToken {
         let apiKey = try await apiKey()
         let language = pair.outputLanguage(for: direction)
-        let (data, http) = try await post(
+        let reply = try await post(
             "v1/run/realtime.translate/start", apiKey: apiKey,
             body: ["language": language])
 
-        switch http.statusCode {
+        switch reply.status {
         case 200:
             let decoder = JSONDecoder()
             decoder.keyDecodingStrategy = .convertFromSnakeCase
-            let r = try decoder.decode(StartResponse.self, from: data)
+            let r = try decoder.decode(StartResponse.self, from: reply.data)
             registerStart()
             AppSettings.pendingSessionId = r.sessionId
             AppSettings.pendingReservedMinutes = r.reservedMinutes
@@ -57,7 +57,7 @@ actor CreditsTranslationProvider: TranslationProviding {
         case 422:
             throw CallError.unsupportedLanguage
         default:
-            throw CallError.server("http_\(http.statusCode)")
+            throw CallError.server("http_\(reply.status)")
         }
     }
 
@@ -104,7 +104,7 @@ actor CreditsTranslationProvider: TranslationProviding {
         let result = try? await post(
             "v1/run/realtime.translate/settle", apiKey: apiKey,
             body: ["session_id": .string(sessionId), "minutes_used": .int(minutes)])
-        if result?.1.statusCode == 200, AppSettings.pendingSessionId == sessionId {
+        if result?.status == 200, AppSettings.pendingSessionId == sessionId {
             clearPending()
         }
     }
@@ -122,19 +122,26 @@ actor CreditsTranslationProvider: TranslationProviding {
         }
     }
 
-    private func post(_ path: String, apiKey: String, body: [String: JSONValue]) async throws -> (Data, HTTPURLResponse) {
-        var request = URLRequest(url: baseURL.appendingPathComponent(path))
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
-        request.setValue(appID, forHTTPHeaderField: "X-App-ID")
-        request.httpBody = try JSONEncoder().encode(body)
-        let (data, response) = try await URLSession.shared.data(for: request)
-        guard let http = response as? HTTPURLResponse else { throw CallError.network }
-        return (data, http)
+    /// One gateway answer: the body and the HTTP status, which the callers read the way the old direct calls did.
+    private struct Reply {
+        let data: Data
+        let status: Int
     }
 
-    private func post(_ path: String, apiKey: String, body: [String: String]) async throws -> (Data, HTTPURLResponse) {
+    /// Sends one call through the gateway. A status outside 2xx comes back as a reply for the caller to judge, as it
+    /// always did; a call that never got an answer throws the matching `CallError`.
+    private func post(_ path: String, apiKey: String, body: [String: JSONValue]) async throws -> Reply {
+        do throws(MidgarHTTPError) {
+            let (data, response) = try await gateway.send(.post, path: path, apiKey: apiKey, body: body)
+            return Reply(data: data, status: response.statusCode)
+        } catch {
+            if case .cancelled = error { throw CallError.cancelled }
+            guard error.statusCode > 0 else { throw CallError.network }
+            return Reply(data: Data(), status: error.statusCode)
+        }
+    }
+
+    private func post(_ path: String, apiKey: String, body: [String: String]) async throws -> Reply {
         try await post(path, apiKey: apiKey, body: body.mapValues { JSONValue.string($0) })
     }
 

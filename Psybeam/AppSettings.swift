@@ -3,13 +3,13 @@ import PsybeamKit
 
 /// Raw values align with `UIUserInterfaceStyle` (unspecified/light/dark) so a
 /// stored mode maps straight onto a window override.
-enum AppearanceMode: Int, CaseIterable {
+nonisolated enum AppearanceMode: Int, CaseIterable {
     case system = 0
     case light = 1
     case dark = 2
 }
 
-enum AppSettings {
+nonisolated enum AppSettings {
     private static var defaults: UserDefaults { .standard }
 
     private enum Key {
@@ -24,15 +24,8 @@ enum AppSettings {
         static let pendingSessionId = "psybeam.pendingSessionId"
         static let pendingReservedMinutes = "psybeam.pendingReservedMinutes"
         static let completedTurns = "psybeam.completedTurns"
-        static let reviewAskDates = "psybeam.reviewAskDates"
-        static let reviewSuccessCountAtLastAsk = "psybeam.reviewSuccessCountAtLastAsk"
-        static let reviewPromptMigrated = "psybeam.reviewPromptMigrated"
         static let firstRunStage = "psybeam.firstRunStage"
     }
-
-    /// Pre-1.1.2 legacy key: asked at most once per app version, with no date
-    /// recorded.
-    private static let legacyRatingPromptShownVersionKey = "psybeam.ratingPromptShownVersion"
 
     /// Progress through the destination picker and the try-it-yourself coach.
     /// Unset on a fresh install and on updates from before the walkthrough.
@@ -41,38 +34,10 @@ enum AppSettings {
         set { defaults.set(newValue.rawValue, forKey: Key.firstRunStage) }
     }
 
-    /// Translation turns that actually produced text. Gates the rating prompt.
+    /// Translation turns that actually produced text. The rating prompt waits for the second.
     static var completedTurns: Int {
         get { defaults.integer(forKey: Key.completedTurns) }
         set { defaults.set(newValue, forKey: Key.completedTurns) }
-    }
-
-    /// Every prior review-prompt ask, for the 14-day cooldown and Apple's
-    /// three-per-year cap.
-    static var reviewAskDates: [Date] {
-        get { (defaults.array(forKey: Key.reviewAskDates) as? [Double] ?? []).map(Date.init(timeIntervalSince1970:)) }
-        set { defaults.set(newValue.map(\.timeIntervalSince1970), forKey: Key.reviewAskDates) }
-    }
-
-    /// `completedTurns` at the moment of the most recent ask, so the policy
-    /// can tell how many successes are new since then.
-    static var reviewSuccessCountAtLastAsk: Int {
-        get { defaults.integer(forKey: Key.reviewSuccessCountAtLastAsk) }
-        set { defaults.set(newValue, forKey: Key.reviewSuccessCountAtLastAsk) }
-    }
-
-    /// One-time move off the pre-1.1.2 "once per app version" flag. The exact
-    /// date of a prior ask was never recorded, so a migrated ask is stamped as
-    /// happening now: that starts its 14-day cooldown fresh and still spends
-    /// one of the three yearly asks, so a migrated install can never end up
-    /// asking more often than the cap allows.
-    static func migrateLegacyReviewPromptStateIfNeeded() {
-        guard defaults.object(forKey: Key.reviewPromptMigrated) == nil else { return }
-        defaults.set(true, forKey: Key.reviewPromptMigrated)
-        defer { defaults.removeObject(forKey: legacyRatingPromptShownVersionKey) }
-        guard defaults.string(forKey: legacyRatingPromptShownVersionKey) != nil else { return }
-        reviewAskDates = [Date()]
-        reviewSuccessCountAtLastAsk = completedTurns
     }
 
     /// A reserved realtime session that may not have been settled (e.g. the app

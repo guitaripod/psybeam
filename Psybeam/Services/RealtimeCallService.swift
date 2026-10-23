@@ -2,6 +2,7 @@ import AVFoundation
 import Foundation
 import PsybeamKit
 import WebRTC
+import MidgarCore
 
 actor RealtimeCallService: RealtimeCallProviding {
     nonisolated let states: AsyncStream<CallState>
@@ -26,6 +27,8 @@ actor RealtimeCallService: RealtimeCallProviding {
     private var levelTask: Task<Void, Never>?
     private var interruptionTask: Task<Void, Never>?
 
+    /// One factory for the whole process, as WebRTC wants. It is `nonisolated(unsafe)` because the SDK's factory is
+    /// not `Sendable` but is thread-safe by contract, and it is only ever read after this one-time initialisation.
     nonisolated(unsafe) private static let sharedFactory: RTCPeerConnectionFactory = {
         RTCInitializeSSL()
         return RTCPeerConnectionFactory()
@@ -69,7 +72,7 @@ actor RealtimeCallService: RealtimeCallProviding {
 
     private func handleInterruption() async {
         guard pc != nil else { return }
-        AppLogger.shared.info("audio session interrupted; ending session=\(currentSessionId ?? "-")", category: .audio)
+        MidgarLog.info("audio session interrupted; ending session=\(currentSessionId ?? "-")", category: .audio)
         await hangUp()
     }
 
@@ -126,7 +129,7 @@ actor RealtimeCallService: RealtimeCallProviding {
 
         self.sessionId = token.sessionId
         startMetering()
-        AppLogger.shared.info("webrtc connected session=\(token.sessionId) lang=\(token.targetLanguage)", category: .webrtc)
+        MidgarLog.info("webrtc connected session=\(token.sessionId) lang=\(token.targetLanguage)", category: .webrtc)
     }
 
     private func startMetering() {
@@ -273,12 +276,14 @@ actor RealtimeCallService: RealtimeCallProviding {
     }
 }
 
-private struct OAIEvent: Decodable {
+private nonisolated struct OAIEvent: Decodable {
     let type: String
     let delta: String?
 }
 
-private final class CallCoordinator: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelegate, @unchecked Sendable {
+/// Receives WebRTC's delegate callbacks, which arrive on the SDK's own threads. It is `@unchecked Sendable` because
+/// its stored properties are immutable `Sendable` values (stream continuations and a side) and it keeps no other state.
+private nonisolated final class CallCoordinator: NSObject, RTCPeerConnectionDelegate, RTCDataChannelDelegate, @unchecked Sendable {
     private let stateCont: AsyncStream<CallState>.Continuation
     private let transcriptCont: AsyncStream<TranscriptDelta>.Continuation
     private let direction: Side

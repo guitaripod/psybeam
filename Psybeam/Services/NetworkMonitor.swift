@@ -4,7 +4,10 @@ import Network
 /// Lightweight reachability so error states stay honest: "No connection" is shown
 /// only when the OS actually reports no satisfied path, never guessed from a
 /// failure that could have many causes.
-final class NetworkMonitor: @unchecked Sendable {
+///
+/// It is `@unchecked Sendable` because the path handler runs on the monitor's own queue
+/// and every read and write of `online` happens under `lock`.
+nonisolated final class NetworkMonitor: @unchecked Sendable {
     static let shared = NetworkMonitor()
     static let didChange = Notification.Name("com.guitaripod.psybeam.network.didChange")
 

@@ -1,6 +1,7 @@
 import Combine
 import Foundation
 import PsybeamKit
+import MidgarCore
 
 /// One direction of the conversation: a `speaker` side, a dedicated WebRTC
 /// session whose output language is the *other* side's, and the streamed
@@ -152,10 +153,10 @@ final class TranslationLeg {
                 return Self.cancelled(speaker)
             } catch let error as CallError {
                 if error == .cancelled { return Self.cancelled(speaker) }
-                AppLogger.shared.error("leg(\(speaker)) connect failed: \(error)", category: .session)
+                MidgarLog.error("leg(\(speaker)) connect failed: \(error)", category: .session)
                 return error
             } catch {
-                AppLogger.shared.error("leg(\(speaker)) connect failed: \(error)", category: .session)
+                MidgarLog.error("leg(\(speaker)) connect failed: \(error)", category: .session)
                 return .network
             }
         }
@@ -170,7 +171,7 @@ final class TranslationLeg {
     /// failure: logged at debug to stay out of the error stream, and mapped to
     /// no UI state via `TranslationState.failure(for: .cancelled)`.
     private static func cancelled(_ speaker: Side) -> CallError {
-        AppLogger.shared.debug("leg(\(speaker)) connect cancelled", category: .session)
+        MidgarLog.debug("leg(\(speaker)) connect cancelled", category: .session)
         return .cancelled
     }
 

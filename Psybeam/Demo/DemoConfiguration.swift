@@ -1,6 +1,7 @@
 #if DEBUG
 import Foundation
 import PsybeamKit
+import MidgarCore
 
 /// The language pair a demo shows and the phrase-table keys that fill it.
 struct DemoPhrasebook: Equatable {
@@ -104,7 +105,7 @@ struct DemoConfiguration {
             guard let data else { throw CocoaError(.fileReadNoSuchFile) }
             return try JSONDecoder().decode([DemoScriptEvent].self, from: data)
         } catch {
-            AppLogger.shared.error("demo script unreadable, playing the default: \(error)", category: .ui)
+            MidgarLog.error("demo script unreadable, playing the default: \(error)", category: .ui)
             return DemoScriptEvent.defaultScript
         }
     }

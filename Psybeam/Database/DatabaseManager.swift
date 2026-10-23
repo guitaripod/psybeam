@@ -1,7 +1,8 @@
 import Foundation
 import GRDB
+import MidgarCore
 
-final class DatabaseManager: @unchecked Sendable {
+nonisolated final class DatabaseManager: Sendable {
     static let shared = DatabaseManager()
 
     let dbQueue: DatabaseQueue
@@ -19,7 +20,7 @@ final class DatabaseManager: @unchecked Sendable {
             let path = dir.appendingPathComponent("psybeam.sqlite").path
             dbQueue = try DatabaseQueue(path: path)
             try Self.runMigrations(dbQueue)
-            AppLogger.shared.info("database opened at \(path)", category: .persistence)
+            MidgarLog.info("database opened at \(path)", category: .persistence)
         } catch {
             fatalError("Database init failed: \(error)")
         }

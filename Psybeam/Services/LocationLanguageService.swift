@@ -1,6 +1,7 @@
 import Combine
 import CoreLocation
 import PsybeamKit
+import MidgarCore
 
 @MainActor
 final class LocationLanguageService: NSObject {
@@ -27,12 +28,12 @@ final class LocationLanguageService: NSObject {
     /// location. The prompt comes from `requestAuthorization()`, from something
     /// the user just did.
     func startIfAuthorized() {
-        AppLogger.shared.info("location start status=\(manager.authorizationStatus.rawValue)", category: .location)
+        MidgarLog.info("location start status=\(manager.authorizationStatus.rawValue)", category: .location)
         if isAuthorized { manager.requestLocation() }
     }
 
     func requestAuthorization() {
-        AppLogger.shared.info("location authorization requested status=\(manager.authorizationStatus.rawValue)", category: .location)
+        MidgarLog.info("location authorization requested status=\(manager.authorizationStatus.rawValue)", category: .location)
         if isUndetermined { manager.requestWhenInUseAuthorization() } else { startIfAuthorized() }
     }
 
@@ -41,11 +42,11 @@ final class LocationLanguageService: NSObject {
             CLLocation(latitude: latitude, longitude: longitude)
         )
         guard let country = placemarks?.first?.isoCountryCode else {
-            AppLogger.shared.warn("location: geocode returned no country", category: .location)
+            MidgarLog.notice("location: geocode returned no country", category: .location)
             return
         }
         let languages = table.languages(forCountry: country)
-        AppLogger.shared.info("location resolved country=\(country) langs=\(languages)", category: .location)
+        MidgarLog.info("location resolved country=\(country) langs=\(languages)", category: .location)
         guard let language = languages.first else { return }
         detected.send((country: country, language: language))
     }
@@ -69,6 +70,6 @@ extension LocationLanguageService: CLLocationManagerDelegate {
     }
 
     nonisolated func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        AppLogger.shared.warn("location failed: \(error.localizedDescription)", category: .location)
+        MidgarLog.notice("location failed: \(error.localizedDescription)", category: .location)
     }
 }

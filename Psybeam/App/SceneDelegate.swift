@@ -1,6 +1,7 @@
 import Combine
 import Foundation
 import UIKit
+import MidgarCore
 
 final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
@@ -27,7 +28,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window.makeKeyAndVisible()
 
         reportAdAttributionOnce()
-        AppLogger.shared.info("scene connected", category: .app)
+        MidgarLog.info("scene connected", category: .app)
     }
 
     func sceneDidBecomeActive(_ scene: UIScene) {
@@ -38,7 +39,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard URLContexts.contains(where: { Self.isWalkthroughLink($0.url) }),
               let conversation = window?.rootViewController as? ConversationViewController
         else { return }
-        AppLogger.shared.info("walkthrough link opened", category: .app)
+        MidgarLog.info("walkthrough link opened", category: .app)
         conversation.replayWalkthrough()
     }
 
@@ -77,22 +78,24 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         store.$identity
             .compactMap { $0 }
             .removeDuplicates()
-            .sink { AppLogger.shared.info("credits identity \($0.kind.rawValue) \($0.userID.prefix(8))", category: .auth) }
+            .sink { MidgarLog.info("credits identity \($0.kind.rawValue) \($0.userID.prefix(8))", category: .auth) }
             .store(in: &creditsObservers)
         store.$error
             .compactMap { $0 }
-            .sink { AppLogger.shared.error("credits error: \($0.localizedDescription)", category: .auth) }
+            .sink { error in
+                MidgarLog.error("credits error: \(error.localizedDescription)", category: .auth)
+                if case .purchaseFailed = error { ReviewPrompt.notePurchaseFailure() }
+            }
             .store(in: &creditsObservers)
         store.$balance
             .removeDuplicates()
             .dropFirst()
-            .sink { AppLogger.shared.info("credits balance \($0)", category: .auth) }
+            .sink { MidgarLog.info("credits balance \($0)", category: .auth) }
             .store(in: &creditsObservers)
     }
 
     private static func makeRoot() -> UIViewController {
-        let provider = CreditsTranslationProvider(
-            client: AICreditsManager.shared.client, baseURL: AICreditsManager.shared.baseURL)
+        let provider = CreditsTranslationProvider(client: AICreditsManager.shared.client)
         let travelerCall = RealtimeCallService(translationProvider: provider)
         let localCall = RealtimeCallService(translationProvider: provider)
         let viewModel = ConversationViewModel(travelerCall: travelerCall, localCall: localCall)
