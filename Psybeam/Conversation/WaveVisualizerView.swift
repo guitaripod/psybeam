@@ -70,8 +70,8 @@ final class WaveVisualizerView: MTKView {
 }
 
 private final class WaveRenderer: NSObject, MTKViewDelegate {
-    private let queue: MTLCommandQueue
-    private let pipeline: MTLRenderPipelineState
+    private let queue: any MTLCommandQueue
+    private let pipeline: any MTLRenderPipelineState
     private var uniforms = WaveUniforms()
     private var accumulatedTime: Float = 0
     private var lastFrameTime = CACurrentMediaTime()
@@ -83,7 +83,7 @@ private final class WaveRenderer: NSObject, MTKViewDelegate {
     private var bloomLevel: Float = 0
     var level: Float = 0
 
-    init?(device: MTLDevice) {
+    init?(device: any MTLDevice) {
         guard
             let queue = device.makeCommandQueue(),
             let library = device.makeDefaultLibrary(),

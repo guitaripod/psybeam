@@ -69,7 +69,7 @@ extension LocationLanguageService: CLLocationManagerDelegate {
         Task { @MainActor in await self.resolve(latitude: latitude, longitude: longitude) }
     }
 
-    nonisolated func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+    nonisolated func locationManager(_ manager: CLLocationManager, didFailWithError error: any Error) {
         MidgarLog.notice("location failed: \(error.localizedDescription)", category: .location)
     }
 }

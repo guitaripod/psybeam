@@ -12,7 +12,7 @@ actor RealtimeCallService: RealtimeCallProviding {
     private let stateCont: AsyncStream<CallState>.Continuation
     private let transcriptCont: AsyncStream<TranscriptDelta>.Continuation
     private let levelCont: AsyncStream<Float>.Continuation
-    private let translationProvider: TranslationProviding
+    private let translationProvider: any TranslationProviding
     private let factory: RTCPeerConnectionFactory
 
     private var pc: RTCPeerConnection?
@@ -34,7 +34,7 @@ actor RealtimeCallService: RealtimeCallProviding {
         return RTCPeerConnectionFactory()
     }()
 
-    init(translationProvider: TranslationProviding) {
+    init(translationProvider: any TranslationProviding) {
         self.translationProvider = translationProvider
         self.factory = Self.sharedFactory
 
@@ -118,7 +118,8 @@ actor RealtimeCallService: RealtimeCallProviding {
 
             let offerSDP = try await makeOffer(pc: pc, constraints: constraints)
             try await setLocal(pc: pc, sdp: RTCSessionDescription(type: .offer, sdp: offerSDP))
-            let answerSDP = try await exchangeSDP(sdpUrl: token.sdpUrl, ephemeralToken: token.ephemeralToken, offer: offerSDP)
+            let answerSDP = try await RealtimeSDPTransport().answer(
+                for: offerSDP, at: token.sdpUrl, ephemeralToken: token.ephemeralToken)
             try await setRemote(pc: pc, sdp: RTCSessionDescription(type: .answer, sdp: answerSDP))
             try Task.checkCancellation()
         } catch {
@@ -242,24 +243,6 @@ actor RealtimeCallService: RealtimeCallProviding {
                 if let error { continuation.resume(throwing: error) } else { continuation.resume() }
             }
         }
-    }
-
-    private func exchangeSDP(sdpUrl: String, ephemeralToken: String, offer: String) async throws -> String {
-        guard let url = URL(string: sdpUrl) else { throw CallError.network }
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("Bearer \(ephemeralToken)", forHTTPHeaderField: "Authorization")
-        request.setValue("application/sdp", forHTTPHeaderField: "Content-Type")
-        request.httpBody = Data(offer.utf8)
-        let (data, response) = try await URLSession.shared.data(for: request)
-        guard
-            let http = response as? HTTPURLResponse,
-            (200...201).contains(http.statusCode),
-            let answer = String(data: data, encoding: .utf8)
-        else {
-            throw CallError.server("sdp_exchange_failed")
-        }
-        return answer
     }
 
     /// `.voiceChat` engages Apple's Voice-Processing I/O unit, which runs hardware
