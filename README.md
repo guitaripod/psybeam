@@ -33,4 +33,4 @@ scripts/ios-deploy.sh    # build + install + relaunch on your device
 
 ## Stack
 
-Swift 6 strict concurrency · MidgarKit 4 · UIKit (programmatic) · Combine · GRDB · Metal · WebRTC ([stasel/WebRTC](https://github.com/stasel/WebRTC)) · OpenAI `gpt-realtime-translate` · mako credits backend (shared Cloudflare Worker) · Sign in with Apple.
+Swift 6 strict concurrency · MidgarKit (monorepo package, by path) · UIKit (programmatic) · Combine · GRDB · Metal · WebRTC ([stasel/WebRTC](https://github.com/stasel/WebRTC)) · OpenAI `gpt-realtime-translate` · mako credits backend (shared Cloudflare Worker) · Sign in with Apple.
