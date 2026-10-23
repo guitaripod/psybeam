@@ -17,7 +17,7 @@ Two parts in this repo, plus a shared backend:
 - **`Sources/PsybeamKit`** — platform-agnostic Swift 6 core: the `TranslationState`/`Side`/`CallState` state machine, `Sendable` provider protocols exposing `AsyncStream`, DTOs, and the CLDR locale tables. No UIKit/AVFoundation. Compiles and tests on Linux and macOS.
 - **`Psybeam/`** — the programmatic UIKit app (xcodegen, no storyboards). MVVM with Combine only at the VM↔VC seam, a Metal aurora that reacts to the voice, Sign in with Apple, Liquid Glass. iOS 18+ deploy target, iOS 26 SDK, iPhone-only.
 
-The backend is **mako** — a shared Cloudflare Worker (`mako.midgarcorp.cc`, repo `guitaripod/pixie`) that mints the ephemeral OpenAI token, meters minutes as credits, and handles Sign in with Apple. It lives outside this repo.
+The backend is **mako**, a shared Cloudflare Worker behind the Midgar gateway (`api.midgarcorp.cc/v1/intelligence`, source in `services/intelligence`) that mints the ephemeral OpenAI token, meters minutes as credits, and handles Sign in with Apple. It lives outside this folder.
 
 See **[DESIGN.md](DESIGN.md)** for the architecture, the state machine, the data model, and the spikes that gate the build.
 
@@ -33,4 +33,4 @@ scripts/ios-deploy.sh    # build + install + relaunch on your device
 
 ## Stack
 
-Swift 6 strict concurrency · UIKit (programmatic) · Combine · GRDB · Metal · WebRTC ([stasel/WebRTC](https://github.com/stasel/WebRTC)) · OpenAI `gpt-realtime-translate` · mako credits backend (shared Cloudflare Worker) · Sign in with Apple.
+Swift 6 strict concurrency · MidgarKit 4 · UIKit (programmatic) · Combine · GRDB · Metal · WebRTC ([stasel/WebRTC](https://github.com/stasel/WebRTC)) · OpenAI `gpt-realtime-translate` · mako credits backend (shared Cloudflare Worker) · Sign in with Apple.
