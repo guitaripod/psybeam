@@ -1,0 +1,76 @@
+> The full guide as it stood on 2026-10-23, kept for its history and detail. The working guide is ../CLAUDE.md.
+
+# Psybeam — Agent Instructions
+
+Native UIKit iOS **real-time voice-to-voice travel interpreter** with a Cloudflare Worker backend that brokers ephemeral OpenAI Realtime tokens (the real key never leaves Cloudflare). **You hold the phone and you are the sole operator** — two thumb-buttons (your language / their language); you hold yours to speak and it speaks theirs aloud, you hold theirs while they reply and it speaks yours. The stranger you walked up to **never touches the phone**: the audio carries the translation, and when it's their turn the screen invites them to speak in their own language. The local language auto-suggests by GPS as you cross borders.
+
+See `DESIGN.md` for the authoritative architecture, the backend decision, the state machine, the data model, and the spikes that gate the build. This file is the working guide.
+
+## Status
+
+Shipping. Live on the App Store as **1.1.0** (2026-09-04: 22 UI languages, audio-interruption recovery, share/rate from Settings, a 34-locale ASO rewrite). **1.1.1** (submitted 2026-09-25) is the activation release: a first-launch "Where are you headed?" destination picker plus a try-it-yourself coach, the at-home en↔en pair bug fixed (GPS never sets their language to yours), a consent-decline recovery state, the rating prompt after 2 turns, AdServices attribution (AICredits 1.5.4) and the `psybeam://try` deep link used by the Try It Before Your Trip in-app event. Growth baseline and funnel: `scripts/funnel.sh` (mako D1) and the `psybeam-growth-baseline` memory. Marketing pipeline: `scripts/capture-screenshots.sh` + `scripts/frame-screenshots.swift` (captions in `marketing/captions/`, per-locale language pairs), custom product pages in `marketing/appstore/cpp/`, social videos and the App Preview in `marketing/video/` (LTX-2.5 scenes + real translation audio; README and POSTING.md there). All spikes in `DESIGN.md` §11 are resolved; the handset single-operator model, WebRTC audio path and quiescence-based turn-taking are the shipped design. Store listing source of truth is `marketing/appstore/metadata/` (push with `asc metadata push`); the review backlog lives in `docs/review-1.0.1-backlog.md`.
+
+## Stack
+
+- **PsybeamKit** (`Sources/PsybeamKit`): platform-agnostic Swift 6 — `TranslationState`/`Side`/`CallState` enums, `RealtimeCallProviding`/`TranslationProviding`/`LocationLanguageProviding`/`Translating` **Sendable** protocols exposing `AsyncStream` (no UIKit/AVFoundation/Combine imports), provider DTOs, `CldrLanguageTable` + `LocaleSuggestion`, GRDB record structs. **Compiles and tests on Linux and macOS.**
+- **Psybeam** (`Psybeam/`, xcodegen): programmatic UIKit, MVVM. Combine `PassthroughSubject` lives **only** at the VM↔VC seam. `RealtimeCallService` (actor, owns `RTCPeerConnection` + `RTCAudioSession`), `LocationLanguageService` (actor over CoreLocation), `OpenAIRealtimeTranslate` adapter (the Azure fallback adapter is retired — Spike 1 disproved the output-language ceiling). Swift 6 strict concurrency, iOS 18+ deploy target / iOS 26 SDK, iPhone-only. Darwin-only — build on a Mac.
+- **Backend**: the shared **mako** AICredits service, reached through the Midgar gateway at `https://api.midgarcorp.cc/v1/intelligence` (`PsybeamMidgar.intelligenceURL`; source in `services/intelligence` of the monorepo): token mint, credit metering, anonymous-first identity + SIWA. **Not in this app's folder** (the old in-repo `psybeam-worker` was vestigial and has been removed). The old `mako.midgarcorp.cc` host still serves builds in the field.
+
+## Backend
+
+`gpt-realtime-translate` (OpenAI speech-to-speech, auto-detects source, mimics speaker voice) over **WebRTC direct from device**, using a **mako**-minted ephemeral token (the shared AICredits backend behind the gateway, via `POST /v1/intelligence/v1/run/realtime.translate/start`) — so the audio never touches our infrastructure and the real key stays on Cloudflare. Served under the dedicated `/v1/realtime/translations` namespace (mint at `/v1/realtime/translations/client_secrets`, SDP at `/v1/realtime/translations/calls`); the general `/v1/realtime` path 404s the translate inference. **WebRTC owns the `AVAudioSession`; there is no hand-built `AVAudioEngine` graph.** Route the speaker via the `.defaultToSpeaker` category option, never `overrideOutputAudioPort` (it reverts on ICE-connect). Spike 1 (2026-06-07) verified the model translates 20+ languages, so the **Azure "Live Interpreter" breadth-fallback tier is retired** (there was no 13-output ceiling). `gpt-realtime-2` (instruction-steered) is the emergency fallback; Apple on-device (`SpeechAnalyzer` + Translation framework) is the no-signal fallback — never primary.
+
+**Transport contract (Spike 6, verified 2026-07-29 — `spikes/spike6-transcript-events/`).** The session emits `session.output_transcript.delta` and `session.output_audio.delta`, plus `session.input_transcript.delta` **only** when the mint sets `audio.input.transcription.model` (mako sends `gpt-4o-mini-transcribe`, +$0.003/min — without it the source-confirmation line is dead). **There is no closing `.done`/`.completed` event, ever** — a turn ends by caption quiescence, which is what `TranslationLeg.scheduleSettle()` implements; never assume `isFinal` will arrive from the wire. The 2026-07-28 `gpt-live-transcribe`/`gpt-transcribe` models are ASR-only and do **not** replace the translate model; their `prompt`/`keywords`/`languages` context knobs 400 in this namespace. `audio.input.noise_reduction` is accepted and unset.
+
+## Code style (non-negotiable)
+
+- `final class` for classes; `nonisolated struct: Sendable` for value types.
+- `@available(*, unavailable) required init?(coder: NSCoder) { fatalError() }` on every custom view/VC.
+- Programmatic only — no storyboards/XIB. `UIStackView` first, then anchors.
+- Core surfaces expose `AsyncStream`/`AsyncSequence` and **Sendable** protocols — no Combine in `PsybeamKit`. The `@MainActor` VM consumes the stream in a `Task` and republishes to the VC via its own `PassthroughSubject<T, Never>` (never `@Published`); VCs bind in `viewDidLoad`, hold `Set<AnyCancellable>`, `.receive(on: DispatchQueue.main)`.
+- Service protocols in `PsybeamKit` where platform-agnostic; concrete singletons (`.shared`) injected through inits with defaults.
+- GRDB: `nonisolated struct` records, `DatabaseMigrator.registerMigration("vN")`, never edited after release. On-device only — transcripts never leave the phone.
+- `UIBackgroundConfiguration.listCell()` on list cells. SF Symbol effects (`.pulse` repeat on listening, `.variableColor` on waveforms, `.bounce`/`.replace` on completion). Liquid Glass (`UIGlassEffect`/`UIGlassContainerEffect`) on iOS 26, `.systemThinMaterial` fallback on iOS 18.
+- No comments, no MARK, no file headers. `///` doc comments sparingly. SPM only.
+- Swift Testing (`@Test`, `#expect`) — never XCTest.
+- No inline comments. Extract a named method with a `///` doc comment.
+
+## Midgar platform
+
+- **MidgarKit** from the monorepo's `packages/MidgarKit` by path (`project.yml`, decision D15). The app target links the `MidgarKit` umbrella product. Swift 6 language mode with complete checking everywhere; the app target also has approachable concurrency and MainActor default isolation, so pure data and URL types are `nonisolated`. Launch the app in the simulator after any isolation change: a trap only shows at runtime. Sign the simulator build ad hoc (`CODE_SIGN_IDENTITY=-`, not `CODE_SIGNING_ALLOWED=NO`) when you want the keychain group and the Midgar ID to work; an unsigned build logs `keychain(status: -34018)`.
+- **Midgar ID**: `PsybeamMidgar` (`App/`) builds the identity, the gateway client behind the portal and the `MakoGateway` (`Services/`) for the app's own mako calls. The keychain group `cc.midgarcorp.shared` is in the entitlements (written by `project.yml`) after the app's own group, which must stay first because AICredits keeps its api key there. No App Attest entitlement is needed: App Store and TestFlight builds attest in Apple's production environment regardless, and development builds attest in the sandbox, which the identity service accepts as the development tier.
+- **Gateway**: AICredits takes `PsybeamMidgar.intelligenceURL` as its base URL and `PsybeamMidgar.midgarTokenHeaders()` as its `additionalHeaders`, so its calls carry `X-Midgar-Token` next to the api key. The realtime session mint and settle (`CreditsTranslationProvider`) and the account deletion (`AccountService`) go through `MakoGateway` and add the same header when the identity answers within two seconds (`MidgarIdentity.midgarTokenHeader(within:)`); no call waits on it and none is sent twice. The WebRTC offer and answer exchange with OpenAI (`RealtimeSDPTransport`) and the audio itself stay direct: the registry lists `api.openai.com` and RevenueCat's API (through AICredits) as network exceptions.
+- **Commerce**: registry engine `aicredits`. AICredits and RevenueCat still buy, restore and meter; do not change product ids, prices or the RevenueCat app user id without the founder. Moving credits to MidgarCredits waits for mako's wallet linking.
+- **Settings**: MidgarUI's `MidgarSettingsViewController` with the portal card and Psybeam's sections (`Settings/`, theme in `PsybeamTheme.swift`); languages and appearance push `OptionPickerViewController`.
+- **Review prompt**: `ReviewPrompt` reports each completed turn to `MidgarReviewPolicy` (no ask before 3 days and 6 sessions); `LegacyReviewState` carries the old ask history over.
+- **Conversation screen**: `ConversationViewController` is split into extensions by seam (layout, configuration, first run, notice, microphone, demo). Its members are internal, not private, for that reason.
+- **Privacy**: `Psybeam/PrivacyInfo.xcprivacy`, `store/privacy-label.md` and the policy at `web/midgarcorp/src/content/legal/psybeam/privacy.html` move together; the store privacy URL is `https://midgarcorp.cc/legal/psybeam/privacy`.
+
+## Build & deploy — MANDATORY: use the scripts (Mac only)
+
+xcodegen regenerates `Psybeam.xcodeproj` from `project.yml` on every build, so:
+
+```bash
+scripts/setup.sh         # one-time: .env.local + xcodegen + spm
+scripts/ios-build.sh     # device build, with staleness assertion
+scripts/ios-deploy.sh    # build + install + relaunch on PSYBEAM_DEVICE_UDID
+scripts/ios-test.sh      # PsybeamKit (SPM) + hosted iOS TranslationLeg tests on a simulator
+```
+
+`ios-build.sh` runs `xcodegen generate` first, captures the real xcodebuild exit code via `pipefail`, surfaces Swift 6 concurrency errors, and asserts no `.swift` is newer than the built binary. Adding/removing any file → just run `ios-build.sh`. Never call `xcodebuild` raw.
+
+The backend (mako) lives in `services/intelligence` of the Midgar monorepo and is deployed from there. This folder builds only the iOS app.
+
+## Logging — agents read this
+
+`MidgarLog` (MidgarCore) mirrors os_log AND `Library/Logs/psybeam.log`. Categories (`App/LogCategories.swift`): `app, auth, session, webrtc, audio, location, translate, persistence, review`, plus MidgarLog's own `ui`. Never use `print`. To pull from a device, use the `ios-device-logs` skill / `devicectl ... copy from --source Library/Logs/psybeam.log`.
+
+## Secrets / config
+
+`.env.local` (gitignored, made by `setup.sh`): `PSYBEAM_BUNDLE_ID`, `PSYBEAM_TEAM_ID`, `PSYBEAM_DEVICE_UDID`, `PSYBEAM_DEVICE_NAME`; never commit it. The app ships no API keys: all backend secrets (`OPENAI_API_KEY`, etc.) live on the shared **mako** worker (`services/intelligence`), managed there via `wrangler secret put`. The mako base URL is `PsybeamMidgar.intelligenceURL` (no `Secrets.swift`). `PSYBEAM_BUNDLE_ID` (`com.guitaripod.psybeam`) and `PSYBEAM_TEAM_ID` (`P4DQK6SRKR`) are read by `xcodegen` from the environment; a shell without `.env.local` exports them by hand.
+
+## Reality
+
+- The product thesis is the **handset, single operator**: you hold the phone and drive both directions from two thumb-buttons; the stranger you approached never operates it and isn't expected to possess this tech. The side-color contract holds (blue = traveler/you, green = local/them) on the buttons + wave, but the bystander's comprehension comes from **audio + an in-their-language "speak now" prompt**, not from reading the UI. This is **handset mode, not flat-on-a-table dual-facing** — do not rebuild table mode. Text orientation is **automatic by audience** (no manual flip control): your speech (rendered in their language) rotates 180° to face them; their reply (in your language) stays upright for you. The source/confirmation line is never rotated, so you always have an upright read of what was heard.
+- The feared **~13-language speech ceiling was disproved** (Spike 1, 2026-06-07): `gpt-realtime-translate` speaks 20+ languages — including the Arabic/Thai/Turkish/Greek/Polish corridors — with `en→en` passthrough. So the Azure breadth-fallback tier is **retired**. `OPENAI_TRANSLATE_OUTPUT_LANGS` survives as informational server-config for `/v1/config` display only — it is **not** a gate and is never hardcoded in the binary.
+- App Review is a three-front gate: **4.3** (translation-app spam — lead screenshots with the table moment), **5.1.2(i)** (pre-audio third-party-AI consent, revocable), **3.1.2** (ongoing value). The bystander cannot consent to cloud routing → a visible "cloud AI" indicator on the local's half is the honest floor. Never claim "on-device" for the live path.
