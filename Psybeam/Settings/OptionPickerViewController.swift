@@ -46,7 +46,7 @@ final class OptionPickerViewController: UITableViewController {
         content.text = option.title
         content.textProperties.color = theme.uiLabel
         cell.contentConfiguration = content
-        var background = UIBackgroundConfiguration.listGroupedCell()
+        var background = UIBackgroundConfiguration.listCell()
         background.backgroundColor = theme.uiSurface
         cell.backgroundConfiguration = background
         cell.accessoryType = option.id == selectedID ? .checkmark : .none
