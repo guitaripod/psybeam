@@ -38,14 +38,22 @@ nonisolated final class PsybeamMidgar: Sendable {
         account = MidgarHTTPClient(configuration: identity.authorizing(configuration))
         mako = MakoGateway(
             client: MidgarHTTPClient(configuration: configuration),
-            midgarToken: Self.tokenSource(of: identity))
+            midgarHeaders: { await Self.tokenHeaders(of: identity) })
     }
 
-    /// Where the app's mako calls get the Midgar token: the identity, or nothing in a host that reaches no Midgar
-    /// service.
-    private static func tokenSource(of identity: MidgarIdentity) -> @Sendable () async -> String? {
-        guard reachesMidgarServices else { return { nil } }
-        return { await accessToken(of: identity) }
+    /// The longest a call waits for the Midgar ID's access token before it goes without.
+    static let tokenWait: Duration = .seconds(2)
+
+    /// The `X-Midgar-Token` header for a call to mako, which is how mako links the legacy api key to the Midgar ID,
+    /// or nothing when the identity cannot answer within `tokenWait` or the host reaches no Midgar service. A call
+    /// never waits on or fails for the token.
+    func midgarTokenHeaders() async -> [String: String] {
+        await Self.tokenHeaders(of: identity)
+    }
+
+    private static func tokenHeaders(of identity: MidgarIdentity) async -> [String: String] {
+        guard reachesMidgarServices else { return [:] }
+        return await identity.midgarTokenHeader(within: tokenWait).map { [$0.name: $0.value] } ?? [:]
     }
 
     /// The portal configuration of Settings: the authorized client, so "Your Midgar" shows what the person owns in
@@ -95,11 +103,5 @@ nonisolated final class PsybeamMidgar: Sendable {
         if ProcessInfo.processInfo.environment["PSYBEAM_DEMO"] != nil { return false }
         #endif
         return true
-    }
-
-    /// The Midgar ID's access token, or nil when it cannot be had within `MakoGateway.tokenWaitSeconds`. A call that
-    /// waits on a slow identity service would be slower than the call it decorates.
-    private static func accessToken(of identity: MidgarIdentity) async -> String? {
-        try? await AsyncTimeout.run(seconds: MakoGateway.tokenWaitSeconds) { try await identity.accessToken() }
     }
 }

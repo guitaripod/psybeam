@@ -8,7 +8,7 @@ struct MakoGatewayTests {
 
     @Test func aSessionMintGoesToMakoBehindTheGatewayWithTheApiKeyAndTheMidgarToken() async throws {
         let capture = StubbedResponses.install(status: 200, body: Data("{}".utf8))
-        let gateway = MakoGateway(client: client(), midgarToken: { "midgar-access" })
+        let gateway = MakoGateway(client: client(), midgarHeaders: { ["X-Midgar-Token": "midgar-access"] })
 
         let (_, response) = try await gateway.send(
             .post, path: "v1/run/realtime.translate/start", apiKey: "legacy-key", body: ["language": "ja"])
@@ -24,7 +24,7 @@ struct MakoGatewayTests {
 
     @Test func aCallWithoutAMidgarTokenGoesWithTheApiKeyAlone() async throws {
         let capture = StubbedResponses.install(status: 200, body: Data("{}".utf8))
-        let gateway = MakoGateway(client: client(), midgarToken: { nil })
+        let gateway = MakoGateway(client: client(), midgarHeaders: { [:] })
 
         _ = try await gateway.send(
             .post, path: "v1/run/realtime.translate/settle", apiKey: "legacy-key",
@@ -37,7 +37,7 @@ struct MakoGatewayTests {
 
     @Test func anAccountDeletionIsSentOnceEvenWhenTheServerFails() async {
         let capture = StubbedResponses.install(status: 503, body: Data())
-        let gateway = MakoGateway(client: client(), midgarToken: { nil })
+        let gateway = MakoGateway(client: client(), midgarHeaders: { [:] })
 
         await #expect(throws: MidgarHTTPError.self) {
             _ = try await gateway.send(.delete, path: "v1/identity", apiKey: "legacy-key")
@@ -48,7 +48,7 @@ struct MakoGatewayTests {
 
     @Test func aRefusedCallReportsItsStatus() async {
         StubbedResponses.install(status: 402, body: Data(#"{"error":{"code":"insufficient_credits","message":"no"}}"#.utf8))
-        let gateway = MakoGateway(client: client(), midgarToken: { nil })
+        let gateway = MakoGateway(client: client(), midgarHeaders: { [:] })
 
         await #expect(throws: MidgarHTTPError.self) {
             _ = try await gateway.send(.post, path: "v1/run/realtime.translate/start", apiKey: "legacy-key", body: ["language": "ja"])
@@ -67,6 +67,11 @@ struct MakoGatewayTests {
 
     @Test func aHostThatReachesNoMidgarServiceSendsNoToken() {
         #expect(PsybeamMidgar.reachesMidgarServices == false)
+    }
+
+    @Test func aHostThatReachesNoMidgarServiceAddsNoHeadersToAICreditsCalls() async {
+        let headers = await PsybeamMidgar.shared.midgarTokenHeaders()
+        #expect(headers.isEmpty)
     }
 
     private func client() -> MidgarHTTPClient {

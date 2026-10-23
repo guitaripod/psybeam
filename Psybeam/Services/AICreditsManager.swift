@@ -21,7 +21,9 @@ nonisolated final class AICreditsManager: Sendable {
     private let revenueCatPublicKey = "appl_MLWBSJBJGebbpfhFwNhhFDvvKfI"
 
     private init() {
-        let config = AICreditsConfig(baseURL: baseURL, appID: appID, lowBalanceThreshold: Self.lowBalanceThreshold)
+        let config = AICreditsConfig(
+            baseURL: baseURL, appID: appID, lowBalanceThreshold: Self.lowBalanceThreshold,
+            additionalHeaders: { await PsybeamMidgar.shared.midgarTokenHeaders() })
         client = AICreditsClient(
             config: config,
             purchaseProvider: RevenueCatPurchaseProvider(apiKey: revenueCatPublicKey))
