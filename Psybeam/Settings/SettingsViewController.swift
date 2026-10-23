@@ -1,29 +1,28 @@
 import AVFoundation
 import Combine
-import MidgarKit
-import PsybeamKit
-import SwiftUI
+import MidgarPortal
+import MidgarUI
 import UIKit
-import AICreditsUI
 
-final class SettingsViewController: UIViewController {
-    private let viewModel: ConversationViewModel
-    private let onBrightnessChanged: () -> Void
-    private let onAutoDetectEnabled: () -> Void
+/// The Settings sheet: MidgarUI's settings list with Psybeam's sections, inside a navigation controller so a language
+/// row can push its picker. The list is rebuilt whenever something it shows changes: the minutes balance, either
+/// language and the microphone mode.
+final class SettingsViewController: UINavigationController {
+    let viewModel: ConversationViewModel
+    let onBrightnessChanged: () -> Void
+    let onAutoDetectEnabled: () -> Void
     var onDismiss: (() -> Void)?
 
-    private let gradient = CAGradientLayer()
-    private let scrollView = UIScrollView()
-    private let content = UIStackView()
-    private let youButton = UIButton(type: .system)
-    private let themButton = UIButton(type: .system)
-    private let minutesLabel = UILabel()
-    private let micModeValue = UILabel()
-    private var micModeTimer: Timer?
-    private let impact = UIImpactFeedbackGenerator(style: .light)
     private var cancellables = Set<AnyCancellable>()
+    private var micModeTask: Task<Void, Never>?
+    private var shownMicMode = SettingsViewController.currentMicModeName()
 
-    private let brand = UIColor(red: 0.30, green: 0.62, blue: 1.0, alpha: 1)
+    private lazy var list = MidgarSettingsViewController(
+        title: String(localized: "Settings"),
+        sections: makeSections(),
+        portalCardView: MidgarEntryView(config: PsybeamMidgar.shared.portalConfig),
+        theme: .psybeam
+    )
 
     init(
         viewModel: ConversationViewModel,
@@ -39,463 +38,66 @@ final class SettingsViewController: UIViewController {
     @available(*, unavailable)
     required init?(coder: NSCoder) { fatalError() }
 
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        traitCollection.userInterfaceStyle == .dark ? .lightContent : .darkContent
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
-        view.layer.insertSublayer(gradient, at: 0)
-        buildLayout()
-        refreshLanguageButtons()
+        view.tintColor = MidgarTheme.psybeam.uiAccent
+        navigationBar.prefersLargeTitles = true
+        list.navigationItem.rightBarButtonItem = UIBarButtonItem(
+            systemItem: .done,
+            primaryAction: UIAction { [weak self] _ in self?.dismiss(animated: true) })
+        viewControllers = [list]
         observeBalance()
-        fetchBalance()
-        refreshMicMode()
-        applyAdaptiveChrome()
-        registerForTraitChanges([UITraitUserInterfaceStyle.self]) { (self: SettingsViewController, _) in
-            self.applyAdaptiveChrome()
-        }
-        impact.prepare()
-    }
-
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        gradient.frame = view.bounds
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        refreshMicMode()
-        fetchBalance()
-        micModeTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
-            self?.refreshMicMode()
-        }
+        refreshList()
+        Task { await AICreditsManager.store.refresh() }
+        watchMicMode()
     }
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        micModeTimer?.invalidate()
-        micModeTimer = nil
+        micModeTask?.cancel()
+        micModeTask = nil
         if presentingViewController == nil || isBeingDismissed { onDismiss?() }
     }
 
-    private func applyAdaptiveChrome() {
-        let top = UIColor { $0.userInterfaceStyle == .dark
-            ? UIColor(red: 0.07, green: 0.08, blue: 0.17, alpha: 1)
-            : UIColor(red: 0.95, green: 0.96, blue: 1.0, alpha: 1) }
-        let bottom = UIColor { $0.userInterfaceStyle == .dark
-            ? UIColor(red: 0.02, green: 0.02, blue: 0.06, alpha: 1)
-            : UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1) }
-        gradient.colors = [top.resolvedColor(with: traitCollection).cgColor, bottom.resolvedColor(with: traitCollection).cgColor]
-        setNeedsStatusBarAppearanceUpdate()
+    /// Rebuilds every row from the current state. Rows read their values when built, so a change is shown by building
+    /// them again.
+    func refreshList() {
+        shownMicMode = Self.currentMicModeName()
+        list.sections = makeSections()
     }
 
-    private func buildLayout() {
-        let title = UILabel()
-        title.text = String(localized: "Settings")
-        title.font = .systemFont(ofSize: 32, weight: .bold)
-        title.textColor = .label
-
-        let done = UIButton(type: .system)
-        done.configuration = doneConfig()
-        done.addTarget(self, action: #selector(dismissSelf), for: .touchUpInside)
-
-        let header = UIStackView(arrangedSubviews: [title, UIView(), done])
-        header.alignment = .center
-        header.translatesAutoresizingMaskIntoConstraints = false
-
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        scrollView.showsVerticalScrollIndicator = false
-        scrollView.contentInsetAdjustmentBehavior = .always
-        content.axis = .vertical
-        content.spacing = 8
-        content.translatesAutoresizingMaskIntoConstraints = false
-
-        view.addSubview(header)
-        view.addSubview(scrollView)
-        scrollView.addSubview(content)
-        let column = makeReadableColumn()
-
-        NSLayoutConstraint.activate([
-            header.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 12),
-            header.leadingAnchor.constraint(equalTo: column.leadingAnchor),
-            header.trailingAnchor.constraint(equalTo: column.trailingAnchor),
-
-            scrollView.topAnchor.constraint(equalTo: header.bottomAnchor, constant: 10),
-            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-
-            content.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
-            content.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor, constant: -40),
-            content.leadingAnchor.constraint(equalTo: column.leadingAnchor),
-            content.trailingAnchor.constraint(equalTo: column.trailingAnchor),
-        ])
-
-        configureLanguageButton(youButton)
-        configureLanguageButton(themButton)
-
-        addMidgarEntry()
-
-        let languageCard = addSection(String(localized: "Languages"))
-        languageCard.addArrangedSubview(row(icon: "person.fill", tint: brand, String(localized: "You speak"), control: youButton))
-        languageCard.addArrangedSubview(divider())
-        languageCard.addArrangedSubview(row(icon: "globe", tint: .systemGreen, String(localized: "They speak"), control: themButton))
-        languageCard.addArrangedSubview(divider())
-        languageCard.addArrangedSubview(row(icon: "location.fill", tint: .systemTeal, String(localized: "Auto-detect from location"), control: toggle(AppSettings.autoDetectLocation, #selector(autoChanged))))
-
-        let micCard = addSection(String(localized: "Microphone"))
-        micCard.addArrangedSubview(micModeRow())
-        micCard.addArrangedSubview(divider())
-        micCard.addArrangedSubview(caption(String(localized: "Voice Isolation locks onto the closest voice and cuts background noise — best in cafés, streets, and markets. iOS only lets you switch it yourself: tap it above, or Control Center → Mic Mode."), icon: "sparkles", tint: .systemTeal))
-        micCard.addArrangedSubview(divider())
-        micCard.addArrangedSubview(row(icon: "bell.fill", tint: .systemPink, String(localized: "Chime on their turn"), control: toggle(AppSettings.turnChime, #selector(chimeChanged))))
-
-        let displayCard = addSection(String(localized: "Display"))
-        displayCard.addArrangedSubview(row(icon: "sun.max.fill", tint: .systemOrange, String(localized: "Keep screen bright"), control: toggle(AppSettings.keepScreenBright, #selector(brightChanged))))
-        displayCard.addArrangedSubview(divider())
-        displayCard.addArrangedSubview(row(icon: "circle.lefthalf.filled", tint: .systemGray, String(localized: "Appearance"), control: appearanceControl()))
-
-        minutesLabel.text = "…"
-        minutesLabel.font = .systemFont(ofSize: 16, weight: .semibold)
-        minutesLabel.textColor = .secondaryLabel
-        let buyButton = UIButton(type: .system)
-        buyButton.setTitle(String(localized: "Buy minutes"), for: .normal)
-        buyButton.contentHorizontalAlignment = .leading
-        buyButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .semibold)
-        buyButton.tintColor = brand
-        buyButton.addTarget(self, action: #selector(openStore), for: .touchUpInside)
-        let minutesCard = addSection(String(localized: "Minutes"))
-        minutesCard.addArrangedSubview(row(icon: "waveform", tint: .systemPurple, String(localized: "Minutes remaining"), control: minutesLabel))
-        minutesCard.addArrangedSubview(divider())
-        minutesCard.addArrangedSubview(row(icon: "creditcard.fill", tint: brand, control: buyButton))
-
-        let privacyCard = addSection(String(localized: "Privacy"))
-        let privacy = UILabel()
-        privacy.numberOfLines = 0
-        privacy.font = .systemFont(ofSize: 13)
-        privacy.textColor = .secondaryLabel
-        privacy.text = String(localized: "Your conversation audio is streamed directly to OpenAI to translate it, then spoken back — it never passes through our servers. See our Privacy Policy for how OpenAI handles it. Your transcript stays on this device.")
-        privacyCard.addArrangedSubview(row(icon: "lock.fill", tint: .systemGreen, control: privacy))
-        privacyCard.addArrangedSubview(divider())
-        privacyCard.addArrangedSubview(row(icon: "doc.text.fill", tint: .systemBlue,
-            control: linkButton(String(localized: "Privacy Policy"), color: brand, #selector(openPrivacyPolicy))))
-        privacyCard.addArrangedSubview(divider())
-        privacyCard.addArrangedSubview(row(icon: "xmark.shield.fill", tint: .systemRed,
-            control: linkButton(String(localized: "Withdraw cloud AI consent"), color: .systemRed, #selector(revokeConsent))))
-
-        let accountCard = addSection(String(localized: "Account"))
-        accountCard.addArrangedSubview(row(icon: "trash.fill", tint: .systemRed,
-            control: linkButton(String(localized: "Delete Account"), color: .systemRed, #selector(confirmDeleteAccount))))
-        accountCard.addArrangedSubview(divider())
-        accountCard.addArrangedSubview(caption(String(localized: "Permanently deletes your account and remaining minutes from our servers, and erases on-device data. This can't be undone."), icon: "exclamationmark.triangle.fill", tint: .systemOrange))
-
-        let moreCard = addSection(String(localized: "More"))
-        moreCard.addArrangedSubview(row(icon: "square.and.arrow.up.fill", tint: .systemBlue,
-            control: linkButton(String(localized: "Share Psybeam"), color: brand, #selector(sharePsybeam))))
-        moreCard.addArrangedSubview(divider())
-        moreCard.addArrangedSubview(row(icon: "star.fill", tint: .systemYellow,
-            control: linkButton(String(localized: "Rate Psybeam"), color: brand, #selector(ratePsybeam))))
-
-        let footer = UILabel()
-        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
-        let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? ""
-        footer.text = String(localized: "Psybeam \(version) (\(build))")
-        footer.font = .systemFont(ofSize: 12)
-        footer.textColor = .tertiaryLabel
-        footer.textAlignment = .center
-        content.addArrangedSubview(spacer(16))
-        content.addArrangedSubview(footer)
-    }
-
-    /// The 20 pt margins of a phone-width screen inside the safe area, held to
-    /// a readable width and centred on a wide sheet, so the cards neither run
-    /// under a vertical bar nor stretch across an inner display.
-    private func makeReadableColumn() -> UILayoutGuide {
-        let column = UILayoutGuide()
-        view.addLayoutGuide(column)
-        let margin = column.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20)
-        margin.priority = .defaultHigh
-        let trailingMargin = column.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20)
-        trailingMargin.priority = .defaultHigh
-        NSLayoutConstraint.activate([
-            margin,
-            trailingMargin,
-            column.leadingAnchor.constraint(greaterThanOrEqualTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
-            column.trailingAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
-            column.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
-            column.widthAnchor.constraint(lessThanOrEqualToConstant: Self.readableColumnWidth),
-        ])
-        return column
-    }
-
-    private static let readableColumnWidth: CGFloat = 600
-
-    private func doneConfig() -> UIButton.Configuration {
-        var config = UIButton.Configuration.gray()
-        config.cornerStyle = .capsule
-        config.baseForegroundColor = .label
-        config.attributedTitle = AttributedString(String(localized: "Done"), attributes: AttributeContainer([.font: UIFont.systemFont(ofSize: 16, weight: .semibold)]))
-        config.contentInsets = NSDirectionalEdgeInsets(top: 7, leading: 16, bottom: 7, trailing: 16)
-        return config
-    }
-
-    /// The Midgar portal doorway, the first thing in the stack because this screen opens with no upsell.
-    private func addMidgarEntry() {
-        let entry = MidgarEntryView()
-        entry.translatesAutoresizingMaskIntoConstraints = false
-        entry.heightAnchor.constraint(equalToConstant: MidgarEntryView.preferredHeight).isActive = true
-        content.addArrangedSubview(entry)
-    }
-
-    @discardableResult
-    private func addSection(_ title: String) -> UIStackView {
-        let header = UILabel()
-        header.text = title.uppercased()
-        header.font = .systemFont(ofSize: 13, weight: .semibold)
-        header.textColor = .secondaryLabel
-        let headerWrap = UIView()
-        headerWrap.addSubview(header)
-        header.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            header.topAnchor.constraint(equalTo: headerWrap.topAnchor, constant: 12),
-            header.bottomAnchor.constraint(equalTo: headerWrap.bottomAnchor, constant: -6),
-            header.leadingAnchor.constraint(equalTo: headerWrap.leadingAnchor, constant: 16),
-        ])
-        content.addArrangedSubview(headerWrap)
-
-        let card = UIVisualEffectView()
-        if #available(iOS 26.0, *) {
-            card.effect = UIGlassEffect()
-        } else {
-            card.effect = UIBlurEffect(style: .systemThinMaterial)
-        }
-        card.translatesAutoresizingMaskIntoConstraints = false
-        card.layer.cornerRadius = 22
-        card.layer.cornerCurve = .continuous
-        card.clipsToBounds = true
-
-        let body = UIStackView()
-        body.axis = .vertical
-        body.translatesAutoresizingMaskIntoConstraints = false
-        card.contentView.addSubview(body)
-        NSLayoutConstraint.activate([
-            body.topAnchor.constraint(equalTo: card.contentView.topAnchor),
-            body.bottomAnchor.constraint(equalTo: card.contentView.bottomAnchor),
-            body.leadingAnchor.constraint(equalTo: card.contentView.leadingAnchor),
-            body.trailingAnchor.constraint(equalTo: card.contentView.trailingAnchor),
-        ])
-        content.addArrangedSubview(card)
-        return body
-    }
-
-    private func iconTile(_ symbol: String, _ tint: UIColor) -> UIView {
-        let tile = UIView()
-        tile.backgroundColor = tint
-        tile.layer.cornerRadius = 7
-        tile.layer.cornerCurve = .continuous
-        tile.translatesAutoresizingMaskIntoConstraints = false
-        let glyph = UIImageView(image: UIImage(systemName: symbol, withConfiguration: UIImage.SymbolConfiguration(pointSize: 14, weight: .semibold)))
-        glyph.tintColor = tint == UIColor.label ? .systemBackground : .white
-        glyph.contentMode = .center
-        glyph.translatesAutoresizingMaskIntoConstraints = false
-        tile.addSubview(glyph)
-        NSLayoutConstraint.activate([
-            tile.widthAnchor.constraint(equalToConstant: 29),
-            tile.heightAnchor.constraint(equalToConstant: 29),
-            glyph.centerXAnchor.constraint(equalTo: tile.centerXAnchor),
-            glyph.centerYAnchor.constraint(equalTo: tile.centerYAnchor),
-        ])
-        return tile
-    }
-
-    private func row(icon: String? = nil, tint: UIColor = .systemGray, _ title: String? = nil, control: UIView) -> UIView {
-        var views: [UIView] = []
-        if let icon { views.append(iconTile(icon, tint)) }
-        if let title {
-            let label = UILabel()
-            label.text = title
-            label.font = .systemFont(ofSize: 16)
-            label.textColor = .label
-            label.numberOfLines = 0
-            label.setContentHuggingPriority(.defaultLow, for: .horizontal)
-            views.append(label)
-        }
-        views.append(UIView())
-        control.setContentHuggingPriority(.required, for: .horizontal)
-        control.setContentCompressionResistancePriority(.required, for: .horizontal)
-        views.append(control)
-        let stack = UIStackView(arrangedSubviews: views)
-        stack.alignment = .center
-        stack.spacing = 12
-        stack.isLayoutMarginsRelativeArrangement = true
-        stack.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 14, leading: 16, bottom: 14, trailing: 16)
-        return stack
-    }
-
-    private func divider() -> UIView {
-        let line = UIView()
-        line.backgroundColor = .separator
-        line.translatesAutoresizingMaskIntoConstraints = false
-        line.heightAnchor.constraint(equalToConstant: 0.5).isActive = true
-        let wrap = UIStackView(arrangedSubviews: [line])
-        wrap.isLayoutMarginsRelativeArrangement = true
-        wrap.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 0, leading: 57, bottom: 0, trailing: 0)
-        return wrap
-    }
-
-    private func spacer(_ height: CGFloat) -> UIView {
-        let v = UIView()
-        v.heightAnchor.constraint(equalToConstant: height).isActive = true
-        return v
-    }
-
-    private func toggle(_ on: Bool, _ action: Selector) -> UISwitch {
-        let s = UISwitch()
-        s.isOn = on
-        s.onTintColor = brand
-        s.addTarget(self, action: action, for: .valueChanged)
-        return s
-    }
-
-    private func linkButton(_ title: String, color: UIColor, _ action: Selector) -> UIButton {
-        let button = UIButton(type: .system)
-        button.setTitle(title, for: .normal)
-        button.contentHorizontalAlignment = .leading
-        button.titleLabel?.font = .systemFont(ofSize: 16, weight: .semibold)
-        button.tintColor = color
-        button.addTarget(self, action: action, for: .touchUpInside)
-        return button
-    }
-
-    private func appearanceControl() -> UISegmentedControl {
-        let control = UISegmentedControl(items: [
-            String(localized: "Auto"),
-            String(localized: "Light"),
-            String(localized: "Dark"),
-        ])
-        control.selectedSegmentIndex = AppSettings.appearance.rawValue
-        control.selectedSegmentTintColor = brand
-        control.setTitleTextAttributes([.foregroundColor: UIColor.label], for: .normal)
-        control.setTitleTextAttributes([.foregroundColor: UIColor.white], for: .selected)
-        control.addTarget(self, action: #selector(appearanceChanged), for: .valueChanged)
-        control.setContentHuggingPriority(.required, for: .horizontal)
-        return control
-    }
-
-    private func configureLanguageButton(_ button: UIButton) {
-        button.showsMenuAsPrimaryAction = true
-        button.tintColor = .tertiaryLabel
-        var config = UIButton.Configuration.plain()
-        config.imagePlacement = .trailing
-        config.imagePadding = 4
-        config.image = UIImage(systemName: "chevron.up.chevron.down", withConfiguration: UIImage.SymbolConfiguration(pointSize: 12, weight: .semibold))
-        config.contentInsets = .zero
-        button.configuration = config
-    }
-
-    private func refreshLanguageButtons() {
-        setLanguageTitle(youButton, code: viewModel.pair.traveler)
-        setLanguageTitle(themButton, code: viewModel.pair.local)
-        youButton.menu = languageMenu(selected: viewModel.pair.traveler, isTraveler: true)
-        themButton.menu = languageMenu(selected: viewModel.pair.local, isTraveler: false)
-    }
-
-    private func setLanguageTitle(_ button: UIButton, code: String) {
-        button.configuration?.attributedTitle = AttributedString(
-            LanguageNames.endonym(code),
-            attributes: AttributeContainer([
-                .font: UIFont.systemFont(ofSize: 16, weight: .semibold),
-                .foregroundColor: UIColor.label,
-            ])
-        )
-    }
-
-    private func languageMenu(selected: String, isTraveler: Bool) -> UIMenu {
-        let actions = SupportedLanguages.codes.map { code in
-            UIAction(title: LanguageNames.endonym(code), state: code == selected ? .on : .off) { [weak self] _ in
-                if isTraveler { self?.viewModel.setTravelerLanguage(code) } else { self?.viewModel.setLocalLanguage(code) }
-                self?.refreshLanguageButtons()
-            }
-        }
-        return UIMenu(children: actions)
-    }
-
-    /// Keep the minutes label live: the credit store sheet (and in-session
-    /// billing) mutate the shared store's balance while this screen stays
-    /// presented, and dismissing a sheet doesn't re-fire `viewDidAppear` on the
-    /// presenter — so bind to the published balance instead of only sampling it
-    /// on appear. `@Published` emits the current value on subscribe, so the
-    /// label is set immediately.
-    ///
-    /// A demo launch shows the documented free-tier grant instead of binding
-    /// live: simulators can never pass the App Attest check mako's identity
-    /// endpoint requires, so the real balance is always stuck at 0 there,
-    /// which would misrepresent what a real first launch shows.
+    /// Keep the minutes row live: the credit store sheet (and in-session billing) mutate the shared store's balance
+    /// while this screen stays presented, and dismissing a sheet doesn't re-fire `viewDidAppear` on the presenter, so
+    /// the list follows the published balance instead of only sampling it on appear.
     private func observeBalance() {
-        #if DEBUG
-        if ProcessInfo.processInfo.environment["PSYBEAM_DEMO"] != nil {
-            minutesLabel.text = String(localized: "\(DemoConfiguration.freeMinutesGrant) min")
-            return
-        }
-        #endif
+        guard !isDemoLaunch else { return }
         AICreditsManager.store.$balance
+            .dropFirst()
+            .removeDuplicates()
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] balance in self?.minutesLabel.text = String(localized: "\(balance) min") }
+            .sink { [weak self] _ in self?.refreshList() }
             .store(in: &cancellables)
     }
 
-    private func fetchBalance() {
-        Task { await AICreditsManager.store.refresh() }
-    }
-
-    @objc private func openStore() {
-        impact.impactOccurred()
-        let store = AICreditsManager.store
-        let host = UIHostingController(rootView: CreditStoreView().environmentObject(store))
-        Task { await store.loadCatalog() }
-        if let sheet = host.sheetPresentationController {
-            sheet.detents = [.medium(), .large()]
-            sheet.prefersGrabberVisible = true
+    /// iOS offers no notification for the microphone mode, which the person changes in Control Center, so it is read
+    /// once a second while the sheet is open and the list is rebuilt only when it changed.
+    private func watchMicMode() {
+        micModeTask?.cancel()
+        micModeTask = Task { [weak self] in
+            while !Task.isCancelled {
+                try? await Task.sleep(for: .seconds(1))
+                guard let self, !Task.isCancelled else { return }
+                if Self.currentMicModeName() != shownMicMode { refreshList() }
+            }
         }
-        present(host, animated: true)
     }
 
-    private func micModeRow() -> UIView {
-        micModeValue.font = .systemFont(ofSize: 16, weight: .semibold)
-        micModeValue.textColor = .secondaryLabel
-        let chevron = UIImageView(image: UIImage(systemName: "chevron.right", withConfiguration: UIImage.SymbolConfiguration(pointSize: 12, weight: .semibold)))
-        chevron.tintColor = .tertiaryLabel
-        let trailing = UIStackView(arrangedSubviews: [micModeValue, chevron])
-        trailing.spacing = 5
-        trailing.alignment = .center
-        let r = row(icon: "waveform", tint: brand, String(localized: "Voice Isolation"), control: trailing)
-        r.isUserInteractionEnabled = true
-        r.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(openMicModes)))
-        return r
-    }
-
-    private func caption(_ text: String, icon: String, tint: UIColor) -> UIView {
-        let label = UILabel()
-        label.text = text
-        label.numberOfLines = 0
-        label.font = .systemFont(ofSize: 13)
-        label.textColor = .secondaryLabel
-        let stack = UIStackView(arrangedSubviews: [iconTile(icon, tint), label])
-        stack.alignment = .top
-        stack.spacing = 12
-        stack.isLayoutMarginsRelativeArrangement = true
-        stack.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 12, leading: 16, bottom: 14, trailing: 16)
-        return stack
-    }
-
-    private func refreshMicMode() {
-        micModeValue.text = Self.micModeName(AVCaptureDevice.activeMicrophoneMode)
-    }
-
-    private static func micModeName(_ mode: AVCaptureDevice.MicrophoneMode) -> String {
-        switch mode {
+    static func currentMicModeName() -> String {
+        switch AVCaptureDevice.activeMicrophoneMode {
         case .voiceIsolation: String(localized: "Voice Isolation")
         case .wideSpectrum: String(localized: "Wide Spectrum")
         case .standard: String(localized: "Standard")
@@ -503,110 +105,14 @@ final class SettingsViewController: UIViewController {
         }
     }
 
-    @objc private func openMicModes() {
-        impact.impactOccurred()
-        AVCaptureDevice.showSystemUserInterface(.microphoneModes)
+    /// A demo launch shows the documented free-tier grant instead of the live balance: simulators can never pass the
+    /// App Attest check mako's identity endpoint requires, so the real balance is always stuck at 0 there, which would
+    /// misrepresent what a real first launch shows.
+    var isDemoLaunch: Bool {
+        #if DEBUG
+        ProcessInfo.processInfo.environment["PSYBEAM_DEMO"] != nil
+        #else
+        false
+        #endif
     }
-
-    @objc private func autoChanged(_ sender: UISwitch) {
-        impact.impactOccurred()
-        AppSettings.autoDetectLocation = sender.isOn
-        if sender.isOn { onAutoDetectEnabled() }
-    }
-    @objc private func brightChanged(_ sender: UISwitch) { impact.impactOccurred(); AppSettings.keepScreenBright = sender.isOn; onBrightnessChanged() }
-    @objc private func chimeChanged(_ sender: UISwitch) { impact.impactOccurred(); AppSettings.turnChime = sender.isOn }
-
-    @objc private func appearanceChanged(_ sender: UISegmentedControl) {
-        let mode = AppearanceMode(rawValue: sender.selectedSegmentIndex) ?? .system
-        AppSettings.appearance = mode
-        impact.impactOccurred()
-        UIView.animate(withDuration: 0.3) {
-            self.view.window?.overrideUserInterfaceStyle = UIUserInterfaceStyle(rawValue: mode.rawValue) ?? .unspecified
-        }
-    }
-
-    @objc private func revokeConsent() {
-        impact.impactOccurred()
-        AppSettings.aiConsentGranted = false
-        viewModel.end()
-        dismiss(animated: true)
-    }
-
-    @objc private func openPrivacyPolicy() {
-        impact.impactOccurred()
-        UIApplication.shared.open(Links.privacyPolicy)
-    }
-
-    /// The share sheet gets the text and the URL as separate items so Messages and Mail render
-    /// a rich App Store link card instead of a bare URL buried in a sentence.
-    @objc private func sharePsybeam(_ sender: UIButton) {
-        impact.impactOccurred()
-        let pitch = String(localized: "Talk to anyone in their language. Psybeam translates voice to voice while you travel.")
-        let sheet = UIActivityViewController(activityItems: [pitch, Links.appStore], applicationActivities: nil)
-        sheet.popoverPresentationController?.sourceView = sender
-        present(sheet, animated: true)
-    }
-
-    @objc private func ratePsybeam() {
-        impact.impactOccurred()
-        UIApplication.shared.open(Links.writeReview)
-    }
-
-    @objc private func confirmDeleteAccount() {
-        impact.impactOccurred()
-        let alert = UIAlertController(
-            title: String(localized: "Delete Account?"),
-            message: String(localized: "This permanently deletes your account and any remaining minutes from our servers and erases on-device data. This can’t be undone."),
-            preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: String(localized: "Cancel"), style: .cancel))
-        alert.addAction(UIAlertAction(title: String(localized: "Delete Account"), style: .destructive) { [weak self] _ in
-            self?.performDeleteAccount()
-        })
-        present(alert, animated: true)
-    }
-
-    private func performDeleteAccount() {
-        let progress = UIAlertController(title: nil, message: String(localized: "Deleting…"), preferredStyle: .alert)
-        present(progress, animated: true)
-        Task { @MainActor in
-            do {
-                try await AccountService().deleteAccount()
-                self.wipeLocalData()
-                self.viewModel.end()
-                await AICreditsManager.store.bootstrap()
-                progress.dismiss(animated: true) { self.showAccountDeleted() }
-            } catch {
-                progress.dismiss(animated: true) { self.showDeletionFailed() }
-            }
-        }
-    }
-
-    private func wipeLocalData() {
-        AppSettings.aiConsentGranted = false
-        AppSettings.pendingSessionId = nil
-        AppSettings.pendingReservedMinutes = 0
-        try? DatabaseManager.shared.wipe()
-    }
-
-    private func showAccountDeleted() {
-        let alert = UIAlertController(
-            title: String(localized: "Account Deleted"),
-            message: String(localized: "Your account and data have been removed."),
-            preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: String(localized: "OK"), style: .default) { [weak self] _ in
-            self?.dismiss(animated: true) { self?.onDismiss?() }
-        })
-        present(alert, animated: true)
-    }
-
-    private func showDeletionFailed() {
-        let alert = UIAlertController(
-            title: String(localized: "Couldn’t Delete Account"),
-            message: String(localized: "Please check your connection and try again."),
-            preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: String(localized: "OK"), style: .default))
-        present(alert, animated: true)
-    }
-
-    @objc private func dismissSelf() { dismiss(animated: true) }
 }
