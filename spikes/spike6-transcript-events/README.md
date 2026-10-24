@@ -59,9 +59,9 @@ The spike checked whether they change anything for Psybeam. Two findings did.
 
 - **mako** `src/handlers/realtime.rs` — mint body now sends
   `audio.input.transcription.model = gpt-4o-mini-transcribe`.
-- `Psybeam/Conversation/TranslationLeg.swift` — `scheduleSettle()`/`finishTurn()` close a
+- `Features/Conversation/TranslationLeg.swift` — `scheduleSettle()`/`finishTurn()` close a
   turn on quiescence; `settleInterval` is injectable so tests don't sleep for real.
-- `Psybeam/Services/RealtimeCallService.swift` — `isTurnFinal(_:)` extracted and
+- `App/Services/RealtimeCallService.swift` — `isTurnFinal(_:)` extracted and
   documented as forward compatibility only.
 
 ## Re-running

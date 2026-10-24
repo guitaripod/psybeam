@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Runs both test suites:
-#   1. PsybeamKit (SPM) — pure logic incl. the cause-accurate failure mapping. Linux + macOS.
+#   1. PsybeamCore (SPM) — pure logic incl. the cause-accurate failure mapping. Linux + macOS.
 #   2. Psybeam (hosted iOS unit tests) — TranslationLeg state machine, driven through a
 #      mock RealtimeCallProviding on a simulator.
 #
@@ -17,8 +17,8 @@ if [ ! -f "$ROOT/.env.local" ]; then
 fi
 set -a; . "$ROOT/.env.local"; set +a
 
-echo "== PsybeamKit (SPM) =="
-swift test
+echo "== PsybeamCore (SPM) =="
+(cd Core/PsybeamCore && swift test)
 
 echo "== Psybeam iOS tests (simulator) =="
 xcodegen generate >/dev/null

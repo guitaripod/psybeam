@@ -33,8 +33,8 @@ settings:
       SWIFT_OPTIMIZATION_LEVEL: "-O"
 
 packages:
-  PsybeamKit:
-    path: .
+  PsybeamCore:
+    path: Core/PsybeamCore
   GRDB:
     url: https://github.com/groue/GRDB.swift
     from: "7.0.0"
@@ -55,10 +55,12 @@ targets:
     type: application
     platform: iOS
     sources:
-      - path: Psybeam
+      - path: App
+      - path: Features
+      - path: Resources
     dependencies:
-      - package: PsybeamKit
-        product: PsybeamKit
+      - package: PsybeamCore
+        product: PsybeamCore
       - package: GRDB
       - package: WebRTC
       - package: AICredits
@@ -69,7 +71,7 @@ targets:
         product: AICreditsUI
       - package: MidgarKit
     info:
-      path: Psybeam/Info.plist
+      path: App/Info.plist
       properties:
         CFBundleDisplayName: Psybeam
         CFBundleShortVersionString: "$(MARKETING_VERSION)"
@@ -117,7 +119,7 @@ targets:
           - com.midgarcorp.flaccy
           - com.midgarcorp.flaccy.mac
     entitlements:
-      path: Psybeam/Psybeam.entitlements
+      path: App/Psybeam.entitlements
       properties:
         com.apple.developer.applesignin:
           - Default
@@ -146,11 +148,11 @@ targets:
     type: bundle.unit-test
     platform: iOS
     sources:
-      - PsybeamTests
+      - Tests/PsybeamTests
     dependencies:
       - target: Psybeam
-      - package: PsybeamKit
-        product: PsybeamKit
+      - package: PsybeamCore
+        product: PsybeamCore
     settings:
       base:
         GENERATE_INFOPLIST_FILE: YES

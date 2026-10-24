@@ -17,7 +17,7 @@ This is the build document. Every P0/P1/P2 from the principal review is resolved
 | C | Turn-taking default | **Auto-VAD + half-tap override** — *contingent on Spike 2*; falls back to hold-to-talk handset if the noisy-room echo test fails. |
 | D | Offline scope | **v1, not MVP.** MVP uses online `CLGeocoder` reverse-geocoding. |
 
-**Foundation scaffolded & green (2026-06-06):** PsybeamKit core (21 tests), psybeam-worker (38 tests, typecheck clean), iOS app (`xcodebuild BUILD SUCCEEDED`). *(The in-repo `psybeam-worker` was never deployed and has since been removed — the shipped backend is the shared **mako** credits service; see §5.)*
+**Foundation scaffolded & green (2026-06-06):** PsybeamCore core (21 tests), psybeam-worker (38 tests, typecheck clean), iOS app (`xcodebuild BUILD SUCCEEDED`). *(The in-repo `psybeam-worker` was never deployed and has since been removed — the shipped backend is the shared **mako** credits service; see §5.)*
 
 **Spike 1 — RESOLVED (2026-06-07).** `gpt-realtime-translate` is served ONLY under the dedicated `/v1/realtime/translations` namespace (the general `/v1/realtime` path 404s its inference — `inference_not_found_error`). Verified flow, live against the API:
 - **Mint (Worker):** `POST https://api.openai.com/v1/realtime/translations/client_secrets`, body `{ session: { model, audio: { output: { language } } } }` (NO `type` field) → `{ value: "ek_…", expires_at, session.type:"translation" }`.
@@ -72,7 +72,7 @@ Mirrors golf-coach / embr exactly.
 
 | Part | Name | Contents |
 |---|---|---|
-| **(1) SPM core** | **`PsybeamKit`** (Swift 6, **Linux-compiles, NO UIKit/AVFoundation/Combine — Combine fully removed**, see §10) | `TranslationState`/`Side` enums; `TranslationProviding`/`LocationLanguageProviding`/`Translating` **Sendable** protocols exposing **`AsyncStream`/`AsyncSequence`** (no `AnyPublisher`); provider-agnostic request-spec structs; WS/WebRTC message DTOs; `CountryLocator` (online + offline impls) + `CldrLanguageTable` + `LocaleSuggestion` (pure value types); GRDB record structs. |
+| **(1) SPM core** | **`PsybeamCore`** (Swift 6, **Linux-compiles, NO UIKit/AVFoundation/Combine — Combine fully removed**, see §10) | `TranslationState`/`Side` enums; `TranslationProviding`/`LocationLanguageProviding`/`Translating` **Sendable** protocols exposing **`AsyncStream`/`AsyncSequence`** (no `AnyPublisher`); provider-agnostic request-spec structs; WS/WebRTC message DTOs; `CountryLocator` (online + offline impls) + `CldrLanguageTable` + `LocaleSuggestion` (pure value types); GRDB record structs. |
 | **(2) iOS app** | **`Psybeam`** (programmatic UIKit, MVVM+Combine) | `ConversationViewController` (@MainActor), `RealtimeCallService` (actor, owns `RTCPeerConnection` + `RTCAudioSession`), `LocationLanguageService` (actor over CoreLocation), `OpenAIRealtimeTranslate`/`AzureLiveInterpreter` adapters, simple color-fill divider view, Liquid-Glass caption cards. **Combine lives only here, at the VM↔VC boundary.** |
 | **(3) backend** | ~~**`psybeam-worker`**~~ → **mako** (shared, `mako.midgarcorp.cc`, repo `pixie`) | **The in-repo worker was never shipped and has been removed.** mako mints the `ek_` token (`/v1/run/realtime.translate/start`), meters minutes as credits, and does anonymous-first identity + SIWA. See §5. |
 
@@ -120,7 +120,7 @@ Mirrors golf-coach / embr exactly.
 
 **Sendable surface (Combine removed from core):**
 ```swift
-// PsybeamKit (pure, Sendable, Linux-compilable — NO AVFoundation, NO Combine)
+// PsybeamCore (pure, Sendable, Linux-compilable — NO AVFoundation, NO Combine)
 public enum CallState: Sendable, Equatable {
     case idle, connecting, live(turn: Side), reconnecting, interrupted, ended, failed(CallError)
 }
@@ -195,7 +195,7 @@ GET  /v1/me/quota
 
 **MVP uses online `CLGeocoder` reverse-geocoding** for country→language (the review's #12 trim). The offline polygon engine is a **v1** feature — and it was *already* scoped to v1 for the no-signal path, so this just stops MVP from carrying it. Rationale: the "no bars at the border" case is real but rare, and reverse-geocoding the common case is one API call with zero bundle weight.
 
-**The service.** `LocationLanguageService` is an `actor` in `Psybeam` wrapping `CLLocationManager`/`CLServiceSession`; the pure resolution logic (`CldrLanguageTable`, `LocaleSuggestion`, and — in v1 — the offline `PolygonCountryLocator`) lives in `PsybeamKit` and takes `(lat, lon)` or `(countryCode)` with **no CoreLocation import** (Linux-testable). Auth: **`whenInUse` only** (foreground tool; never `Always`, never `startUpdatingLocation`). One-shot foreground fix is the source of truth. Honor `.accuracyLimited`/`.locationUnavailable` → downgrade confidence near borders, suppress bad suggestions. **Do not depend on `CLMonitor` geofences for correctness** (documented unreliable across iOS 17–18; *not* a specific "26.1 regression," which was an unsupported claim — correctly walked back).
+**The service.** `LocationLanguageService` is an `actor` in `Psybeam` wrapping `CLLocationManager`/`CLServiceSession`; the pure resolution logic (`CldrLanguageTable`, `LocaleSuggestion`, and — in v1 — the offline `PolygonCountryLocator`) lives in `PsybeamCore` and takes `(lat, lon)` or `(countryCode)` with **no CoreLocation import** (Linux-testable). Auth: **`whenInUse` only** (foreground tool; never `Always`, never `startUpdatingLocation`). One-shot foreground fix is the source of truth. Honor `.accuracyLimited`/`.locationUnavailable` → downgrade confidence near borders, suppress bad suggestions. **Do not depend on `CLMonitor` geofences for correctness** (documented unreliable across iOS 17–18; *not* a specific "26.1 regression," which was an unsupported claim — correctly walked back).
 
 **v1 offline boundary approach (deferred, de-risked into Spike 5).** Bundle **Natural Earth 1:10m Admin-0** (public domain) for microstate correctness. **The review is right that a uniform-detail 1:10m file at a 1–4 MB target is not credible** — raw is ~20–25 MB. Resolution: **a hybrid layer** — coarse 1:50m for the common case + a **separate small enclave-only high-res layer** for the ~12 problem features (Vatican, San Marino, Büsingen, Llívia, Baarle, Monaco, Liechtenstein, Lesotho, Kaliningrad, Campione). This is smaller and faster than one uniformly-detailed file. **Bundle size and cold-start parse time are unverified → Spike 5 measures both before committing.** Runtime engine: pure-Swift ray-cast (Jordan-curve) + bbox pre-filter + nearest-polygon fallback — **NO GEOSwift/GEOS (LGPL static-linking trap)**; MIT GeoJSON parser at build time only.
 
@@ -207,7 +207,7 @@ GET  /v1/me/quota
 
 ## 7. UX & STATE MACHINE
 
-**Canonical `TranslationState`** (`PsybeamKit`, `nonisolated enum: Sendable`; the VM exposes exactly one `PassthroughSubject<TranslationState, Never>`, the VC subscribes once in `viewDidLoad`). **Expanded with the states the review found missing** — these *will* fire on foreign cellular and the clueless-local thesis demands each be visually legible, not a generic red triangle:
+**Canonical `TranslationState`** (`PsybeamCore`, `nonisolated enum: Sendable`; the VM exposes exactly one `PassthroughSubject<TranslationState, Never>`, the VC subscribes once in `viewDidLoad`). **Expanded with the states the review found missing** — these *will* fire on foreign cellular and the clueless-local thesis demands each be visually legible, not a generic red triangle:
 ```swift
 public enum Side: Sendable { case a, b }          // a = traveler (blue), b = local (green)
 public enum TranslationState: Sendable, Equatable {
@@ -266,7 +266,7 @@ public struct AppPreferences: Codable, FetchableRecord, PersistableRecord, Senda
 ```
 `AppPreferences` (consent + prefs) ships in **MVP** even though conversation history doesn't — consent state must persist. Migrations: `v1` = these tables; `v2` adds `phrasebook`; `v3` multi-speaker. List cells: `UIBackgroundConfiguration.listCell()`.
 
-**Sendable protocols `PsybeamKit` exposes — Combine removed, `AsyncStream` throughout** (review #10):
+**Sendable protocols `PsybeamCore` exposes — Combine removed, `AsyncStream` throughout** (review #10):
 ```swift
 public protocol TranslationProviding: Sendable {
     func openSession(spec: TranslationSessionSpec) async throws -> TranslationSessionHandle

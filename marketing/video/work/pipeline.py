@@ -6,7 +6,7 @@ ASSETS = f"{ROOT}/assets"
 FF = "/opt/homebrew/bin/ffmpeg"
 FP = "/opt/homebrew/bin/ffprobe"
 TEXTCARD = f"{WORK}/textcard/textcard"
-ICON = "/Users/marcus/Dev/ios/psybeam/Psybeam/Assets.xcassets/AppIcon.appiconset/icon-1024.png"
+ICON = "/Users/marcus/Dev/ios/psybeam/Resources/Assets.xcassets/AppIcon.appiconset/icon-1024.png"
 
 W, H, FPS = 1080, 1920, 30
 SEG_DIR = f"{WORK}/segments"

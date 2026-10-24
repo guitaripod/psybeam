@@ -4,7 +4,7 @@
 # - Creates .env.local from .env.local.example if missing (auto-detecting the
 #   signing Team ID when possible).
 # - Regenerates Psybeam.xcodeproj from project.yml (xcodegen).
-# - Resolves the local PsybeamKit package + GRDB.
+# - Resolves the local PsybeamCore package + GRDB.
 #
 # Safe to re-run.
 
@@ -41,6 +41,6 @@ echo "==> xcodegen generate"
 xcodegen generate
 
 echo "==> swift package resolve"
-swift package resolve >/dev/null 2>&1 || true
+(cd Core/PsybeamCore && swift package resolve >/dev/null 2>&1) || true
 
 echo "==> Done. Next: edit .env.local, then scripts/ios-build.sh"

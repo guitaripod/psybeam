@@ -7,7 +7,7 @@
 #   cannot mask it).
 # - On failure, surfaces the first error / Swift 6 concurrency lines from the
 #   raw log.
-# - After a successful build, asserts that no .swift under Psybeam/ or Sources/
+# - After a successful build, asserts that no .swift under App/, Features/ or Core/
 #   is newer than the built binary. If anything is, the build was stale → abort.
 #
 # Usage: scripts/ios-build.sh [destination]
@@ -81,7 +81,7 @@ if [ ! -f "$BIN" ]; then
   exit 1
 fi
 
-NEWER="$(find Psybeam Sources -name '*.swift' -newer "$BIN" 2>/dev/null || true)"
+NEWER="$(find App Features Core -name '*.swift' -newer "$BIN" 2>/dev/null || true)"
 if [ -n "$NEWER" ]; then
   echo "" >&2
   echo "❌ BUILD IS STALE — source files newer than the binary:" >&2

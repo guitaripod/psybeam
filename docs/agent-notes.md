@@ -12,8 +12,8 @@ Shipping. Live on the App Store as **1.1.0** (2026-09-04: 22 UI languages, audio
 
 ## Stack
 
-- **PsybeamKit** (`Sources/PsybeamKit`): platform-agnostic Swift 6 — `TranslationState`/`Side`/`CallState` enums, `RealtimeCallProviding`/`TranslationProviding`/`LocationLanguageProviding`/`Translating` **Sendable** protocols exposing `AsyncStream` (no UIKit/AVFoundation/Combine imports), provider DTOs, `CldrLanguageTable` + `LocaleSuggestion`, GRDB record structs. **Compiles and tests on Linux and macOS.**
-- **Psybeam** (`Psybeam/`, xcodegen): programmatic UIKit, MVVM. Combine `PassthroughSubject` lives **only** at the VM↔VC seam. `RealtimeCallService` (actor, owns `RTCPeerConnection` + `RTCAudioSession`), `LocationLanguageService` (actor over CoreLocation), `OpenAIRealtimeTranslate` adapter (the Azure fallback adapter is retired — Spike 1 disproved the output-language ceiling). Swift 6 strict concurrency, iOS 18+ deploy target / iOS 26 SDK, iPhone-only. Darwin-only — build on a Mac.
+- **PsybeamCore** (`Core/PsybeamCore/Sources/PsybeamCore`): platform-agnostic Swift 6 — `TranslationState`/`Side`/`CallState` enums, `RealtimeCallProviding`/`TranslationProviding`/`LocationLanguageProviding`/`Translating` **Sendable** protocols exposing `AsyncStream` (no UIKit/AVFoundation/Combine imports), provider DTOs, `CldrLanguageTable` + `LocaleSuggestion`, GRDB record structs. **Compiles and tests on Linux and macOS.**
+- **Psybeam** (`App/`, `Features/`, `Resources/`, `Tests/`, xcodegen): programmatic UIKit, MVVM. Combine `PassthroughSubject` lives **only** at the VM↔VC seam. `RealtimeCallService` (actor, owns `RTCPeerConnection` + `RTCAudioSession`), `LocationLanguageService` (actor over CoreLocation), `OpenAIRealtimeTranslate` adapter (the Azure fallback adapter is retired — Spike 1 disproved the output-language ceiling). Swift 6 strict concurrency, iOS 18+ deploy target / iOS 26 SDK, iPhone-only. Darwin-only — build on a Mac.
 - **Backend**: the shared **mako** AICredits service, reached through the Midgar gateway at `https://api.midgarcorp.cc/v1/intelligence` (`PsybeamMidgar.intelligenceURL`; source in `services/intelligence` of the monorepo): token mint, credit metering, anonymous-first identity + SIWA. **Not in this app's folder** (the old in-repo `psybeam-worker` was vestigial and has been removed). The old `mako.midgarcorp.cc` host still serves builds in the field.
 
 ## Backend
@@ -27,8 +27,8 @@ Shipping. Live on the App Store as **1.1.0** (2026-09-04: 22 UI languages, audio
 - `final class` for classes; `nonisolated struct: Sendable` for value types.
 - `@available(*, unavailable) required init?(coder: NSCoder) { fatalError() }` on every custom view/VC.
 - Programmatic only — no storyboards/XIB. `UIStackView` first, then anchors.
-- Core surfaces expose `AsyncStream`/`AsyncSequence` and **Sendable** protocols — no Combine in `PsybeamKit`. The `@MainActor` VM consumes the stream in a `Task` and republishes to the VC via its own `PassthroughSubject<T, Never>` (never `@Published`); VCs bind in `viewDidLoad`, hold `Set<AnyCancellable>`, `.receive(on: DispatchQueue.main)`.
-- Service protocols in `PsybeamKit` where platform-agnostic; concrete singletons (`.shared`) injected through inits with defaults.
+- Core surfaces expose `AsyncStream`/`AsyncSequence` and **Sendable** protocols — no Combine in `PsybeamCore`. The `@MainActor` VM consumes the stream in a `Task` and republishes to the VC via its own `PassthroughSubject<T, Never>` (never `@Published`); VCs bind in `viewDidLoad`, hold `Set<AnyCancellable>`, `.receive(on: DispatchQueue.main)`.
+- Service protocols in `PsybeamCore` where platform-agnostic; concrete singletons (`.shared`) injected through inits with defaults.
 - GRDB: `nonisolated struct` records, `DatabaseMigrator.registerMigration("vN")`, never edited after release. On-device only — transcripts never leave the phone.
 - `UIBackgroundConfiguration.listCell()` on list cells. SF Symbol effects (`.pulse` repeat on listening, `.variableColor` on waveforms, `.bounce`/`.replace` on completion). Liquid Glass (`UIGlassEffect`/`UIGlassContainerEffect`) on iOS 26, `.systemThinMaterial` fallback on iOS 18.
 - No comments, no MARK, no file headers. `///` doc comments sparingly. SPM only.
@@ -44,7 +44,7 @@ Shipping. Live on the App Store as **1.1.0** (2026-09-04: 22 UI languages, audio
 - **Settings**: MidgarUI's `MidgarSettingsViewController` with the portal card and Psybeam's sections (`Settings/`, theme in `PsybeamTheme.swift`); languages and appearance push `OptionPickerViewController`.
 - **Review prompt**: `ReviewPrompt` reports each completed turn to `MidgarReviewPolicy` (no ask before 3 days and 6 sessions); `LegacyReviewState` carries the old ask history over.
 - **Conversation screen**: `ConversationViewController` is split into extensions by seam (layout, configuration, first run, notice, microphone, demo). Its members are internal, not private, for that reason.
-- **Privacy**: `Psybeam/PrivacyInfo.xcprivacy`, `store/privacy-label.md` and the policy at `web/midgarcorp/src/content/legal/psybeam/privacy.html` move together; the store privacy URL is `https://midgarcorp.cc/legal/psybeam/privacy`.
+- **Privacy**: `Resources/PrivacyInfo.xcprivacy`, `store/privacy-label.md` and the policy at `web/midgarcorp/src/content/legal/psybeam/privacy.html` move together; the store privacy URL is `https://midgarcorp.cc/legal/psybeam/privacy`.
 
 ## Build & deploy — MANDATORY: use the scripts (Mac only)
 
@@ -54,7 +54,7 @@ xcodegen regenerates `Psybeam.xcodeproj` from `project.yml` on every build, so:
 scripts/setup.sh         # one-time: .env.local + xcodegen + spm
 scripts/ios-build.sh     # device build, with staleness assertion
 scripts/ios-deploy.sh    # build + install + relaunch on PSYBEAM_DEVICE_UDID
-scripts/ios-test.sh      # PsybeamKit (SPM) + hosted iOS TranslationLeg tests on a simulator
+scripts/ios-test.sh      # PsybeamCore (SPM) + hosted iOS TranslationLeg tests on a simulator
 ```
 
 `ios-build.sh` runs `xcodegen generate` first, captures the real xcodebuild exit code via `pipefail`, surfaces Swift 6 concurrency errors, and asserts no `.swift` is newer than the built binary. Adding/removing any file → just run `ios-build.sh`. Never call `xcodebuild` raw.

@@ -12,8 +12,8 @@ Speech is translated by OpenAI's `gpt-realtime-translate` (simultaneous speech-t
 
 Two parts in this repo, plus a shared backend:
 
-- **`Sources/PsybeamKit`** — platform-agnostic Swift 6 core: the `TranslationState`/`Side`/`CallState` state machine, `Sendable` provider protocols exposing `AsyncStream`, DTOs, and the CLDR locale tables. No UIKit/AVFoundation. Compiles and tests on Linux and macOS.
-- **`Psybeam/`** — the programmatic UIKit app (xcodegen, no storyboards). MVVM with Combine only at the VM↔VC seam, a Metal aurora that reacts to the voice, Sign in with Apple, Liquid Glass. iOS 18+ deploy target, iOS 26 SDK, iPhone-only.
+- **`Core/PsybeamCore/Sources/PsybeamCore`** — platform-agnostic Swift 6 core: the `TranslationState`/`Side`/`CallState` state machine, `Sendable` provider protocols exposing `AsyncStream`, DTOs, and the CLDR locale tables. No UIKit/AVFoundation. Compiles and tests on Linux and macOS.
+- **`App/`, `Features/`, `Resources/`** — the programmatic UIKit app (xcodegen, no storyboards). MVVM with Combine only at the VM↔VC seam, a Metal aurora that reacts to the voice, Sign in with Apple, Liquid Glass. iOS 18+ deploy target, iOS 26 SDK, iPhone-only.
 
 The backend is **mako**, a shared Cloudflare Worker behind the Midgar gateway (`api.midgarcorp.cc/v1/intelligence`, source in `services/intelligence`) that mints the ephemeral OpenAI token, meters minutes as credits, and handles Sign in with Apple. It lives outside this folder.
 
