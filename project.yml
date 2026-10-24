@@ -18,7 +18,7 @@ settings:
     SWIFT_UPCOMING_FEATURE_EXISTENTIAL_ANY: YES
     SWIFT_UPCOMING_FEATURE_REGION_BASED_ISOLATION: YES
     CODE_SIGN_STYLE: Automatic
-    DEVELOPMENT_TEAM: ${PSYBEAM_TEAM_ID}
+    DEVELOPMENT_TEAM: P4DQK6SRKR
     ENABLE_USER_SCRIPT_SANDBOXING: YES
     GENERATE_INFOPLIST_FILE: NO
     IPHONEOS_DEPLOYMENT_TARGET: "18.0"
@@ -135,7 +135,7 @@ targets:
         keychain-access-groups: *midgarKeychainGroups
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: ${PSYBEAM_BUNDLE_ID}
+        PRODUCT_BUNDLE_IDENTIFIER: com.guitaripod.psybeam
         PRODUCT_NAME: Psybeam
         SWIFT_APPROACHABLE_CONCURRENCY: YES
         SWIFT_DEFAULT_ACTOR_ISOLATION: MainActor
@@ -165,7 +165,7 @@ targets:
     settings:
       base:
         GENERATE_INFOPLIST_FILE: YES
-        PRODUCT_BUNDLE_IDENTIFIER: ${PSYBEAM_BUNDLE_ID}.tests
+        PRODUCT_BUNDLE_IDENTIFIER: com.guitaripod.psybeam.tests
         TEST_HOST: $(BUILT_PRODUCTS_DIR)/Psybeam.app/Psybeam
         BUNDLE_LOADER: $(TEST_HOST)
         SWIFT_STRICT_CONCURRENCY: complete
