@@ -11,7 +11,8 @@ extension SettingsViewController {
         }
         wipeLocalData()
         viewModel.end()
-        await AICreditsManager.store.bootstrap()
+        credits.forget()
+        await credits.refresh()
         showAccountDeleted()
     }
 

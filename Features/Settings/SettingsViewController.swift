@@ -9,6 +9,7 @@ import UIKit
 /// language and the microphone mode.
 final class SettingsViewController: UINavigationController {
     let viewModel: ConversationViewModel
+    let credits: CreditsModel
     let onBrightnessChanged: () -> Void
     let onAutoDetectEnabled: () -> Void
     var onDismiss: (() -> Void)?
@@ -26,10 +27,12 @@ final class SettingsViewController: UINavigationController {
 
     init(
         viewModel: ConversationViewModel,
+        credits: CreditsModel,
         onBrightnessChanged: @escaping () -> Void,
         onAutoDetectEnabled: @escaping () -> Void
     ) {
         self.viewModel = viewModel
+        self.credits = credits
         self.onBrightnessChanged = onBrightnessChanged
         self.onAutoDetectEnabled = onAutoDetectEnabled
         super.init(nibName: nil, bundle: nil)
@@ -52,7 +55,7 @@ final class SettingsViewController: UINavigationController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         refreshList()
-        Task { await AICreditsManager.store.refresh() }
+        Task { await credits.refresh() }
         watchMicMode()
     }
 
@@ -70,14 +73,11 @@ final class SettingsViewController: UINavigationController {
         list.sections = makeSections()
     }
 
-    /// Keep the minutes row live: the credit store sheet (and in-session billing) mutate the shared store's balance
-    /// while this screen stays presented, and dismissing a sheet doesn't re-fire `viewDidAppear` on the presenter, so
-    /// the list follows the published balance instead of only sampling it on appear.
+    /// Keep the minutes row live: the credit store sheet (and in-session billing) change the wallet's balance while this
+    /// screen stays presented, and dismissing a sheet doesn't re-fire `viewDidAppear` on the presenter, so the list
+    /// follows the model's balance instead of only sampling it on appear.
     private func observeBalance() {
-        guard !isDemoLaunch else { return }
-        AICreditsManager.store.$balance
-            .dropFirst()
-            .removeDuplicates()
+        credits.balanceChanges
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in self?.refreshList() }
             .store(in: &cancellables)
@@ -103,16 +103,5 @@ final class SettingsViewController: UINavigationController {
         case .standard: String(localized: "Standard")
         @unknown default: String(localized: "Standard")
         }
-    }
-
-    /// A demo launch shows the documented free-tier grant instead of the live balance: simulators can never pass the
-    /// App Attest check mako's identity endpoint requires, so the real balance is always stuck at 0 there, which would
-    /// misrepresent what a real first launch shows.
-    var isDemoLaunch: Bool {
-        #if DEBUG
-        ProcessInfo.processInfo.environment["PSYBEAM_DEMO"] != nil
-        #else
-        false
-        #endif
     }
 }

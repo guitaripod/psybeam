@@ -11,17 +11,38 @@ import MidgarCore
 /// exchange is billed by real elapsed talk-time instead of per-leg rounded-up
 /// (which over-charged whenever both sides spoke for sub-minute turns). An actor
 /// because the two legs report concurrently into the shared running total.
+///
+/// A settle mako accepted changes the balance (the unused reservation comes back), so `onSettled` runs after each one
+/// and the app reads the balance again.
 actor CreditsTranslationProvider: TranslationProviding {
-    private let client: AICreditsClient
+    private let apiKeyProvider: @Sendable () async throws -> String
     private let gateway: MakoGateway
+    private let onSettled: @Sendable () async -> Void
 
     private var openSessions = 0
     private var conversationSeconds = 0
     private var billedMinutes = 0
 
-    init(client: AICreditsClient, gateway: MakoGateway = PsybeamMidgar.shared.mako) {
-        self.client = client
+    /// - Parameters:
+    ///   - client: The AICredits client whose account's api key authorizes the calls.
+    ///   - gateway: mako behind the gateway.
+    ///   - onSettled: Runs after mako accepted a settle.
+    init(
+        client: AICreditsClient,
+        gateway: MakoGateway = PsybeamMidgar.shared.mako,
+        onSettled: @escaping @Sendable () async -> Void = {}
+    ) {
+        self.init(apiKey: { try await client.bootstrap().apiKey }, gateway: gateway, onSettled: onSettled)
+    }
+
+    init(
+        apiKey: @escaping @Sendable () async throws -> String,
+        gateway: MakoGateway,
+        onSettled: @escaping @Sendable () async -> Void = {}
+    ) {
+        self.apiKeyProvider = apiKey
         self.gateway = gateway
+        self.onSettled = onSettled
     }
 
     func requestSession(pair: LanguagePair, direction: Side) async throws -> SessionToken {
@@ -104,9 +125,11 @@ actor CreditsTranslationProvider: TranslationProviding {
         let result = try? await post(
             "v1/run/realtime.translate/settle", apiKey: apiKey,
             body: ["session_id": .string(sessionId), "minutes_used": .int(minutes)])
-        if result?.status == 200, AppSettings.pendingSessionId == sessionId {
+        guard result?.status == 200 else { return }
+        if AppSettings.pendingSessionId == sessionId {
             clearPending()
         }
+        await onSettled()
     }
 
     private func clearPending() {
@@ -116,7 +139,7 @@ actor CreditsTranslationProvider: TranslationProviding {
 
     private func apiKey() async throws -> String {
         do {
-            return try await client.bootstrap().apiKey
+            return try await apiKeyProvider()
         } catch {
             throw CallError.network
         }

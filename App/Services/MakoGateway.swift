@@ -2,8 +2,9 @@ import Foundation
 import MidgarCore
 
 /// mako calls the app makes itself, through the gateway at `/v1/intelligence/`: minting and settling a realtime
-/// session, and deleting the account. AICredits makes the rest (identity, balance, purchases) against the same base
-/// URL. The realtime media connection to the AI provider is not one of them and does not pass through here.
+/// session. AICredits makes the identity registration against the same base URL, and MidgarCredits the balance, the
+/// purchases and the deletion of the old account. The realtime media connection to the AI provider is not one of them
+/// and does not pass through here.
 ///
 /// `Authorization` keeps the legacy api key, which is what mako knows the person by. When the Midgar ID can be had
 /// quickly, its `midgarTokenHeader(within:)` rides next to it, which is how mako links the two. A call never

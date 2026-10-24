@@ -1,7 +1,5 @@
-import AICreditsUI
 import MidgarCore
 import PsybeamCore
-import SwiftUI
 import UIKit
 
 extension ConversationViewController {
@@ -28,12 +26,12 @@ extension ConversationViewController {
         }
         #endif
         Task {
-            do {
-                knownBalance = try await AICreditsManager.shared.client.balance().balance
-                refreshNotice()
-            } catch {
-                MidgarLog.notice("balance check failed: \(error)", category: .ui)
+            guard let balance = await credits.refresh() else {
+                MidgarLog.notice("balance check failed", category: .ui)
+                return
             }
+            knownBalance = balance
+            refreshNotice()
         }
     }
 
@@ -41,7 +39,7 @@ extension ConversationViewController {
     /// low. Users with minutes and a connection see nothing at all.
     func refreshNotice() {
         let notice = isDemo || !sessionStarted ? nil : SessionNotice.evaluate(
-            isOnline: isOnline, balance: knownBalance, lowThreshold: AICreditsManager.lowBalanceThreshold)
+            isOnline: isOnline, balance: knownBalance, lowThreshold: CreditsModel.lowBalanceThreshold)
         guard notice != shownNotice else { return }
         shownNotice = notice
         if let notice {
@@ -83,17 +81,13 @@ extension ConversationViewController {
         noticeButton.accessibilityTraits = notice.offersStore ? .button : .staticText
     }
 
-    /// On a 402 from /start (out of credits) the leg surfaces `.quotaExhausted`;
-    /// present the credit store so the user can top up minutes.
-    func presentStoreIfPossible() {
-        guard presentedViewController == nil else { return }
-        let store = AICreditsManager.store
-        let host = UIHostingController(rootView: CreditStoreView().environmentObject(store))
-        Task { await store.loadCatalog() }
-        if let sheet = host.sheetPresentationController {
-            sheet.detents = [.medium(), .large()]
-            sheet.prefersGrabberVisible = true
-        }
-        present(host, animated: true)
+    /// On a 402 from /start (out of credits) the leg surfaces `.quotaExhausted`; present the credit store so the user can
+    /// top up minutes. The 402 of a session start does not say how many credits the session needed, so the store opens
+    /// without a shortfall; a call that reports one passes it.
+    func presentStoreIfPossible(shortfall: Int? = nil) {
+        guard presentedViewController == nil,
+              let store = CreditStoreSheet.makeController(credits: credits, shortfall: shortfall)
+        else { return }
+        present(store, animated: true)
     }
 }

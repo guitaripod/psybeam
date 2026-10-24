@@ -5,6 +5,7 @@ import MidgarCore
 
 final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
+    private let credits = CreditsModel.live()
     private var creditsObservers: Set<AnyCancellable> = []
     private var didReportAdAttribution = false
 
@@ -20,10 +21,11 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
         NetworkMonitor.shared.start()
         observeCreditsEvents()
+        Task { await credits.start() }
 
         let window = UIWindow(windowScene: windowScene)
         window.overrideUserInterfaceStyle = UIUserInterfaceStyle(rawValue: AppSettings.appearance.rawValue) ?? .unspecified
-        window.rootViewController = Self.makeRoot()
+        window.rootViewController = makeRoot()
         self.window = window
         window.makeKeyAndVisible()
 
@@ -33,6 +35,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     func sceneDidBecomeActive(_ scene: UIScene) {
         reportAdAttributionOnce()
+        Task { await credits.refresh() }
     }
 
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
@@ -59,50 +62,33 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     /// permission alert is typically on screen, and a presented system alert keeps
     /// the scene `inactive` until the user answers it. The AdServices token is
     /// short-lived, so deferring capture until then loses the install. Nothing
-    /// here touches the launch critical path: the reporter returns immediately and
-    /// does its work on a detached task. Demo launches never report.
+    /// here touches the launch critical path: the wallet does the work on its own
+    /// actor and remembers mako's verdict, so an install is settled once. A test
+    /// host, a demo capture and a debug build have no wallet or say it is not a
+    /// production launch, and report nothing.
     private func reportAdAttributionOnce() {
-        #if DEBUG
-        if ProcessInfo.processInfo.environment["PSYBEAM_DEMO"] != nil { return }
-        #endif
-        guard !didReportAdAttribution else { return }
+        guard !didReportAdAttribution, let wallet = PsybeamMidgar.shared.credits else { return }
         didReportAdAttribution = true
-        AICreditsManager.shared.reportAdAttribution()
+        Task {
+            let result = await wallet.reportAdAttributionOnce()
+            MidgarLog.info("ad attribution \(result.logDescription)", category: .auth)
+        }
     }
 
-    /// The AICredits package emits no logging of its own, so the store's
-    /// published identity/error/balance transitions are the only app-visible
-    /// trace of bootstrap, Apple-link, refresh, and purchase outcomes.
+    /// The balance transitions are the only app-visible trace of the wallet, so each change is written to the file log.
     private func observeCreditsEvents() {
-        let store = AICreditsManager.store
-        store.$identity
-            .compactMap { $0 }
-            .removeDuplicates()
-            .sink { MidgarLog.info("credits identity \($0.kind.rawValue) \($0.userID.prefix(8))", category: .auth) }
-            .store(in: &creditsObservers)
-        store.$error
-            .compactMap { $0 }
-            .sink { error in
-                MidgarLog.error("credits error: \(error.localizedDescription)", category: .auth)
-                if case .purchaseFailed = error { ReviewPrompt.notePurchaseFailure() }
-            }
-            .store(in: &creditsObservers)
-        store.$balance
-            .removeDuplicates()
-            .dropFirst()
+        credits.balanceChanges
             .sink { MidgarLog.info("credits balance \($0)", category: .auth) }
             .store(in: &creditsObservers)
     }
 
-    private static func makeRoot() -> UIViewController {
-        let provider = CreditsTranslationProvider(client: AICreditsManager.shared.client)
+    private func makeRoot() -> UIViewController {
+        let credits = credits
+        let provider = CreditsTranslationProvider(client: AICreditsManager.shared.client, onSettled: { await credits.refresh() })
         let travelerCall = RealtimeCallService(translationProvider: provider)
         let localCall = RealtimeCallService(translationProvider: provider)
         let viewModel = ConversationViewModel(travelerCall: travelerCall, localCall: localCall)
-        Task {
-            await AICreditsManager.store.bootstrap()
-            await provider.settlePendingIfNeeded()
-        }
-        return ConversationViewController(viewModel: viewModel)
+        Task { await provider.settlePendingIfNeeded() }
+        return ConversationViewController(viewModel: viewModel, credits: credits)
     }
 }

@@ -65,10 +65,6 @@ targets:
       - package: WebRTC
       - package: AICredits
         product: AICreditsCore
-      - package: AICredits
-        product: AICreditsRevenueCat
-      - package: AICredits
-        product: AICreditsUI
       - package: MidgarKit
     info:
       path: App/Info.plist
@@ -145,7 +141,7 @@ targets:
         TARGETED_DEVICE_FAMILY: "1"
       configs:
         # Manual signing on the app target's Release config only — global
-        # overrides would leak onto RevenueCat's SPM targets, which reject
+        # overrides would leak onto the SPM package targets, which reject
         # provisioning profiles. Local work uses Debug (automatic signing);
         # App Store archives happen exclusively in release CI.
         Release:
@@ -178,6 +174,7 @@ schemes:
         PsybeamTests: [test]
     run:
       config: Debug
+      storeKitConfiguration: Products.storekit
     test:
       config: Debug
       targets:

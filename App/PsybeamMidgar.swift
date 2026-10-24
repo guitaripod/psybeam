@@ -1,9 +1,11 @@
 import Foundation
+import MidgarCommerce
 import MidgarCore
+import MidgarCredits
 import MidgarPortal
 
 /// The composition root of everything Psybeam shares with the other Midgar apps: the Midgar ID, the gateway client
-/// built on it, the anonymous signals client and the gateway address of mako. One instance lives for the whole
+/// built on it, the credit store and wallet, the anonymous signals client and the gateway address of mako. One instance lives for the whole
 /// process, so there is one identity.
 nonisolated final class PsybeamMidgar: Sendable {
     /// The registry slug: the `X-App-ID` of every gateway call and the id mako resolves to the `psybeam` tenant.
@@ -31,14 +33,46 @@ nonisolated final class PsybeamMidgar: Sendable {
     /// `Authorization`.
     let mako: MakoGateway
 
+    /// The purchase engine for the credit packs: StoreKit 2 with the Midgar ID as `appAccountToken`. Nil in a test host
+    /// or a demo capture, which must not reach the ledger.
+    let store: MidgarStore?
+
+    /// The wallet behind the credit packs: the balance, the purchase and the credit on the Midgar ID, with the old
+    /// AICredits api key as the legacy key so the balance from before the move stays linked. Nil where `store` is.
+    let credits: MidgarCredits?
+
     private init() {
         let configuration = MidgarHTTPConfiguration(appID: Self.appID)
         let identity = MidgarIdentity(httpConfiguration: configuration, bundleID: Self.bundleID)
         self.identity = identity
-        account = MidgarHTTPClient(configuration: identity.authorizing(configuration))
+        let account = MidgarHTTPClient(configuration: identity.authorizing(configuration))
+        self.account = account
         mako = MakoGateway(
             client: MidgarHTTPClient(configuration: configuration),
             midgarHeaders: { await Self.tokenHeaders(of: identity) })
+        let commerce = Self.makeCommerce(identity: identity, account: account, configuration: configuration)
+        store = commerce?.store
+        credits = commerce?.credits
+    }
+
+    /// Builds the store and the wallet on it, or nothing where the app reaches no Midgar service. The wallet takes the
+    /// plain configuration, because it authorizes its own requests: the legacy key and the Midgar token travel in
+    /// different headers.
+    private static func makeCommerce(
+        identity: MidgarIdentity,
+        account: MidgarHTTPClient,
+        configuration: MidgarHTTPConfiguration
+    ) -> (store: MidgarStore, credits: MidgarCredits)? {
+        guard reachesMidgarServices else { return nil }
+        let store = MidgarStore(configuration: PsybeamPacks.storeConfiguration(), identity: identity, http: account)
+        let credits = MidgarCredits(
+            configuration: PsybeamPacks.creditsConfiguration(),
+            http: configuration,
+            identity: identity,
+            purchasing: store,
+            legacyAPIKey: { await AICreditsManager.shared.legacyAPIKey() }
+        )
+        return (store, credits)
     }
 
     /// The longest a call waits for the Midgar ID's access token before it goes without.
@@ -93,6 +127,16 @@ nonisolated final class PsybeamMidgar: Sendable {
         for url in MidgarLog.logFileURLs {
             try? FileManager.default.removeItem(at: url)
         }
+    }
+
+    /// True only for the shipped app on a real launch: the Apple Ads install attribution is reported then and never from a
+    /// debug build, a test host or a demo capture.
+    static var isProductionLaunch: Bool {
+        #if DEBUG
+        false
+        #else
+        reachesMidgarServices
+        #endif
     }
 
     /// False inside an XCTest or Swift Testing host and in a DEBUG demo capture, which must not mint identities or

@@ -1,13 +1,12 @@
 import AVFAudio
 import Combine
 import PsybeamCore
-import SwiftUI
 import UIKit
-import AICreditsUI
 import MidgarCore
 
 final class ConversationViewController: UIViewController {
     let viewModel: ConversationViewModel
+    let credits: CreditsModel
     let location = LocationLanguageService()
     var cancellables = Set<AnyCancellable>()
 
@@ -92,8 +91,9 @@ final class ConversationViewController: UIViewController {
     var demoPlayer: DemoScriptPlayer?
     #endif
 
-    init(viewModel: ConversationViewModel) {
+    init(viewModel: ConversationViewModel, credits: CreditsModel) {
         self.viewModel = viewModel
+        self.credits = credits
         self.displayedPair = viewModel.pair
         super.init(nibName: nil, bundle: nil)
     }
@@ -248,9 +248,7 @@ final class ConversationViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in self?.connectivityChanged() }
             .store(in: &cancellables)
-        AICreditsManager.store.$balance
-            .dropFirst()
-            .removeDuplicates()
+        credits.balanceChanges
             .receive(on: DispatchQueue.main)
             .sink { [weak self] balance in
                 guard let self, self.knownBalance != nil else { return }
@@ -467,6 +465,7 @@ final class ConversationViewController: UIViewController {
         visualizer.setPaused(true)
         let settings = SettingsViewController(
             viewModel: viewModel,
+            credits: credits,
             onBrightnessChanged: { [weak self] in self?.applyMaxBrightness() },
             onAutoDetectEnabled: { [weak self] in self?.location.requestAuthorization() }
         )

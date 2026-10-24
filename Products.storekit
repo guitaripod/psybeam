@@ -1,0 +1,72 @@
+{
+  "appPolicies" : {
+    "eula" : "",
+    "policies" : [
+      {
+        "locale" : "en_US",
+        "policyText" : "",
+        "policyURL" : "https://midgarcorp.cc/legal/psybeam/privacy"
+      }
+    ]
+  },
+  "identifier" : "B5E4A001",
+  "nonRenewingSubscriptions" : [],
+  "products" : [
+    {
+      "displayPrice" : "4.99",
+      "familyShareable" : false,
+      "internalID" : "B5E4A002",
+      "localizations" : [
+        {
+          "description" : "45 credits for live translation.",
+          "displayName" : "Small",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.guitaripod.psybeam.credits.small",
+      "referenceName" : "Small",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "9.99",
+      "familyShareable" : false,
+      "internalID" : "B5E4A003",
+      "localizations" : [
+        {
+          "description" : "120 credits for live translation.",
+          "displayName" : "Medium",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.guitaripod.psybeam.credits.medium",
+      "referenceName" : "Medium",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "19.99",
+      "familyShareable" : false,
+      "internalID" : "B5E4A004",
+      "localizations" : [
+        {
+          "description" : "300 credits for live translation.",
+          "displayName" : "Large",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.guitaripod.psybeam.credits.large",
+      "referenceName" : "Large",
+      "type" : "Consumable"
+    }
+  ],
+  "settings" : {
+    "_failTransactionsEnabled" : false,
+    "_locale" : "en_US",
+    "_storefront" : "USA",
+    "_storeKitErrors" : []
+  },
+  "subscriptionGroups" : [],
+  "version" : {
+    "major" : 4,
+    "minor" : 0
+  }
+}

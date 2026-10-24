@@ -1,9 +1,7 @@
 import AVFoundation
 import MidgarUI
 import PsybeamCore
-import SwiftUI
 import UIKit
-import AICreditsUI
 
 extension SettingsViewController {
     func makeSections() -> [MidgarSettingsSection] {
@@ -84,10 +82,7 @@ extension SettingsViewController {
     }
 
     private func minutesDetail() -> String {
-        #if DEBUG
-        if isDemoLaunch { return String(localized: "\(DemoConfiguration.freeMinutesGrant) min") }
-        #endif
-        return String(localized: "\(AICreditsManager.store.balance) min")
+        String(localized: "\(credits.balance) min")
     }
 
     private func privacyRows() -> [MidgarSettingsRow] {
@@ -161,14 +156,8 @@ extension SettingsViewController {
     }
 
     private func openStore() {
-        let store = AICreditsManager.store
-        let host = UIHostingController(rootView: CreditStoreView().environmentObject(store))
-        Task { await store.loadCatalog() }
-        if let sheet = host.sheetPresentationController {
-            sheet.detents = [.medium(), .large()]
-            sheet.prefersGrabberVisible = true
-        }
-        present(host, animated: true)
+        guard let store = CreditStoreSheet.makeController(credits: credits) else { return }
+        present(store, animated: true)
     }
 
     private func revokeConsent() {

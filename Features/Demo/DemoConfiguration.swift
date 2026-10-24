@@ -65,7 +65,7 @@ struct DemoConfiguration {
     /// launch shows this instead of the live balance, since a simulator can
     /// never pass the App Attest check mako's identity endpoint requires and
     /// so always reads back a stuck 0.
-    static let freeMinutesGrant = 5
+    nonisolated static let freeMinutesGrant = 5
 
     let mode: String
     let phrasebook: DemoPhrasebook
