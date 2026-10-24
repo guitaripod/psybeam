@@ -15,10 +15,10 @@ This replaces whatever label the app carried before, which predates the Midgar I
 | Data type (Apple) | Linked to the user | Used to track | Purpose | What it is in Psybeam |
 | --- | --- | --- | --- | --- |
 | Audio Data, Audio Data | No | No | App Functionality | The microphone audio of the conversation while a talk button is held, streamed from the phone straight to OpenAI (`gpt-realtime-translate`, with `gpt-4o-mini-transcribe` for the "what was heard" line) over WebRTC to be translated and spoken back. It does not pass through Midgar's servers, which only mint the session's short-lived token. No identifier travels with the audio; mako's session record (below) is the only link between a session and an account. Needs the person's consent (in app, before the first session). |
-| Identifiers, User ID | Yes | No | App Functionality | The anonymous account key mako issues for the minutes balance, the random Midgar ID, and, if the person links Sign in with Apple, Apple's user identifier. All go to `api.midgarcorp.cc`. RevenueCat also holds its own anonymous app user id. |
+| Identifiers, User ID | Yes | No | App Functionality | The anonymous account key mako issues for the minutes balance, the random Midgar ID, and, if the person links Sign in with Apple, Apple's user identifier. All go to `api.midgarcorp.cc`. |
 | Identifiers, Device ID | Yes | No | App Functionality | The app reads no advertising identifier and no vendor identifier. The first mako identity is created with a DeviceCheck token that mako checks with Apple, which answers only yes or no; the app also keeps a random per-install id in the Keychain as the idempotency key. MidgarKit's App Attest key id, per app and per device, stored with the Midgar ID when the ID is created or joined. App Store and TestFlight builds use App Attest's production environment whether or not the app has the App Attest entitlement (Apple, App Attest Environment entitlement), so released builds create it. |
 | Contact Info, Email Address | Yes | No | App Functionality | Only when the person links Sign in with Apple in the credits sheet: the address Apple provides, which may be Apple's private relay address. mako stores it with the account. |
-| Purchases, Purchase History | Yes | No | App Functionality | The App Store transactions of minute packs. RevenueCat verifies them and mako records them against the account. |
+| Purchases, Purchase History | Yes | No | App Functionality | The App Store transactions of minute packs. mako verifies each one from the signed App Store transaction and records it against the account and the Midgar ID, so the purchase history stays linked. |
 | Usage Data, Other Usage Data | Yes | No | Analytics | The App Store ad attribution: when the install came from an Apple ad, Apple tells mako the campaign, ad group and keyword (no advertising identifier, no device identifier). mako keeps them with the anonymous account to see which ads pay for themselves. The app sends the short-lived AdServices token for this on the first launches. |
 | Usage Data, Product Interaction | No | No | Analytics | The anonymous More Apps events (opened, shown, tapped) sent by MidgarKit with no identifier. |
 
@@ -41,7 +41,6 @@ Everything else is "Data Not Collected".
 
 ## Third-party SDK notes
 
-- RevenueCat (full purchase mode through AICredits, RevenueCat finishes every transaction): processes purchase data on our behalf; its manifest declares Purchase History and User ID. The Midgar ID is not sent to RevenueCat in this release (the RevenueCat app user id is unchanged), so the two identifiers are not joined by the app.
 - MidgarKit: `MidgarPortal` ships a manifest that declares Product Interaction for Analytics, not linked, matching the row above.
 - WebRTC (stasel/WebRTC): carries the audio to OpenAI; it collects nothing for itself.
 - OpenAI: reached directly by the phone for the audio and, from mako, to mint the session token (the target language travels with that request).

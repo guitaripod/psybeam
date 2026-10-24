@@ -13,7 +13,7 @@ This is the build document. Every P0/P1/P2 from the principal review is resolved
 |---|---|---|
 | Name | App name | **Psybeam** (`com.guitaripod.psybeam`) — clean App Store namespace, sibling to Solar Beam / Psywave. Findability via keyword subtitle, not the brand. |
 | A | Backend posture | **OpenAI `gpt-realtime-translate` — VERIFIED WORKING (Spike 1) via `/v1/realtime/translations`, 20+ languages, flat $0.034/min, no drift.** Azure fallback tier **retired** (the 13-language ceiling was disproved). `gpt-realtime-2` (instruction-steered) is the proven emergency fallback. Apple on-device for no-signal. |
-| B | Monetization | **SHIPPED:** one-time **5 free minutes** (mako "welcome bonus", anonymous-first — no sign-in to start) → **consumable minute packs** (mako/AICredits via RevenueCat): **45 min $4.99 · 120 min $9.99 · 300 min $19.99**. *No subscription; the planned 10-min/day free tier + $9.99/$59.99 sub were dropped pre-launch. Billing runs on **mako** (`mako.midgarcorp.cc`), not the in-repo `workers/` mint (vestigial).* BYO-key deferred (OpenAI ToS check). |
+| B | Monetization | **SHIPPED:** one-time **5 free minutes** (mako "welcome bonus", anonymous-first — no sign-in to start) → **consumable minute packs** (StoreKit 2 through MidgarStore, credited by mako on the Midgar ID wallet): **45 min $4.99 · 120 min $9.99 · 300 min $19.99**. *No subscription; the planned 10-min/day free tier + $9.99/$59.99 sub were dropped pre-launch. Billing runs on **mako** (`mako.midgarcorp.cc`), not the in-repo `workers/` mint (vestigial).* BYO-key deferred (OpenAI ToS check). |
 | C | Turn-taking default | **Auto-VAD + half-tap override** — *contingent on Spike 2*; falls back to hold-to-talk handset if the noisy-room echo test fails. |
 | D | Offline scope | **v1, not MVP.** MVP uses online `CLGeocoder` reverse-geocoding. |
 
@@ -297,7 +297,7 @@ The `Translating` impl in `Psybeam` wraps a zero-size `UIHostingController` carr
 - **5.1.2(i) pre-audio consent screen + revocable Settings toggle** (revocation actually kills cloud routing) naming OpenAI + Cloudflare; **bystander "cloud AI" indicator** on the local's half; privacy-policy update.
 - **4.3 defense baked into the submission:** first screenshot = the dual-facing table moment; App Review notes lead with the differentiation.
 - Privacy Manifest (`CA92.1`; `7D9E.1` DiskSpace if GRDB ships), `ITSAppUsesNonExemptEncryption=false`.
-- **SHIPPED:** consumable **minute packs** (RevenueCat via mako/AICredits: 45 min $4.99 · 120 min $9.99 · 300 min $19.99) — *no subscription, no trial*. **Consent persistence in GRDB `AppPreferences`.** (Conversation history, Live Activity, Action Button deferred.)
+- **SHIPPED:** consumable **minute packs** (StoreKit 2 via MidgarStore and MidgarCredits, credited by mako: 45 min $4.99 · 120 min $9.99 · 300 min $19.99) — *no subscription, no trial*. **Consent persistence in GRDB `AppPreferences`.** (Conversation history, Live Activity, Action Button deferred.)
 
 **v1:**
 - **Azure Live Interpreter fallback** for non-13 output corridors (Arabic/Thai/Turkish/Greek) + Personal Voice (pending Limited-Access approval applied-for on day 1).
