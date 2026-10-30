@@ -1,34 +1,30 @@
 # Psybeam
 
-A real-time voice-to-voice travel interpreter for iOS. You hold the phone and you're the only operator: two thumb-buttons — your language and theirs. Hold yours to speak and it speaks their language aloud to the person across from you; hold theirs while they reply and it speaks yours back. The stranger never has to touch the phone or understand the UI — the audio carries it, and when it's their turn the screen invites them to speak in their own language. The translation always faces whoever it's for. The local language auto-suggests by GPS as you cross borders.
-
-> Built for the person handed the phone, not the owner.
+A voice-to-voice travel interpreter for iPhone. You hold the phone and press one of two buttons: yours or theirs. Hold yours and speak, and Psybeam says it aloud in the other person's language. Hold theirs while they answer, and you hear it in yours. The other person never touches the phone; when it is their turn the screen asks them, in their language, to speak. The local language is suggested from GPS as you cross borders.
 
 ## How it works
 
-Speech is translated by OpenAI's `gpt-realtime-translate` (simultaneous speech-to-speech — it auto-detects the source, mimics the speaker's voice, and streams the result) over **WebRTC directly from the device**. A Cloudflare Worker mints short-lived ephemeral tokens so the real OpenAI key never leaves Cloudflare and the audio never touches our own infrastructure. Each direction is its own turn-gated session sharing one microphone.
+Speech goes to OpenAI's `gpt-realtime-translate` (simultaneous speech to speech: it detects the source language, keeps the speaker's voice and streams the result) over WebRTC, straight from the device. The app ships no API key. Midgar's intelligence service (`services/intelligence`, behind `api.midgarcorp.cc/v1/intelligence`) mints a short-lived token for each session and meters the minutes as credits from the person's Midgar ID wallet. Audio never passes through Midgar's servers. Credit packs are App Store purchases.
 
-## Structure
+## Layout
 
-Two parts in this repo, plus a shared backend:
+```
+Core/PsybeamCore/     Swift 6 package: the turn and call state machines, provider protocols, CLDR locale tables (builds on Linux)
+App/ Features/        programmatic UIKit app (XcodeGen, MVVM), Metal aurora that follows the voice, Liquid Glass
+Resources/            string catalog, assets, privacy manifest
+Tests/                unit and StoreKit tests
+```
 
-- **`Core/PsybeamCore/Sources/PsybeamCore`** — platform-agnostic Swift 6 core: the `TranslationState`/`Side`/`CallState` state machine, `Sendable` provider protocols exposing `AsyncStream`, DTOs, and the CLDR locale tables. No UIKit/AVFoundation. Compiles and tests on Linux and macOS.
-- **`App/`, `Features/`, `Resources/`** — the programmatic UIKit app (xcodegen, no storyboards). MVVM with Combine only at the VM↔VC seam, a Metal aurora that reacts to the voice, Sign in with Apple, Liquid Glass. iOS 18+ deploy target, iOS 26 SDK, iPhone-only.
-
-The backend is **mako**, a shared Cloudflare Worker behind the Midgar gateway (`api.midgarcorp.cc/v1/intelligence`, source in `services/intelligence`) that mints the ephemeral OpenAI token, meters minutes as credits, and handles Sign in with Apple. It lives outside this folder.
-
-See **[DESIGN.md](DESIGN.md)** for the architecture, the state machine, the data model, and the spikes that gate the build.
+[DESIGN.md](DESIGN.md) has the architecture and the state machine.
 
 ## Build
 
-```bash
-scripts/setup.sh         # one-time: .env.local + xcodegen + SPM resolve
-scripts/ios-build.sh     # device build
-scripts/ios-deploy.sh    # build + install + relaunch on your device
+iOS 18 or later, iPhone. MidgarKit and AICredits are local packages in the Midgar monorepo (`packages/`).
+
 ```
-
-`scripts/setup.sh` creates the gitignored `.env.local` you supply yourself (your bundle id, team id, device udid — see `.env.local.example`). The app ships no API keys: all backend secrets (the OpenAI key, etc.) live on the shared mako worker, not in this repo.
-
-## Stack
-
-Swift 6 strict concurrency · MidgarKit (monorepo package, by path) · UIKit (programmatic) · Combine · GRDB · Metal · WebRTC ([stasel/WebRTC](https://github.com/stasel/WebRTC)) · OpenAI `gpt-realtime-translate` · mako credits backend (shared Cloudflare Worker) · Sign in with Apple.
+scripts/setup.sh        # once: .env.local (bundle id, team id, device), xcodegen, package resolve
+scripts/ios-build.sh    # device build
+scripts/ios-deploy.sh   # build, install and launch on your device
+scripts/ios-test.sh
+swift test --package-path Core/PsybeamCore
+```
