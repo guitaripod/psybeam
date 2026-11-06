@@ -112,7 +112,7 @@ extension SettingsViewController {
         ) { [weak self] in self?.sharePsybeam() }
         let rate = MidgarSettingsRow.link(
             id: "rate", title: String(localized: "Rate Psybeam"), systemImage: "star.fill", url: Links.writeReview)
-        return [share, rate, .version()]
+        return [share, rate, .support(subject: "Psybeam"), .version()]
     }
 
     private func pickLanguage(isTraveler: Bool) {
