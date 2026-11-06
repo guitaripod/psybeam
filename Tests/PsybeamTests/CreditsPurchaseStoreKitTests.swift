@@ -116,7 +116,7 @@ extension GatewayBacked {
             let bought = harness.session.allTransactions().filter { $0.productIdentifier == Self.smallProductID }
             let transaction = try #require(bought.first)
             #expect(bought.count == 1)
-            let posted = GatewayStub.requests(method: "POST", pathSuffix: "/v1/credits/purchase/revenuecat/validate")
+            let posted = GatewayStub.requests(method: "POST", pathSuffix: "/v1/credits/purchase/validate")
             let request = try #require(posted.first)
             #expect(posted.count == 1)
             let body = try request.json()
@@ -146,7 +146,7 @@ extension GatewayBacked {
 
             #expect(result == .creditPending(packID: "small", credits: 45))
             #expect(await harness.credits.unconfirmedPurchases == 1)
-            let validations = GatewayStub.requests(method: "POST", pathSuffix: "/v1/credits/purchase/revenuecat/validate")
+            let validations = GatewayStub.requests(method: "POST", pathSuffix: "/v1/credits/purchase/validate")
             let transactionIDs = try Set(validations.map { try $0.json()["purchase_token"] })
             #expect(validations.count == 4)
             #expect(transactionIDs.count == 1)
@@ -159,7 +159,7 @@ extension GatewayBacked {
 
             #expect(balance.credits == 48)
             #expect(await harness.credits.unconfirmedPurchases == 0)
-            let retried = GatewayStub.requests(method: "POST", pathSuffix: "/v1/credits/purchase/revenuecat/validate")
+            let retried = GatewayStub.requests(method: "POST", pathSuffix: "/v1/credits/purchase/validate")
             #expect(retried.count == 5)
             #expect(try Set(retried.map { try $0.json()["purchase_token"] }) == transactionIDs)
             await harness.stop()
@@ -171,7 +171,7 @@ extension GatewayBacked {
             let result = try await harness.credits.buy("small")
 
             #expect(result == .cancelled)
-            #expect(GatewayStub.requests(method: "POST", pathSuffix: "/v1/credits/purchase/revenuecat/validate").isEmpty)
+            #expect(GatewayStub.requests(method: "POST", pathSuffix: "/v1/credits/purchase/validate").isEmpty)
             #expect(await harness.credits.unconfirmedPurchases == 0)
             await harness.stop()
         }
@@ -184,7 +184,7 @@ extension GatewayBacked {
                 _ = try await harness.credits.buy("small")
             }
 
-            #expect(GatewayStub.requests(method: "POST", pathSuffix: "/v1/credits/purchase/revenuecat/validate").isEmpty)
+            #expect(GatewayStub.requests(method: "POST", pathSuffix: "/v1/credits/purchase/validate").isEmpty)
             #expect(await harness.credits.unconfirmedPurchases == 0)
             #expect(harness.session.allTransactions().isEmpty)
             await harness.stop()
@@ -197,7 +197,7 @@ extension GatewayBacked {
                 _ = try await harness.credits.buy("huge")
             }
 
-            #expect(GatewayStub.requests(method: "POST", pathSuffix: "/v1/credits/purchase/revenuecat/validate").isEmpty)
+            #expect(GatewayStub.requests(method: "POST", pathSuffix: "/v1/credits/purchase/validate").isEmpty)
             #expect(harness.session.allTransactions().isEmpty)
             await harness.stop()
         }
