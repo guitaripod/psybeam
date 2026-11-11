@@ -142,6 +142,24 @@
             "state" : "translated",
             "value" : "Psybeam tar inte foton eller videor. Kameraåtkomst begärs endast av ramverket för realtidsljud och används aldrig."
           }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam tager ikke billeder eller video. Kameraadgang anmodes kun af realtidslydframeworket og bruges aldrig."
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam tekur hvorki myndir né myndskeið. Aðgengi að myndavél er aðeins beðið um af rauntímahljóðrammanum og er aldrei notað."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam tar ikke bilder eller video. Kameratilgang blir bare bedt om av sanntidslydrammeverket og brukes aldri."
+          }
         }
       }
     },
@@ -286,6 +304,24 @@
             "state" : "translated",
             "value" : "Psybeam föreslår det lokala språket där du befinner dig när du korsar gränser."
           }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam foreslår sproget på dit aktuelle sted, når du krydser grænser."
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam stingur upp á tungumáli út frá staðsetningu þinni þegar þú ferð yfir landamæri."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam foreslår språket der du befinner deg når du krysser grenser."
+          }
         }
       }
     },
@@ -429,6 +465,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Psybeam använder mikrofonen för att fånga tal för direkt röstöversättning."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam bruger mikrofonen til at optage tale til direkte stemmeoversættelse."
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam notar hljóðnemann til að taka upp tal fyrir beina raddþýðingu."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam bruker mikrofonen til å ta opp tale for direkte stemmeoversettelse."
           }
         }
       }

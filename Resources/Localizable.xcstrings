@@ -134,6 +134,24 @@
             "state" : "translated",
             "value" : "%lld min"
           }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld min."
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld mín."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld min."
+          }
         }
       }
     },
@@ -588,6 +606,60 @@
               }
             }
           }
+        },
+        "da" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld minut tilbage. Tryk for at fylde op."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld minutter tilbage. Tryk for at fylde op."
+                }
+              }
+            }
+          }
+        },
+        "is" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld mínúta eftir. Pikkaðu til að fylla á."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld mínútur eftir. Pikkaðu til að fylla á."
+                }
+              }
+            }
+          }
+        },
+        "nb" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld minutt igjen. Trykk for å fylle på."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld minutter igjen. Trykk for å fylle på."
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -720,6 +792,24 @@
           }
         },
         "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konto"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konto"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aðgangur"
+          }
+        },
+        "nb" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Konto"
@@ -860,6 +950,24 @@
             "state" : "translated",
             "value" : "Kontot har tagits bort"
           }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kontoen er slettet"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aðgangi hefur verið eytt"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kontoen er slettet"
+          }
         }
       }
     },
@@ -996,6 +1104,24 @@
             "state" : "translated",
             "value" : "Godkänn och fortsätt"
           }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Accepter og fortsæt"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Samþykkja og halda áfram"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Godta og fortsett"
+          }
         }
       }
     },
@@ -1128,6 +1254,24 @@
           }
         },
         "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utseende"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Udseende"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Útlit"
+          }
+        },
+        "nb" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Utseende"
@@ -1268,6 +1412,24 @@
             "state" : "translated",
             "value" : "Auto"
           }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auto"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sjálfvirkt"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auto"
+          }
         }
       }
     },
@@ -1403,6 +1565,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Identifiera automatiskt utifrån plats"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Registrer automatisk ud fra placering"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Greina sjálfkrafa út frá staðsetningu"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gjenkjenn automatisk fra posisjon"
           }
         }
       }
@@ -1540,6 +1720,24 @@
             "state" : "translated",
             "value" : "Köp minuter"
           }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Køb minutter"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kaupa mínútur"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kjøp minutter"
+          }
         }
       }
     },
@@ -1676,6 +1874,24 @@
             "state" : "translated",
             "value" : "ANSLUTER"
           }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OPRETTER FORBINDELSE"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TENGIST"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "KOBLER TIL"
+          }
         }
       }
     },
@@ -1808,6 +2024,24 @@
           }
         },
         "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Avbryt"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Annuller"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hætta við"
+          }
+        },
+        "nb" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Avbryt"
@@ -1948,6 +2182,24 @@
             "state" : "translated",
             "value" : "Ändra språket de talar"
           }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ændrer det sprog, de taler"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Breyta tungumálinu sem viðmælandi talar"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Endrer språket motparten snakker"
+          }
         }
       }
     },
@@ -2083,6 +2335,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ändra språket du talar"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ændrer det sprog, du taler"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Breyta tungumálinu sem þú talar"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Endrer språket du snakker"
           }
         }
       }
@@ -2220,6 +2490,24 @@
             "state" : "translated",
             "value" : "Ljudsignal när det är deras tur"
           }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klokkespil, når det er deres tur"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hljómur þegar röðin er hjá viðmælanda"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klokkespill når motparten har tur"
+          }
         }
       }
     },
@@ -2355,6 +2643,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Moln-AI"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sky-AI"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ský-gervigreind"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sky-AI"
           }
         }
       }
@@ -2492,6 +2798,24 @@
             "state" : "translated",
             "value" : "Det gick inte att ta bort kontot"
           }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kontoen kunne ikke slettes"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ekki tókst að eyða aðgangi"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kontoen kunne ikke slettes"
+          }
         }
       }
     },
@@ -2627,6 +2951,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mörkt"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mørk"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dökkt"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mørk"
           }
         }
       }
@@ -2764,6 +3106,24 @@
             "state" : "translated",
             "value" : "Ta bort konto"
           }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Slet konto"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eyða aðgangi"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Slett konto"
+          }
         }
       }
     },
@@ -2899,6 +3259,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Vill du ta bort kontot?"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Slet konto?"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eyða aðgangi?"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Slette konto?"
           }
         }
       }
@@ -3036,6 +3414,24 @@
             "state" : "translated",
             "value" : "Tar bort…"
           }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sletter…"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eyðir…"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sletter…"
+          }
         }
       }
     },
@@ -3171,6 +3567,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Skärm"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skærm"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skjár"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skjerm"
           }
         }
       }
@@ -3308,6 +3722,24 @@
             "state" : "translated",
             "value" : "Klar"
           }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Færdig"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lokið"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ferdig"
+          }
         }
       }
     },
@@ -3443,6 +3875,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "GÖR DIG REDO"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GØR KLAR"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "UNDIRBÚÐU ÞIG"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GJØR KLAR"
           }
         }
       }
@@ -3580,6 +4030,24 @@
             "state" : "translated",
             "value" : "Skaffa krediter"
           }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hent kreditter"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fá inneignir"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hent kreditter"
+          }
         }
       }
     },
@@ -3715,6 +4183,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "HÅLL NER FÖR ATT FÖRSÖKA IGEN"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HOLD FOR AT PRØVE IGEN"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HALTU NIÐRI TIL AÐ REYNA AFTUR"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HOLD FOR Å PRØVE IGJEN"
           }
         }
       }
@@ -3852,6 +4338,24 @@
             "state" : "translated",
             "value" : "HÅLL · DE"
           }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HOLD · MODPARTEN"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HALTU · VIÐMÆLANDI"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HOLD · MOTPARTEN"
+          }
         }
       }
     },
@@ -3987,6 +4491,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "HÅLL · DU"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HOLD · DU"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HALTU · ÞÚ"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HOLD · DU"
           }
         }
       }
@@ -4124,6 +4646,24 @@
             "state" : "translated",
             "value" : "Håll in ”%1$@” och säg något. Du hör det på %2$@."
           }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hold %@ nede, og sig noget. Du hører det på %@."
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haltu „%@“ niðri og segðu eitthvað. Þú heyrir það á tungumálinu %@."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hold %@ og si noe. Du hører det på %@."
+          }
         }
       }
     },
@@ -4259,6 +4799,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Håll ner en knapp och prata"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hold en knap nede, og tal"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haltu hnappi niðri og talaðu"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hold en knapp inne og snakk"
           }
         }
       }
@@ -4396,6 +4954,24 @@
             "state" : "translated",
             "value" : "Håll ner för att prata %@"
           }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hold for at tale %@"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haltu niðri til að tala %@"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hold for å snakke %@"
+          }
         }
       }
     },
@@ -4531,6 +5107,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Håll ner medan de pratar %@"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hold, mens modparten taler %@"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haltu niðri meðan viðmælandi talar %@"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hold mens motparten snakker %@"
           }
         }
       }
@@ -4668,6 +5262,24 @@
             "state" : "translated",
             "value" : "Håll skärmen tänd"
           }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hold skærmen lys"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Halda skjánum björtum"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hold skjermen lys"
+          }
         }
       }
     },
@@ -4803,6 +5415,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "SPRÅKET STÖDS INTE"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SPROG UNDERSTØTTES IKKE"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TUNGUMÁL ER EKKI STUTT"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SPRÅKET STØTTES IKKE"
           }
         }
       }
@@ -4940,6 +5570,24 @@
             "state" : "translated",
             "value" : "LYSSNAR"
           }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "LYTTER"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HLUSTAR"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "LYTTER"
+          }
         }
       }
     },
@@ -5072,6 +5720,24 @@
           }
         },
         "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Språk"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sprog"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tungumál"
+          }
+        },
+        "nb" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Språk"
@@ -5212,6 +5878,24 @@
             "state" : "translated",
             "value" : "Ljust"
           }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lys"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ljóst"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lys"
+          }
         }
       }
     },
@@ -5344,6 +6028,24 @@
           }
         },
         "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mikrofon"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mikrofon"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hljóðnemi"
+          }
+        },
+        "nb" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mikrofon"
@@ -5484,6 +6186,24 @@
             "state" : "translated",
             "value" : "Mikrofonåtkomsten är avstängd, så Psybeam kan inte höra dig. Slå på den i Inställningar för att översätta."
           }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mikrofonadgang er slået fra, så Psybeam ikke kan høre dig. Slå den til i Indstillinger for at oversætte."
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aðgengi að hljóðnema er slökkt, svo Psybeam heyrir ekki í þér. Kveiktu á því í stillingum til að þýða."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mikrofontilgang er av, så Psybeam kan ikke høre deg. Slå den på i Innstillinger for å oversette."
+          }
         }
       }
     },
@@ -5619,6 +6339,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Minuter"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minutter"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mínútur"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minutter"
           }
         }
       }
@@ -5756,6 +6494,24 @@
             "state" : "translated",
             "value" : "Återstående minuter"
           }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resterende minutter"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mínútur eftir"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gjenstående minutter"
+          }
         }
       }
     },
@@ -5888,6 +6644,24 @@
           }
         },
         "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mer"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mere"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meira"
+          }
+        },
+        "nb" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mer"
@@ -6028,6 +6802,24 @@
             "state" : "translated",
             "value" : "INGEN ANSLUTNING"
           }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "INGEN FORBINDELSE"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ENGIN TENGING"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "INGEN TILKOBLING"
+          }
         }
       }
     },
@@ -6163,6 +6955,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ingen anslutning. Översättning kräver internet."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ingen forbindelse. Oversættelse kræver internet."
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Engin tenging. Til að þýða þarf netið."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ingen tilkobling. Oversettelse krever internett."
           }
         }
       }
@@ -6300,6 +7110,24 @@
             "state" : "translated",
             "value" : "Inte nu"
           }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ikke nu"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ekki núna"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ikke nå"
+          }
         }
       }
     },
@@ -6436,6 +7264,24 @@
             "state" : "translated",
             "value" : "Håll nu in ”%@” och svara – eller låt någon annan svara dig."
           }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hold nu %@ nede, og besvar – eller lad nogen besvare dig."
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haltu nú „%@“ niðri og svaraðu, eða leyfðu einhverjum að svara þér."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hold nå %@ og svar – eller la noen svare deg."
+          }
         }
       }
     },
@@ -6568,6 +7414,24 @@
           }
         },
         "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Í lagi"
+          }
+        },
+        "nb" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "OK"
@@ -6708,6 +7572,24 @@
             "state" : "translated",
             "value" : "INGA MINUTER KVAR"
           }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "INGEN MINUTTER TILBAGE"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ENGAR MÍNÚTUR EFTIR"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "INGEN MINUTTER IGJEN"
+          }
         }
       }
     },
@@ -6843,6 +7725,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Öppna Inställningar"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Åbn Indstillinger"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opna stillingar"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Åpne Innstillinger"
           }
         }
       }
@@ -6980,6 +7880,24 @@
             "state" : "translated",
             "value" : "Tar bort ditt konto och dina återstående minuter permanent från våra servrar och raderar data på enheten. Detta går inte att ångra."
           }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sletter din konto og de resterende minutter permanent fra vores servere og fjerner data på enheden. Det kan ikke fortrydes."
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eyðir aðgangi þínum og mínútum sem eftir eru varanlega af netþjónum okkar og eyðir gögnum í tækinu. Ekki er hægt að afturkalla þetta."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sletter kontoen din og gjenstående minutter permanent fra serverne våre, og fjerner opplysninger på enheten. Dette kan ikke angres."
+          }
         }
       }
     },
@@ -7115,6 +8033,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kontrollera din anslutning och försök igen."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tjek din forbindelse, og prøv igen."
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Athugaðu tenginguna þína og reyndu aftur."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sjekk tilkoblingen din og prøv igjen."
           }
         }
       }
@@ -7252,6 +8188,24 @@
             "state" : "translated",
             "value" : "Sekretess"
           }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Privatliv"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Persónuvernd"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Personvern"
+          }
         }
       }
     },
@@ -7388,6 +8342,24 @@
             "state" : "translated",
             "value" : "Sekretesspolicy"
           }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Privatlivspolitik"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Persónuverndarstefna"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Personvernerklæring"
+          }
         }
       }
     },
@@ -7520,6 +8492,24 @@
           }
         },
         "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam %@ (%@)"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam %@ (%@)"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam %@ (%@)"
+          }
+        },
+        "nb" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Psybeam %@ (%@)"
@@ -7660,6 +8650,24 @@
             "state" : "translated",
             "value" : "Psybeam kan välja deras språk utifrån var du är. Tryck på “Tillåt” när iOS frågar."
           }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam kan vælge deres sprog ud fra, hvor du befinder dig. Tryk på Tillad, når iOS spørger."
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam getur valið tungumál viðmælanda út frá staðsetningu þinni. Pikkaðu á „Leyfa“ þegar iOS spyr."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam kan velge språket der du er. Trykk på Tillat når iOS spør."
+          }
         }
       }
     },
@@ -7795,6 +8803,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Psybeam behöver ditt godkännande för att skicka tal till sin molnöversättare."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam skal have dit samtykke til at sende tale til sin oversættelse i skyen."
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam þarf samþykki þitt til að senda tal í skýið til þýðingar."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam trenger ditt samtykke for å sende tale til skyoversetteren."
           }
         }
       }
@@ -7932,6 +8958,24 @@
             "state" : "translated",
             "value" : "Psybeam talar deras språk åt dig."
           }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam taler deres sprog for dig."
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam talar tungumál viðmælandans fyrir þig."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psybeam snakker motpartens språk for deg."
+          }
         }
       }
     },
@@ -8067,6 +9111,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ANSLUTER IGEN"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GENOPRETTER FORBINDELSE"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TENGIST AFTUR"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "KOBLER TIL IGJEN"
           }
         }
       }
@@ -8204,6 +9266,24 @@
             "state" : "translated",
             "value" : "Betygsätt Psybeam"
           }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bedøm Psybeam"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gefa Psybeam einkunn"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vurder Psybeam"
+          }
         }
       }
     },
@@ -8339,6 +9419,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Granska samtycke"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gennemgå samtykke"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skoða samþykki"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gjennomgå samtykket"
           }
         }
       }
@@ -8476,6 +9574,24 @@
             "state" : "translated",
             "value" : "Inställningar"
           }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Indstillinger"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stillingar"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Innstillinger"
+          }
         }
       }
     },
@@ -8612,6 +9728,24 @@
             "state" : "translated",
             "value" : "Dela Psybeam"
           }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Del Psybeam"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deila Psybeam"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Del Psybeam"
+          }
         }
       }
     },
@@ -8744,6 +9878,24 @@
           }
         },
         "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Standard"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Standard"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Staðlað"
+          }
+        },
+        "nb" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Standard"
@@ -8884,6 +10036,24 @@
             "state" : "translated",
             "value" : "Byt språk"
           }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skift sprog"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skipta um tungumál"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bytt språk"
+          }
         }
       }
     },
@@ -9019,6 +10189,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Prata med vem som helst på deras språk. Psybeam översätter röst till röst när du reser."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tal med alle på deres sprog. Psybeam oversætter stemme til stemme, når du rejser."
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Talaðu við fólk á tungumáli þess. Psybeam þýðir rödd yfir í rödd þegar þú ferðast."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Snakk med hvem som helst på deres språk. Psybeam oversetter stemme til stemme mens du reiser."
           }
         }
       }
@@ -9156,6 +10344,24 @@
             "state" : "translated",
             "value" : "De talar"
           }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modparten taler"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Viðmælandi talar"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Motparten snakker"
+          }
         }
       }
     },
@@ -9291,6 +10497,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Detta tar bort ditt konto och eventuella återstående minuter permanent från våra servrar och raderar data på enheten. Detta går inte att ångra."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dette sletter din konto og alle resterende minutter permanent fra vores servere og fjerner data på enheden. Det kan ikke fortrydes."
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Þetta eyðir aðgangi þínum og öllum mínútum sem eftir eru varanlega af netþjónum okkar og eyðir gögnum í tækinu. Ekki er hægt að afturkalla þetta."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dette sletter kontoen din og eventuelle gjenstående minutter permanent fra serverne våre og fjerner opplysninger på enheten. Dette kan ikke angres."
           }
         }
       }
@@ -9428,6 +10652,24 @@
             "state" : "translated",
             "value" : "För att översätta strömmas mikrofonljudet från ditt samtal i realtid till OpenAI — vår molnbaserade översättningsleverantör — och översättningen läses upp för dig. Ljudet skickas direkt till OpenAI och passerar aldrig våra servrar. Se OpenAI:s sekretessvillkor och vår sekretesspolicy för hur de hanterar det.\n\nDitt samtalstranskript stannar på den här enheten. Personen du pratar med översätts av OpenAI på samma sätt."
           }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "For at oversætte streames mikrofonlyden fra samtalen i realtid til OpenAI – vores udbyder af skyoversættelse – og oversættelsen læses op for dig. Lyden sendes direkte til OpenAI og går aldrig via vores servere. Se OpenAI’s privatlivsvilkår og vores privatlivspolitik for, hvordan de håndterer den.\n\nDin samtales transskription bliver på denne enhed. Personen, du taler med, oversættes af OpenAI på samme måde."
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Til að þýða er hljóð hljóðnemans í samtalinu streymt í rauntíma til OpenAI, sem er þýðingarþjónustan okkar í skýinu, og þýðingin er lesin upp fyrir þig. Hljóðið er sent beint til OpenAI og fer aldrei um netþjónana okkar. Sjáðu persónuverndarskilmála OpenAI og persónuverndarstefnu okkar um hvernig þeir fara með það.\n\nUppskrift samtalsins verður áfram í þessu tæki. Það sem viðmælandinn segir er þýtt af OpenAI á sama hátt."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "For å oversette strømmes mikrofonlyden fra samtalen i sanntid til OpenAI, vår leverandør av skyoversettelse, og oversettelsen leses opp for deg. Lyden sendes direkte til OpenAI og går aldri via serverne våre. Se OpenAIs personvernvilkår og vår personvernerklæring for hvordan de håndterer den.\n\nTranskripsjonen av samtalen blir på denne enheten. Det personen du snakker med sier, oversettes av OpenAI på samme måte."
+          }
         }
       }
     },
@@ -9563,6 +10805,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Översatt av moln-AI"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oversat af Sky-AI"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Þýtt af Ský-gervigreind"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oversatt av Sky-AI"
           }
         }
       }
@@ -9700,6 +10960,24 @@
             "state" : "translated",
             "value" : "Översättning av OpenAI"
           }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oversættelse af OpenAI"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Þýðing frá OpenAI"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oversettelse av OpenAI"
+          }
         }
       }
     },
@@ -9835,6 +11113,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Använd min plats"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Brug min placering"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nota staðsetninguna mína"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bruk min posisjon"
           }
         }
       }
@@ -9972,6 +11268,24 @@
             "state" : "translated",
             "value" : "Röstisolering"
           }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stemmeisolering"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Raddeinangrun"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stemmeisolering"
+          }
         }
       }
     },
@@ -10107,6 +11421,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Röstisolering låser sig till den närmaste rösten och dämpar bakgrundsljud — fungerar bäst på kaféer, gator och marknader. iOS låter dig bara byta det själv: tryck ovan, eller Kontrollpanelen → Mikrofonläge."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stemmeisolering fokuserer på den nærmeste stemme og dæmper baggrundsstøj – bedst i caféer, på gader og på markeder. iOS lader kun dig selv skifte den: Tryk på den ovenfor, eller gå til Kontrolcenter → Mikrofontilstand."
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Raddeinangrun einbeitir sér að næstu rödd og dregur úr bakgrunnshávaða og virkar best á kaffihúsum, götum og mörkuðum. iOS leyfir aðeins að skipta um hana handvirkt: pikkaðu á hana hér að ofan eða farðu í Stjórnborð → Hljóðnemastilling."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stemmeisolering fokuserer på nærmeste stemme og demper bakgrunnsstøy – best på kafeer, gater og markeder. iOS lar deg bare bytte den selv: trykk på den over, eller gå til Kontrollsenter → Mikrofonmodus."
           }
         }
       }
@@ -10244,6 +11576,24 @@
             "state" : "translated",
             "value" : "Vart är du på väg?"
           }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hvor skal du hen?"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hvert ertu að fara?"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hvor skal du?"
+          }
         }
       }
     },
@@ -10379,6 +11729,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bredspektrum"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bredt spektrum"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Breitt róf"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bredt spekter"
           }
         }
       }
@@ -10516,6 +11884,24 @@
             "state" : "translated",
             "value" : "Återkalla samtycke till moln-AI"
           }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tilbagekald Sky-AI-samtykke"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afturkalla samþykki fyrir Ský-gervigreind"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trekk tilbake samtykke til Sky-AI"
+          }
         }
       }
     },
@@ -10651,6 +12037,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Du kan återkalla ditt samtycke när som helst i Inställningar."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Du kan til enhver tid tilbagekalde dit samtykke i Indstillinger."
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Þú getur afturkallað samþykki hvenær sem er í stillingum."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Du kan når som helst trekke tilbake samtykket i Innstillinger."
           }
         }
       }
@@ -10788,6 +12192,24 @@
             "state" : "translated",
             "value" : "Du talar"
           }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Du taler"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Þú talar"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Du snakker"
+          }
         }
       }
     },
@@ -10923,6 +12345,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ditt konto och dina data har tagits bort."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Din konto og dine data er blevet fjernet."
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aðgangi þínum og gögnum hefur verið eytt."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kontoen og opplysningene dine er fjernet."
           }
         }
       }
@@ -11060,6 +12500,24 @@
             "state" : "translated",
             "value" : "Ljudet från ditt samtal skickas direkt till OpenAI för översättning och läses sedan upp — det passerar aldrig våra servrar. Se vår sekretesspolicy för hur OpenAI hanterar det. Ditt transkript stannar på den här enheten."
           }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Din samtales lyd streames direkte til OpenAI for at oversætte den og læses derefter op – den går aldrig via vores servere. Se vores privatlivspolitik for, hvordan OpenAI håndterer den. Din transskription bliver på denne enhed."
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hljóð samtalsins er streymt beint til OpenAI til þýðingar og síðan lesið upp fyrir þig, það fer aldrei um netþjónana okkar. Sjáðu persónuverndarstefnu okkar um hvernig OpenAI fer með það. Uppskrift samtalsins verður áfram í þessu tæki."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Samtalelyden din strømmes direkte til OpenAI for å oversette den, og leses så opp – den går aldri via serverne våre. Se personvernerklæringen vår for hvordan OpenAI håndterer den. Transkripsjonen blir på denne enheten."
+          }
         }
       }
     },
@@ -11196,6 +12654,24 @@
             "state" : "translated",
             "value" : "Första gången du håller in knappen frågar iOS om mikrofonen. Tryck på “Tillåt” så att Psybeam kan höra dig."
           }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Første gang du holder, bliver du spurgt om adgang til mikrofonen. Tryk på Tillad, så Psybeam kan høre dig."
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Þegar þú heldur niðri í fyrsta sinn biður Psybeam um hljóðnemann. Pikkaðu á „Leyfa“ svo Psybeam geti heyrt í þér."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Første gang du holder knappen inne, spør appen etter mikrofonen. Trykk på Tillat, så Psybeam kan høre deg."
+          }
         }
       }
     },
@@ -11331,6 +12807,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dina minuter har tagit slut. Tryck för att köpa mer."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dine minutter er brugt op. Tryk for at købe flere."
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mínúturnar þínar eru búnar. Pikkaðu til að kaupa fleiri."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Du har gått tom for minutter. Trykk for å kjøpe flere."
           }
         }
       }

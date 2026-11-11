@@ -1,0 +1,102 @@
+{
+  "version": 1,
+  "subscriptionGroups": [],
+  "inAppPurchases": [
+    {
+      "productId": "com.guitaripod.psybeam.credits.large",
+      "type": "CONSUMABLE",
+      "referenceName": "Large Pack",
+      "price": {
+        "territory": "USA",
+        "amount": "19.99"
+      },
+      "localizations": {
+        "da": {
+          "name": "Stor pakke",
+          "description": "300 minutter"
+        },
+        "en-US": {
+          "name": "Large Pack",
+          "description": "300 minutes"
+        },
+        "fi": {
+          "name": "Suuri paketti",
+          "description": "300 minuuttia"
+        },
+        "no": {
+          "name": "Stor pakke",
+          "description": "300 minutter"
+        },
+        "sv": {
+          "name": "Stort paket",
+          "description": "300 minuter"
+        }
+      },
+      "reviewScreenshotMd5": "56070ff1c7e6f3b617f82ada395e497b"
+    },
+    {
+      "productId": "com.guitaripod.psybeam.credits.medium",
+      "type": "CONSUMABLE",
+      "referenceName": "Medium Pack",
+      "price": {
+        "territory": "USA",
+        "amount": "9.99"
+      },
+      "localizations": {
+        "da": {
+          "name": "Mellemstor pakke",
+          "description": "120 minutter"
+        },
+        "en-US": {
+          "name": "Medium Pack",
+          "description": "120 minutes"
+        },
+        "fi": {
+          "name": "Keskikokoinen paketti",
+          "description": "120 minuuttia"
+        },
+        "no": {
+          "name": "Mellomstor pakke",
+          "description": "120 minutter"
+        },
+        "sv": {
+          "name": "Mellanstort paket",
+          "description": "120 minuter"
+        }
+      },
+      "reviewScreenshotMd5": "56070ff1c7e6f3b617f82ada395e497b"
+    },
+    {
+      "productId": "com.guitaripod.psybeam.credits.small",
+      "type": "CONSUMABLE",
+      "referenceName": "Small Pack",
+      "price": {
+        "territory": "USA",
+        "amount": "4.99"
+      },
+      "localizations": {
+        "da": {
+          "name": "Lille pakke",
+          "description": "45 minutter"
+        },
+        "en-US": {
+          "name": "Small Pack",
+          "description": "45 minutes"
+        },
+        "fi": {
+          "name": "Pieni paketti",
+          "description": "45 minuuttia"
+        },
+        "no": {
+          "name": "Liten pakke",
+          "description": "45 minutter"
+        },
+        "sv": {
+          "name": "Litet paket",
+          "description": "45 minuter"
+        }
+      },
+      "reviewScreenshotMd5": "56070ff1c7e6f3b617f82ada395e497b"
+    }
+  ]
+}
