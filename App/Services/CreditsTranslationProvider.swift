@@ -77,6 +77,8 @@ actor CreditsTranslationProvider: TranslationProviding {
             throw CallError.quota
         case 422:
             throw CallError.unsupportedLanguage
+        case MidgarModelRegion.refusalStatus:
+            throw CallError.unavailableInRegion
         default:
             throw CallError.server("http_\(reply.status)")
         }
@@ -89,9 +91,10 @@ actor CreditsTranslationProvider: TranslationProviding {
 
     /// Settles a session that was reserved but never settled (app killed
     /// mid-call), charging the reserved minutes so the worker refunds whatever is
-    /// unused. Bypasses the live talk-time total — it recovers a prior run.
+    /// unused. Bypasses the live talk-time total — it recovers a prior run. Where
+    /// Midgar refuses model calls it waits for a launch that can reach them.
     func settlePendingIfNeeded() async {
-        guard let sessionId = AppSettings.pendingSessionId else { return }
+        guard MidgarModelRegion.shared.modelsAvailable, let sessionId = AppSettings.pendingSessionId else { return }
         await settle(sessionId: sessionId, minutes: AppSettings.pendingReservedMinutes)
     }
 
@@ -160,6 +163,7 @@ actor CreditsTranslationProvider: TranslationProviding {
         } catch {
             if case .cancelled = error { throw CallError.cancelled }
             guard error.statusCode > 0 else { throw CallError.network }
+            MidgarModelRegion.shared.note(error)
             return Reply(data: Data(), status: error.statusCode)
         }
     }

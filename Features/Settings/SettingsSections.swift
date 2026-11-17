@@ -5,14 +5,18 @@ import UIKit
 
 extension SettingsViewController {
     func makeSections() -> [MidgarSettingsSection] {
-        [
+        var sections: [MidgarSettingsSection] = [
             MidgarSettingsSection(id: "languages", title: String(localized: "Languages"), rows: languageRows()),
             MidgarSettingsSection(
                 id: "microphone", title: String(localized: "Microphone"),
                 footer: String(localized: "Voice Isolation locks onto the closest voice and cuts background noise — best in cafés, streets, and markets. iOS only lets you switch it yourself: tap it above, or Control Center → Mic Mode."),
                 rows: microphoneRows()),
             MidgarSettingsSection(id: "display", title: String(localized: "Display"), rows: displayRows()),
-            MidgarSettingsSection(id: "minutes", title: String(localized: "Minutes"), rows: minutesRows()),
+        ]
+        if ModelFeatureVisibility.current.offersPurchases {
+            sections.append(MidgarSettingsSection(id: "minutes", title: String(localized: "Minutes"), rows: minutesRows()))
+        }
+        sections += [
             MidgarSettingsSection(
                 id: "privacy", title: String(localized: "Privacy"),
                 footer: String(localized: "Your conversation audio is streamed directly to OpenAI to translate it, then spoken back — it never passes through our servers. See our Privacy Policy for how OpenAI handles it. Your transcript stays on this device."),
@@ -23,6 +27,7 @@ extension SettingsViewController {
                 rows: [deleteAccountRow()]),
             MidgarSettingsSection(id: "more", title: String(localized: "More"), rows: moreRows()),
         ]
+        return sections
     }
 
     private func languageRows() -> [MidgarSettingsRow] {

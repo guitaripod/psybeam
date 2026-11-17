@@ -160,7 +160,9 @@ final class ConversationViewController: UIViewController {
         if applyPreviewIfNeeded() { return }
         convoRoot.alpha = 1
         updateLanguages(viewModel.pair)
-        if !AppSettings.aiConsentGranted {
+        if !features.offersOnboarding {
+            startSession()
+        } else if !AppSettings.aiConsentGranted {
             needsConsentOnAppear = true
         } else if firstRun.offersDestination {
             needsDestinationOnAppear = true
@@ -178,7 +180,7 @@ final class ConversationViewController: UIViewController {
     }
 
     var needsConsent: Bool {
-        !AppSettings.aiConsentGranted && !isDemo
+        !AppSettings.aiConsentGranted && !isDemo && features.offersOnboarding
     }
 
     func bind() {
@@ -256,6 +258,7 @@ final class ConversationViewController: UIViewController {
                 self.refreshNotice()
             }
             .store(in: &cancellables)
+        bindModelRegion()
     }
 
     func render(legState state: TranslationState, speaker: Side) {
@@ -282,6 +285,10 @@ final class ConversationViewController: UIViewController {
             knownBalance = 0
             refreshNotice()
             presentStoreIfPossible()
+        case .unavailableInRegion:
+            visualizer.apply(.idle)
+            setStatus("", color: .clear)
+            refreshResting()
         case .offline:
             visualizer.apply(.error)
             setStatus(String(localized: "NO CONNECTION"), color: errorRed)
@@ -364,7 +371,7 @@ final class ConversationViewController: UIViewController {
     /// waits until the permission is granted, whether that is already so or
     /// the user's first hold has just granted it.
     func warmUpIfMicGranted() {
-        guard AVAudioApplication.shared.recordPermission == .granted else { return }
+        guard features.startsSessions, AVAudioApplication.shared.recordPermission == .granted else { return }
         viewModel.warmUp()
     }
 

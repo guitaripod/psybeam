@@ -2,6 +2,7 @@
 public enum CallError: Sendable, Equatable, Error {
     case network
     case quota
+    case unavailableInRegion
     case permission(Permission)
     case unsupportedLanguage
     case server(String)

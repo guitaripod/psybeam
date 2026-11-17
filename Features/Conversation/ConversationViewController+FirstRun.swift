@@ -1,4 +1,5 @@
 import AVFAudio
+import MidgarCore
 import PsybeamCore
 import UIKit
 
@@ -64,7 +65,7 @@ extension ConversationViewController {
     /// `psybeam://try` link that the "Try It Before Your Trip" in-app event
     /// deep-links to; consent still comes first for anyone who hasn't given it.
     func replayWalkthrough() {
-        guard !isDemo else { return }
+        guard !isDemo, features.offersOnboarding else { return }
         setFirstRun(.chooseDestination)
         refreshResting()
         guard presentedViewController == nil else {
@@ -112,14 +113,23 @@ extension ConversationViewController {
     /// (no consent), the first-run coach, or the idle hint. A translation on
     /// screen is left alone, and so is a turn in progress.
     func refreshResting() {
-        let showsMicSettings = !needsConsent && micDenied
+        let showsRegionLine = features.showsRegionLine
+        buttonRow.isHidden = !features.showsTalkButtons
+        cloudBadge.isHidden = !features.showsTalkButtons
+        let showsMicSettings = !showsRegionLine && !needsConsent && micDenied
         consentButton.isHidden = !needsConsent
         consentButtonClearance.isActive = needsConsent
         micSettingsButton.isHidden = !showsMicSettings
         micSettingsButtonClearance.isActive = showsMicSettings
         refreshCoach()
         guard heldSide == nil else { return }
-        if showsMicSettings {
+        if showsRegionLine {
+            hasTranslation = false
+            sourceLabel.text = ""
+            showResting(NSAttributedString(
+                string: MidgarModelRegion.unavailableMessage,
+                attributes: restingAttributes(size: 28, alpha: 0.85, style: .title1, maximumScale: 1.15)))
+        } else if showsMicSettings {
             hasTranslation = false
             sourceLabel.text = ""
             let explanation = String(localized: "Microphone access is off, so Psybeam can’t hear you. Turn it on in Settings to translate.")
@@ -150,7 +160,7 @@ extension ConversationViewController {
     /// while a released turn is still settling, so the button just let go of
     /// never breathes again for the moment before its turn completes.
     func refreshCoach() {
-        let idle = !needsConsent && heldSide == nil && pendingTurns.isEmpty
+        let idle = !needsConsent && heldSide == nil && pendingTurns.isEmpty && features.showsTalkButtons
         let beckoning = idle ? firstRun.beckoning : nil
         meButton.setBeckoning(beckoning == .traveler)
         themButton.setBeckoning(beckoning == .local)
@@ -228,7 +238,7 @@ extension ConversationViewController {
         firstRun = stage
         if !isDemo { AppSettings.firstRunStage = stage }
         refreshResting()
-        if let line = coachText(for: stage, size: 17, style: .headline)?.string {
+        if features.offersOnboarding, let line = coachText(for: stage, size: 17, style: .headline)?.string {
             UIAccessibility.post(notification: .announcement, argument: line)
         }
     }
@@ -237,7 +247,7 @@ extension ConversationViewController {
     /// beyond the practice, so it is when Psybeam says what location is for
     /// and offers to use it, once. Settings' auto-detect switch is the way back.
     func scheduleLocationOffer() {
-        guard !isDemo, !AppSettings.locationOffered, AppSettings.autoDetectLocation, location.isUndetermined else { return }
+        guard !isDemo, features.offersOnboarding, !AppSettings.locationOffered, AppSettings.autoDetectLocation, location.isUndetermined else { return }
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in self?.presentLocationOffer() }
     }
 

@@ -121,6 +121,13 @@ nonisolated final class PsybeamMidgar: Sendable {
         }
     }
 
+    /// Asks Midgar whether model features work where the device connects from, on the app's authorized client. Run it in
+    /// the background at launch and on each return to the foreground; the conversation follows the answer.
+    func refreshModelRegion() async {
+        guard Self.reachesMidgarServices else { return }
+        await MidgarModelRegion.shared.refresh(client: account)
+    }
+
     /// Removes the log files, for the account deletion that starts the app over.
     static func eraseLogFiles() {
         MidgarLog.flush()

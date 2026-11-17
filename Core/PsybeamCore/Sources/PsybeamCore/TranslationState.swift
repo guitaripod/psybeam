@@ -12,6 +12,7 @@ public enum TranslationState: Sendable, Equatable {
     case passthrough(side: Side)
     case reconnecting
     case quotaExhausted
+    case unavailableInRegion
     case permissionDenied(Permission)
     case offline
     case error(TranslationError)
@@ -26,6 +27,7 @@ public extension TranslationState {
     static func failure(for error: CallError, isOnline: Bool) -> TranslationState? {
         switch error {
         case .quota: .quotaExhausted
+        case .unavailableInRegion: .unavailableInRegion
         case .permission(let permission): .permissionDenied(permission)
         case .unsupportedLanguage: .error(.unsupportedLanguage)
         case .server(let message): .error(.server(message))

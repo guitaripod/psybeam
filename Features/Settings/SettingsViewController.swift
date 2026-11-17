@@ -1,5 +1,6 @@
 import AVFoundation
 import Combine
+import MidgarCore
 import MidgarPortal
 import MidgarUI
 import UIKit
@@ -50,6 +51,7 @@ final class SettingsViewController: UINavigationController {
             primaryAction: UIAction { [weak self] _ in self?.dismiss(animated: true) })
         viewControllers = [list]
         observeBalance()
+        observeModelRegion()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -78,6 +80,15 @@ final class SettingsViewController: UINavigationController {
     /// follows the model's balance instead of only sampling it on appear.
     private func observeBalance() {
         credits.balanceChanges
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in self?.refreshList() }
+            .store(in: &cancellables)
+    }
+
+    /// The minutes section exists only where model features work, so the list follows Midgar's answer while the sheet
+    /// stays presented.
+    private func observeModelRegion() {
+        NotificationCenter.default.publisher(for: MidgarModelRegion.didChangeNotification)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in self?.refreshList() }
             .store(in: &cancellables)

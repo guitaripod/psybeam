@@ -36,6 +36,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func sceneDidBecomeActive(_ scene: UIScene) {
         reportAdAttributionOnce()
         Task { await credits.refresh() }
+        Task { await PsybeamMidgar.shared.refreshModelRegion() }
     }
 
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {

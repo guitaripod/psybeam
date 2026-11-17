@@ -38,7 +38,7 @@ extension ConversationViewController {
     /// The upfront state of the session: offline, out of minutes, or running
     /// low. Users with minutes and a connection see nothing at all.
     func refreshNotice() {
-        let notice = isDemo || !sessionStarted ? nil : SessionNotice.evaluate(
+        let notice = isDemo || !sessionStarted || !features.showsSessionNotice ? nil : SessionNotice.evaluate(
             isOnline: isOnline, balance: knownBalance, lowThreshold: CreditsModel.lowBalanceThreshold)
         guard notice != shownNotice else { return }
         shownNotice = notice
@@ -85,7 +85,7 @@ extension ConversationViewController {
     /// top up minutes. The 402 of a session start does not say how many credits the session needed, so the store opens
     /// without a shortfall; a call that reports one passes it.
     func presentStoreIfPossible(shortfall: Int? = nil) {
-        guard presentedViewController == nil,
+        guard features.offersPurchases, presentedViewController == nil,
               let store = CreditStoreSheet.makeController(credits: credits, shortfall: shortfall)
         else { return }
         present(store, animated: true)
