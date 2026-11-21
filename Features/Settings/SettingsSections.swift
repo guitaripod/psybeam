@@ -95,7 +95,10 @@ extension SettingsViewController {
             id: "withdrawConsent", title: String(localized: "Withdraw cloud AI consent"),
             systemImage: "xmark.shield.fill", role: .destructive,
             kind: .action { [weak self] in self?.revokeConsent() })
-        return [.privacyPolicy(url: Links.privacyPolicy), withdraw]
+        let usageCounts = MidgarSettingsRow.usageCountsDetail { [weak self] in
+            self?.pushViewController(MidgarUsageCountsViewController(theme: .psybeam), animated: true)
+        }
+        return [usageCounts, .privacyPolicy(url: Links.privacyPolicy), withdraw]
     }
 
     private func deleteAccountRow() -> MidgarSettingsRow {

@@ -263,6 +263,7 @@ final class TranslationLeg {
     private func finishTurn() {
         guard !text.isEmpty, finishedTurn != turn else { return }
         finishedTurn = turn
+        MidgarSignals.noteValue()
         finishedPublisher.send(())
     }
 }

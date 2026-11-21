@@ -105,6 +105,7 @@ final class ConversationViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        MidgarSignals.noteScreen("conversation")
         applyMaxBrightness()
         primeHaptics()
         if needsConsentOnAppear {

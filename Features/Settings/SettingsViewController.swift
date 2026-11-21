@@ -56,6 +56,7 @@ final class SettingsViewController: UINavigationController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        MidgarSignals.noteScreen("settings")
         refreshList()
         Task { await credits.refresh() }
         watchMicMode()
