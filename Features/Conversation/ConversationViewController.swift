@@ -342,6 +342,7 @@ final class ConversationViewController: UIViewController {
             hasTranslation = true
             turnProducedText = true
             translationAudience = audience
+            translatedLabel.font = captionFont
             translatedLabel.text = text
             UIView.animate(withDuration: 0.2) {
                 self.promptLabel.alpha = 0

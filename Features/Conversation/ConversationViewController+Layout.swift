@@ -196,7 +196,7 @@ extension ConversationViewController {
     }
 
     func captionSizeChanged() {
-        if hasTranslation { translatedLabel.font = captionFont }
+        translatedLabel.font = captionFont
         refreshResting()
     }
 
