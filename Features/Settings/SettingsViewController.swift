@@ -18,6 +18,7 @@ final class SettingsViewController: UINavigationController {
     private var cancellables = Set<AnyCancellable>()
     private var micModeTask: Task<Void, Never>?
     private var shownMicMode = SettingsViewController.currentMicModeName()
+    private var shownBalance: Int?
 
     private lazy var list = MidgarSettingsViewController(
         title: String(localized: "Settings"),
@@ -50,6 +51,7 @@ final class SettingsViewController: UINavigationController {
             systemItem: .done,
             primaryAction: UIAction { [weak self] _ in self?.dismiss(animated: true) })
         viewControllers = [list]
+        shownBalance = credits.balance
         observeBalance()
         observeModelRegion()
     }
@@ -57,7 +59,6 @@ final class SettingsViewController: UINavigationController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         MidgarSignals.noteScreen("settings")
-        refreshList()
         Task { await credits.refresh() }
         watchMicMode()
     }
@@ -73,16 +74,23 @@ final class SettingsViewController: UINavigationController {
     /// them again.
     func refreshList() {
         shownMicMode = Self.currentMicModeName()
+        shownBalance = credits.balance
         list.sections = makeSections()
     }
 
     /// Keep the minutes row live: the credit store sheet (and in-session billing) change the wallet's balance while this
     /// screen stays presented, and dismissing a sheet doesn't re-fire `viewDidAppear` on the presenter, so the list
     /// follows the model's balance instead of only sampling it on appear.
+    ///
+    /// It rebuilds only for a balance the rows do not already show: the events also arrive while the sheet is still
+    /// presenting, and a reload there recreates every cell, the SwiftUI card included, inside that animation.
     private func observeBalance() {
         credits.balanceChanges
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in self?.refreshList() }
+            .sink { [weak self] balance in
+                guard let self, balance != shownBalance else { return }
+                refreshList()
+            }
             .store(in: &cancellables)
     }
 

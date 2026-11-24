@@ -89,6 +89,7 @@ final class ConversationViewController: UIViewController {
     #if DEBUG
     var demo: DemoConfiguration?
     var demoPlayer: DemoScriptPlayer?
+    var perfWalk: PerfWalk?
     #endif
 
     init(viewModel: ConversationViewModel, credits: CreditsModel) {
@@ -118,6 +119,7 @@ final class ConversationViewController: UIViewController {
         #if DEBUG
         startDemoScriptIfNeeded()
         startDebugPressIfNeeded()
+        startPerfWalkIfNeeded()
         #endif
     }
 
@@ -340,10 +342,7 @@ final class ConversationViewController: UIViewController {
             hasTranslation = true
             turnProducedText = true
             translationAudience = audience
-            translatedLabel.font = captionFont
-            translatedLabel.textAlignment = .center
             translatedLabel.text = text
-            translatedLabel.textColor = .white
             UIView.animate(withDuration: 0.2) {
                 self.promptLabel.alpha = 0
                 self.translatedLabel.alpha = 1

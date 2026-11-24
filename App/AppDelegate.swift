@@ -1,5 +1,8 @@
 import UIKit
 import MidgarCore
+#if DEBUG
+import MidgarUI
+#endif
 
 enum OrientationCoordinator {
     static let mask: UIInterfaceOrientationMask = .allButUpsideDown
@@ -22,6 +25,9 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         _ = DatabaseManager.shared
         PsybeamMidgar.shared.start()
         ReviewPrompt.beginSession()
+        #if DEBUG
+        MidgarFrameWatch.shared.startIfRequested()
+        #endif
         MidgarLog.info("app launched", category: .app)
         return true
     }

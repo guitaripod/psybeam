@@ -60,10 +60,22 @@ final class WaveVisualizerView: MTKView {
         apply(.idle)
     }
 
-    func apply(_ style: WaveStyle) { renderer.apply(style) }
+    func apply(_ style: WaveStyle) {
+        renderer.apply(style)
+        setRenderRate(active: style != .idle && style != .error)
+    }
+
     func setLevel(_ level: Float) { renderer.level = level }
     func setPaused(_ paused: Bool) { isPaused = paused }
     func bloom() { renderer.addBloom() }
+
+    /// The aurora drifts slowly enough that half the frames are indistinguishable
+    /// while nothing is being heard or said, and the shader's noise field is what
+    /// keeps the whole display at 40 fps on an A12. A turn gets the full rate back,
+    /// because the wave then follows the voice.
+    private func setRenderRate(active: Bool) {
+        preferredFramesPerSecond = active ? 60 : 30
+    }
 
     @available(*, unavailable)
     required init(coder: NSCoder) { fatalError() }
